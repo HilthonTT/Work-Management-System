@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WSMApi.Library.Models;
 
-public class JobTitle
+public class JobTitleModel
 {
     public int Id { get; set; }
     public string JobName { get; set; }

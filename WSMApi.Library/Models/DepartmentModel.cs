@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WSMApi.Library.Models;
 
-public class Department
+public class DepartmentModel
 {
     public int Id { get; set; }
     public int CompanyId { get; set; }

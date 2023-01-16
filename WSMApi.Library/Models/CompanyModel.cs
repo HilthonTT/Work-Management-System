@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WSMApi.Library.Models;
 
-public class Company
+public class CompanyModel
 {
     public int Id { get; set; }
     public string CompanyName { get; set; }
