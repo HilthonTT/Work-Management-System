@@ -31,6 +31,13 @@ public class UserData : IUserData
         return output;
     }
 
+    public List<UserModel> GetUsers()
+    {
+        var output = _sql.LoadData<UserModel, dynamic>("dbo.spUser_GetAll", new { }, "WSMData");
+
+        return output;
+    }
+
     public void InsertUser(UserModel user)
     {
         _sql.SaveData("dbo.spUser_Insert", user, "WSMData");
