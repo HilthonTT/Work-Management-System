@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WSMApi.Data;
+using WSMApi.Library.Internal.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+
+// Personal Services
+builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 
 var app = builder.Build();
 
