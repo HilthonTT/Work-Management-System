@@ -12,4 +12,6 @@ begin
 	JobName = @JobName,
 	[Description] = @Description,
 	DepartmentId = @DepartmentId
+
+	WHERE Id = @Id
 end
