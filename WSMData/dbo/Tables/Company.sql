@@ -4,7 +4,7 @@
     [CompanyName] NVARCHAR(100) NOT NULL, 
     [PhoneNumber] NVARCHAR(50) NOT NULL, 
     [NumberOfEmployees] INT NOT NULL DEFAULT 1, 
-    [ChairPersonId] NVARCHAR(128) NOT NULL, 
+    [ChairPersonId] NVARCHAR(128) NULL, 
     [Description] NVARCHAR(MAX) NOT NULL, 
     [Revenue] MONEY NOT NULL, 
     [StockPrices] MONEY NOT NULL, 

@@ -6,8 +6,8 @@
     [EmailAddress] NVARCHAR(MAX) NOT NULL, 
     [PhoneNumber] NVARCHAR(50) NOT NULL, 
     [Age] INT NOT NULL, 
-    [DepartmentId] INT NOT NULL, 
-    [JobTitleId] INT NOT NULL, 
+    [DepartmentId] INT NULL, 
+    [JobTitleId] INT NULL, 
     [CreatedDate] DATETIME2 NOT NULL DEFAULT getutcdate(), 
     CONSTRAINT [FK_User_ToDepartment] FOREIGN KEY (DepartmentId) REFERENCES Department(Id), 
     CONSTRAINT [FK_User_ToJobTitle] FOREIGN KEY (JobTitleId) REFERENCES JobTitle(Id)
