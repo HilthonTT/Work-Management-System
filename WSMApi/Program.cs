@@ -1,9 +1,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 using WSMApi.Data;
+using WSMApi.Library.DataAccess;
 using WSMApi.Library.Internal.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var Configuration = builder.Configuration;
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -19,6 +25,41 @@ builder.Services.AddControllersWithViews();
 
 // Personal Services
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+builder.Services.AddTransient<IUserData, UserData>();
+builder.Services.AddTransient<ICompanyData, CompanyData>();
+builder.Services.AddTransient<IJobTitleData, JobTitleData>();
+builder.Services.AddTransient<IDepartmentData, DepartmentData>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "JwtBearer";
+    options.DefaultChallengeScheme = "JwtBearer";
+})
+    .AddJwtBearer("JwtBearer", jwtBearerOptions =>
+    {
+        jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Secrets:SecurityKey"))),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(5)
+        };
+    });
+
+builder.Services.AddSwaggerGen(setup =>
+{
+    setup.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "Work System Management API",
+            Version = "v1"
+        });
+});
+
+
 
 var app = builder.Build();
 
@@ -40,6 +81,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WSM API v1");
+});
 
 app.MapControllerRoute(
     name: "default",
