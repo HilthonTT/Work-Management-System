@@ -36,7 +36,7 @@ public class CompanyData : ICompanyData
         _sql.SaveData("dbo.spCompany_Insert", company, "WSMData");
     }
 
-    public void UpdateUser(CompanyModel company)
+    public void UpdateCompany(CompanyModel company)
     {
         _sql.SaveData("dbo_spCompany_Update", company, "WSMData");
     }
