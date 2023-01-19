@@ -8,14 +8,14 @@ using UI.Library.Models;
 
 namespace UI.Library.API;
 
-public class UserEndpoint
+public class UserEndpoint : IUserEndpoint
 {
     private readonly IAPIHelper _apiHelper;
     private readonly ILogger<UserEndpoint> _logger;
 
     public UserEndpoint(IAPIHelper apiHelper,
-					 ILogger<UserEndpoint> logger)
-	{
+                     ILogger<UserEndpoint> logger)
+    {
         _apiHelper = apiHelper;
         _logger = logger;
     }
@@ -52,8 +52,8 @@ public class UserEndpoint
     {
         var data = new
         {
-            model.FirstName, 
-            model.LastName, 
+            model.FirstName,
+            model.LastName,
             model.EmailAddress,
             model.PhoneNumber,
             model.Age,
