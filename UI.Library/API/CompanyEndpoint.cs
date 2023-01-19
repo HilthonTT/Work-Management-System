@@ -54,7 +54,7 @@ public class CompanyEndpoint : ICompanyEndpoint
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/InsertCompany", company);
         if (response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("The company has successfully been added to the database.");
+            _logger.LogInformation("The company of name ({CompanyName}) has successfully been added to the database.", company.CompanyName);
         }
         else
         {
