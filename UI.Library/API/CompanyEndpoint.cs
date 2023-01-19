@@ -37,47 +37,41 @@ public class CompanyEndpoint : ICompanyEndpoint
 
     public async Task<List<CompanyModel>> GetByName(string CompanyName)
     {
-        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyByName", CompanyName))
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyByName", CompanyName);
+        if (response.IsSuccessStatusCode)
         {
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsAsync<List<CompanyModel>>();
-                return result;
-            }
-            else
-            {
-                throw new Exception(response.ReasonPhrase);
-            }
+            var result = await response.Content.ReadAsAsync<List<CompanyModel>>();
+            return result;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
         }
     }
 
     public async Task PostCompany(CompanyModel company)
     {
-        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/InsertCompany", company))
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/InsertCompany", company);
+        if (response.IsSuccessStatusCode)
         {
-            if (response.IsSuccessStatusCode)
-            {
-                _logger.LogInformation("The company has successfully been added to the database.");
-            }
-            else
-            {
-                throw new Exception(response.ReasonPhrase);
-            }
+            _logger.LogInformation("The company has successfully been added to the database.");
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
         }
     }
 
     public async Task UpdateCompany(CompanyModel company)
     {
-        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/UpdateCompany", company))
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/UpdateCompany", company);
+        if (response.IsSuccessStatusCode)
         {
-            if (response.IsSuccessStatusCode)
-            {
-                _logger.LogInformation("The company of Id ({Id}) has sucessfully been updated.", company.Id);
-            }
-            else
-            {
-                throw new Exception(response.ReasonPhrase);
-            }
+            _logger.LogInformation("The company of Id ({Id}) has sucessfully been updated.", company.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
         }
     }
 
