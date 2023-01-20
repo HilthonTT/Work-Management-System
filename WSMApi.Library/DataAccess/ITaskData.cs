@@ -8,7 +8,7 @@ namespace WSMApi.Library.DataAccess
         List<TaskModel> GetTaskByUserId(string UserId);
         List<TaskModel> GetTasks();
         void InsertTask(TaskModel task);
-        void UpdatePercentage(int percentage);
+        void UpdatePercentage(TaskModel task);
         void UpdateTask(TaskModel task);
     }
 }

@@ -52,9 +52,9 @@ public class TaskController : ControllerBase
     [HttpPost]
     [Authorize]
     [Route("UpdateTaskPercentage")]
-    public void UpdateTaskPercentage(int percentage) 
+    public void UpdateTaskPercentage(TaskModel task) 
     {
-        _taskData.UpdatePercentage(percentage);
+        _taskData.UpdatePercentage(task);
     }
 
     [HttpPost]
