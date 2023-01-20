@@ -8,6 +8,7 @@
     [DateDue] DATETIME2 NOT NULL, 
     [PercentageDone] INT NOT NULL DEFAULT 0, 
     [IsDone] BIT NOT NULL DEFAULT 0, 
+    [DateCreated] DATETIME2 NOT NULL DEFAULT getutcdate(), 
     CONSTRAINT [FK_Task_ToUser] FOREIGN KEY (UserId) REFERENCES [User](Id), 
     CONSTRAINT [FK_Task_ToDepartment] FOREIGN KEY (DepartmentId) REFERENCES Department(Id)
 )

@@ -6,13 +6,14 @@
 	@Description nvarchar(MAX),
 	@DateDue datetime2,
 	@PercentageDone int,
-	@IsDone bit
+	@IsDone bit,
+	@DateCreated datetime2
 AS
 begin
 	set nocount on;
 
-	insert into dbo.Task (UserId, DepartmentId, Title, DateDue, PercentageDone, IsDone)
-	values (@UserId, @DepartmentId, @Title, @DateDue, @PercentageDone, @IsDone)
+	insert into dbo.Task (UserId, DepartmentId, Title, DateDue, PercentageDone, IsDone, DateCreated)
+	values (@UserId, @DepartmentId, @Title, @DateDue, @PercentageDone, @IsDone, @DateCreated)
 
 	select @Id = SCOPE_IDENTITY()
 end
