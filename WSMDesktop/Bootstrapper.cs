@@ -38,7 +38,8 @@ public class Bootstrapper : BootstrapperBase
             .PerRequest<ICompanyEndpoint, CompanyEndpoint>()
             .PerRequest<IDepartmentEndpoint, DepartmentEndpoint>()
             .PerRequest<IJobTitleEndpoint, JobTitleEndpoint>()
-            .PerRequest<IUserEndpoint, UserEndpoint>();
+            .PerRequest<IUserEndpoint, UserEndpoint>()
+            .PerRequest<ITaskEndpoint, TaskEndpoint>();
 
         _container
             .Singleton<IWindowManager, WindowManager>()
