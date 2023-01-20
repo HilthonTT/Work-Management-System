@@ -19,4 +19,6 @@ begin
 	DateDue = @DateDue,
 	PercentageDone = @PercentageDone,
 	IsDone = @IsDone
+
+	where Id = @Id;
 end
