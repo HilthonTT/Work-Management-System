@@ -31,7 +31,7 @@ public class TaskData : ITaskData
         return output;
     }
 
-    public List<TaskModel> GetTaskByDepartmentId(string DepartmentId)
+    public List<TaskModel> GetTaskByDepartmentId(int DepartmentId)
     {
         var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetByDepartmentId", new { DepartmentId }, "WSMData");
 

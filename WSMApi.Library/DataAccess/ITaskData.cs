@@ -4,7 +4,7 @@ namespace WSMApi.Library.DataAccess
 {
     public interface ITaskData
     {
-        List<TaskModel> GetTaskByDepartmentId(string DepartmentId);
+        List<TaskModel> GetTaskByDepartmentId(int DepartmentId);
         List<TaskModel> GetTaskByUserId(string UserId);
         List<TaskModel> GetTasks();
         void InsertTask(TaskModel task);
