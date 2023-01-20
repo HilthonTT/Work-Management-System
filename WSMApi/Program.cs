@@ -29,6 +29,7 @@ builder.Services.AddTransient<IUserData, UserData>();
 builder.Services.AddTransient<ICompanyData, CompanyData>();
 builder.Services.AddTransient<IJobTitleData, JobTitleData>();
 builder.Services.AddTransient<IDepartmentData, DepartmentData>();
+builder.Services.AddTransient<ITaskData, TaskData>();
 
 builder.Services.AddAuthentication(options =>
 {
