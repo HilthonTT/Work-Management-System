@@ -14,4 +14,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CreatedDate" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="f4706728-1c78-49fd-a2bd-ff5b5be52a6f" ChangeDateTime="01/20/2023 17:12:11">
+    <Property Name="ElementName" Value="[dbo].[Task].[TaskTitle]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Task]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Title" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="43d196db-146e-4fa5-8051-f5c409b8693a" ChangeDateTime="01/20/2023 17:14:33">
+    <Property Name="ElementName" Value="[dbo].[Task].[Percentage]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Task]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PercentageDone" />
+  </Operation>
 </Operations>

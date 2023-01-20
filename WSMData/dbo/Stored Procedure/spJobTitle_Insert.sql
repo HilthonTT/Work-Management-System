@@ -5,6 +5,8 @@
 	@DepartmentId int
 AS
 begin
+	set nocount on;
+
 	insert into dbo.JobTitle(JobName, [Description], DepartmentId)
 	values (@JobName, @Description, @DepartmentId)
 
