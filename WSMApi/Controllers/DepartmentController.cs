@@ -28,7 +28,7 @@ public class DepartmentController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("GetDepartmentByName")] 
-    public List<DepartmentModel> GetDepartments(string DepartmentName)
+    public List<DepartmentModel> GetDepartmentsByName(string DepartmentName)
     {
         return _departmentData.GetDepartmentByName(DepartmentName);
     }
