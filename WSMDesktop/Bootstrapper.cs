@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using UI.Library.API;
 using UI.Library.Models;
+using WSMDesktop.ViewModels;
+using WSMDesktop.Views;
 
 namespace WSMDesktop;
 
@@ -47,7 +49,7 @@ public class Bootstrapper : BootstrapperBase
             .Singleton<ILoggedInUserModel, LoggedInUserModel>()
             .Singleton<IAPIHelper, APIHelper>();
 
-        _container.RegisterInstance(typeof(IConfigurationBuilder), "IConfiguration", AddConfiguration());
+        _container.RegisterInstance(typeof(IConfiguration), "IConfiguration", AddConfiguration());
 
         GetType().Assembly.GetTypes()
             .Where(type => type.IsClass)
@@ -58,9 +60,9 @@ public class Bootstrapper : BootstrapperBase
     }
 
 
-    protected override void OnStartup(object sender, StartupEventArgs e)
+    protected override async void OnStartup(object sender, StartupEventArgs e)
     {
-        base.OnStartup(sender, e);
+        await DisplayRootViewForAsync<ShellViewModel>();
     }
 
     protected override object GetInstance(Type service, string key)
