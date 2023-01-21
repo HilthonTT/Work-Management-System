@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using UI.Library.API;
 using UI.Library.Models;
+using WSMDesktop.Helpers;
 using WSMDesktop.ViewModels;
 using WSMDesktop.Views;
 
@@ -20,6 +22,10 @@ public class Bootstrapper : BootstrapperBase
 	public Bootstrapper()
 	{
 		Initialize();
+        ConventionManager.AddElementConvention<PasswordBox>(
+            PasswordBoxHelper.BoundPasswordProperty,
+            "Password",
+            "PasswordChanged");
 	}
 
     private IConfiguration AddConfiguration()
