@@ -52,7 +52,7 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
 
     public async Task LogIn()
     {
-        await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
     }
 
     public async Task LogOut()
