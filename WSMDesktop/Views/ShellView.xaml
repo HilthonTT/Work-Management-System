@@ -10,7 +10,7 @@
         Background="#282828"
         WindowStyle="None"
         FontFamily="Comic Sans MS"
-        Title="Work System Management" Height="900" Width="1250">
+        Title="Work System Management" Height="900" Width="1500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />

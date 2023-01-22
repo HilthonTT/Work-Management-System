@@ -3,11 +3,16 @@ using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SqlTypes;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using UI.Library.API;
 using UI.Library.Models;
+using WSMDesktop.EventModels;
 using WSMDesktop.Models;
 
 namespace WSMDesktop.ViewModels;
@@ -22,6 +27,7 @@ public class MaintenanceViewModel : Screen
     private readonly IJobTitleEndpoint _jobEndpoint;
     private readonly IUserEndpoint _userEndpoint;
     private readonly ITaskEndpoint _taskEndpoint;
+    private readonly StatusViewModel _status;
 
     public MaintenanceViewModel(IEventAggregator events,       
                                 IWindowManager window,
@@ -30,7 +36,8 @@ public class MaintenanceViewModel : Screen
                                 IDepartmentEndpoint departmentEndpoint,
                                 IJobTitleEndpoint jobEndpoint,
                                 IUserEndpoint userEndpoint,
-                                ITaskEndpoint taskEndpoint)
+                                ITaskEndpoint taskEndpoint,
+                                StatusViewModel status)
 	{
         _events = events;
         _window = window;
@@ -40,6 +47,7 @@ public class MaintenanceViewModel : Screen
         _jobEndpoint = jobEndpoint;
         _userEndpoint = userEndpoint;
         _taskEndpoint = taskEndpoint;
+        _status = status;
     }
 
     protected override async void OnViewLoaded(object view)
@@ -54,8 +62,21 @@ public class MaintenanceViewModel : Screen
         }
         catch (Exception ex)
         {
+            dynamic settings = new ExpandoObject();
+            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            settings.ResizeMode = ResizeMode.NoResize;
+            settings.Title = "System Error";
 
-            throw;
+            if (ex.Message == "Unauthorized")
+            {
+                _status.UpdateMessage("Unauthorized Access", "You do not have permission to interact with this page.");
+                await _window.ShowDialogAsync(_status, null, settings);
+            }
+            else
+            {
+                _status.UpdateMessage("Fatal Exception", ex.Message);
+                await _window.ShowDialogAsync(_status, null, settings);
+            }
         }
     }
 
@@ -104,12 +125,27 @@ public class MaintenanceViewModel : Screen
         get { return _selectedCompany; }
         set 
         { 
-            _selectedCompany = value; 
+            _selectedCompany = value;
+            SelectedCompanyName = $"*{value.CompanyName}";
             NotifyOfPropertyChange(() => SelectedCompany);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+            NotifyOfPropertyChange(() => SelectedCompanyName);
         }
     }
+
+    private string _selectedCompanyName;
+
+    public string SelectedCompanyName
+    {
+        get { return _selectedCompanyName; }
+        set 
+        { 
+            _selectedCompanyName = value;
+            NotifyOfPropertyChange(() => SelectedCompanyName);
+        }
+    }
+
 
 
 
@@ -133,12 +169,25 @@ public class MaintenanceViewModel : Screen
         set 
         { 
             _selectedDepartment = value; 
+            SelectedDepartmentName = $"*{value.DepartmentName}";
             NotifyOfPropertyChange(() => SelectedDepartment);
+            NotifyOfPropertyChange(() => SelectedDepartmentName);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
         }
     }
 
+    private string _selectedDepartmentName;
+
+    public string SelectedDepartmentName
+    {
+        get { return _selectedDepartmentName; }
+        set 
+        { 
+            _selectedDepartmentName = value; 
+            NotifyOfPropertyChange(() => SelectedDepartmentName);
+        }
+    }
 
     private BindingList<JobTitleModel> _jobTitles;
 
@@ -159,10 +208,23 @@ public class MaintenanceViewModel : Screen
         get { return _selectedJobTitle; }
         set 
         { 
-            _selectedJobTitle = value; 
+            _selectedJobTitle = value;
+            SelectedJobTitleName = $"*{value.JobName}";
             NotifyOfPropertyChange(() => SelectedJobTitle);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+        }
+    }
+
+    private string _selectedJobTitleName;
+
+    public string SelectedJobTitleName
+    {
+        get { return _selectedJobTitleName; }
+        set 
+        { 
+            _selectedJobTitleName = value; 
+            NotifyOfPropertyChange(() => SelectedJobTitleName);
         }
     }
 
@@ -185,8 +247,50 @@ public class MaintenanceViewModel : Screen
         get { return _selectedUser; }
         set 
         {
-            _selectedUser = value; 
+            _selectedUser = value;
+            SelectedUserName = $"*{value.FirstName} {value.LastName}";
             NotifyOfPropertyChange(() => SelectedUser);
+            NotifyOfPropertyChange(() => AssignTaskButtonColor);
+            NotifyOfPropertyChange(() => CanAssignTask);
+        }
+    }
+
+    private string _selectedUserName;
+
+    public string SelectedUserName
+    {
+        get { return _selectedUserName; }
+        set 
+        { 
+            _selectedUserName = value; 
+            NotifyOfPropertyChange(() => SelectedUserName);
+        }
+    }
+
+
+    private string _title;
+
+    public string Title
+    {
+        get { return _title; }
+        set 
+        { 
+            _title = value; 
+            NotifyOfPropertyChange(() => Title);
+            NotifyOfPropertyChange(() => AssignTaskButtonColor);
+            NotifyOfPropertyChange(() => CanAssignTask);
+        }
+    }
+
+    private DateTime _dateDue = SqlDateTime.MinValue.Value;
+
+    public DateTime DateDue
+    {
+        get { return _dateDue; }
+        set 
+        {
+            _dateDue = value;
+            NotifyOfPropertyChange(() => DateDue);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
         }
@@ -203,6 +307,18 @@ public class MaintenanceViewModel : Screen
             NotifyOfPropertyChange(() => TaskDescription);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+        }
+    }
+
+    private string _errorMessage;
+
+    public string ErrorMessage
+    {
+        get { return _errorMessage; }
+        set 
+        { 
+            _errorMessage = value; 
+            NotifyOfPropertyChange(() => ErrorMessage);
         }
     }
 
@@ -223,11 +339,13 @@ public class MaintenanceViewModel : Screen
     {
         get
         {
-            if (SelectedCompany is not null && 
-                SelectedDepartment is not null && 
+            if (SelectedCompany is not null &&
+                SelectedDepartment is not null &&
                 SelectedJobTitle is not null &&
                 SelectedUser is not null &&
-                string.IsNullOrWhiteSpace(TaskDescription) == false)
+                string.IsNullOrWhiteSpace(Title) == false &&
+                string.IsNullOrWhiteSpace(TaskDescription) == false &&
+                DateDue >= SqlDateTime.MinValue.Value == true)
             {
                 return true;
             }
@@ -238,7 +356,26 @@ public class MaintenanceViewModel : Screen
 
     public async Task AssignTask()
     {
-        
-    }
+        try
+        {
+            TaskModel newTask = new()
+            {
+                UserId = SelectedUser.Id,
+                DepartmentId = SelectedDepartment.Id,
+                Title = Title,
+                Description = TaskDescription,
+                DateDue = DateDue,
+                PercentageDone = 0,
+                IsDone = false,
+                DateCreated = DateTime.UtcNow,
+            };
 
+            await _events.PublishOnCurrentThreadAsync(new PostTaskEvent(), new CancellationToken());
+            await _taskEndpoint.PostTask(newTask);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
 }

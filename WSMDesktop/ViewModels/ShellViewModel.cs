@@ -11,7 +11,7 @@ using WSMDesktop.EventModels;
 
 namespace WSMDesktop.ViewModels;
 
-public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
+public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>, IHandle<PostTaskEvent>
 {
     private readonly IEventAggregator _events;
     private readonly ILoggedInUserModel _user;
@@ -74,5 +74,10 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
         await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
         NotifyOfPropertyChange(() => IsLoggedIn);
         NotifyOfPropertyChange(() => IsLoggedOut);
+    }
+
+    public async Task HandleAsync(PostTaskEvent message, CancellationToken cancellationToken)
+    {
+        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
     }
 }
