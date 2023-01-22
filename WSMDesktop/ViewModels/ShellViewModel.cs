@@ -52,7 +52,7 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
 
     public async Task LogIn()
     {
-        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
     }
 
     public async Task LogOut()
@@ -71,7 +71,7 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
 
     public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
     {
-        await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
         NotifyOfPropertyChange(() => IsLoggedIn);
         NotifyOfPropertyChange(() => IsLoggedOut);
     }

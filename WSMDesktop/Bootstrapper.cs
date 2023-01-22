@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using UI.Library.API;
 using UI.Library.Models;
 using WSMDesktop.Helpers;
+using WSMDesktop.Models;
 using WSMDesktop.ViewModels;
 using WSMDesktop.Views;
 
@@ -28,7 +30,19 @@ public class Bootstrapper : BootstrapperBase
             "PasswordChanged");
 	}
 
-    private IConfiguration AddConfiguration()
+    private static IMapper ConfigureAutoMapper()
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<CompanyModel, CompanyDisplayModel>();
+            cfg.CreateMap<DepartmentModel, DepartmentDisplayModel>();
+        });
+
+        var output = config.CreateMapper();
+        return output;
+    }
+
+    private static IConfiguration AddConfiguration()
     {
         IConfigurationBuilder builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -42,6 +56,8 @@ public class Bootstrapper : BootstrapperBase
 
     protected override void Configure()
     {
+        _container.Instance(ConfigureAutoMapper());
+
         _container.Instance(_container)
             .PerRequest<ICompanyEndpoint, CompanyEndpoint>()
             .PerRequest<IDepartmentEndpoint, DepartmentEndpoint>()
