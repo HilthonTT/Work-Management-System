@@ -7,5 +7,5 @@ begin
 
 	select [Id], [JobName], [Description], [DepartmentId]
 	from dbo.JobTitle
-	where JobName = @JobName
+	where JobName LIKE @JobName
 end

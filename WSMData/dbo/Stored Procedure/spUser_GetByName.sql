@@ -8,5 +8,5 @@ begin
 
 	select *
 	from [dbo].[User]
-	where FirstName = @FirstName and LastName = @LastName
+	where FirstName LIKE @FirstName and LastName LIKE @LastName
 end

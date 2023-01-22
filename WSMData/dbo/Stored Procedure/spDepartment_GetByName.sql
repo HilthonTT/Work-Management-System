@@ -5,7 +5,7 @@ AS
 begin
 	set nocount on;
 
-	select *
+	select [Id], [CompanyId], [DepartmentName], [ChairPersonId], [Budget], [Description], [CreatedDate]
 	from dbo.Department
-	WHERE DepartmentName = @DepartmentName
+	WHERE DepartmentName LIKE @DepartmentName
 end

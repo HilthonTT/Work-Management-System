@@ -8,5 +8,5 @@ begin
 
 	select [Id], [CompanyName], [PhoneNumber], [NumberOfEmployees], [ChairPersonId], [Description], [Revenue], [StockPrices], [DateFounded] 
 	from dbo.Company
-	where CompanyName = @CompanyName
+	where CompanyName LIKE @CompanyName
 end
