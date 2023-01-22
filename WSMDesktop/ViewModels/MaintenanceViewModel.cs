@@ -36,7 +36,6 @@ public class MaintenanceViewModel : Screen
         _taskEndpoint = taskEndpoint;
     }
 
-
     protected override async void OnViewLoaded(object view)
     {
         base.OnViewLoaded(view);
