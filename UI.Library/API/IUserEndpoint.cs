@@ -10,6 +10,5 @@ namespace UI.Library.API
         Task<Dictionary<string, string>> GetAllRoles();
         Task RemoveUserFromRole(string userId, string roleName);
         Task UpdateUser(UserModel model);
-        Task UpdateUserAge(UserModel user, int Age);
     }
 }

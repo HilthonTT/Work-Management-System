@@ -98,26 +98,6 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task UpdateUserAge(UserModel user, int Age)
-    {
-        var data = new
-        {
-            Id = user.Id,
-            Age = Age,
-        };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/UpdateUserAge", data);
-        if (response.IsSuccessStatusCode)
-        {
-            _logger.LogInformation("The user of Id {userId} has been updated", data.Id);
-        }
-        else
-        {
-            throw new Exception(response.ReasonPhrase);
-        }
-    }
-    
-
     public async Task AddUserToRole(string userId, string roleName)
     {
         var data = new { userId, roleName };
