@@ -120,4 +120,10 @@ public class LoginViewModel : Screen
 			ErrorMessage = ex.Message;
 		}
 	}
+
+	public async Task Register()
+	{
+		await _events.PublishOnCurrentThreadAsync(new OpeningRegisterPageEvent(), new CancellationToken());
+	}
+
 }

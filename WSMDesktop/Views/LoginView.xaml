@@ -15,6 +15,7 @@
             <RowDefinition Height="100" />
             <RowDefinition />
             <RowDefinition />
+            
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -118,10 +119,46 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
+        
+        <!-- Register Button -->
+        <Button x:Name="Register" Content="Register"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="0 0 0 140"
+                FontSize="24"
+                Grid.RowSpan="2">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#555555" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="150" Height="45"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        
+        <!-- Error Message -->
 
         <TextBlock x:Name="ErrorMessage"
                    Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
-                   Grid.Row="3"
+                   Grid.Row="4"
                    Grid.Column="1"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
@@ -134,6 +171,5 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-
     </Grid>
 </UserControl>

@@ -11,7 +11,9 @@ using WSMDesktop.EventModels;
 
 namespace WSMDesktop.ViewModels;
 
-public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>, IHandle<PostTaskEvent>
+public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>, 
+    IHandle<PostTaskEvent>, 
+    IHandle<OpeningRegisterPageEvent>
 {
     private readonly IEventAggregator _events;
     private readonly ILoggedInUserModel _user;
@@ -79,5 +81,10 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>, IHandle<Po
     public async Task HandleAsync(PostTaskEvent message, CancellationToken cancellationToken)
     {
         await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
+    }
+
+    public async Task HandleAsync(OpeningRegisterPageEvent message, CancellationToken cancellationToken)
+    {
+        await ActivateItemAsync(IoC.Get<RegisterViewModel>(), new CancellationToken());
     }
 }
