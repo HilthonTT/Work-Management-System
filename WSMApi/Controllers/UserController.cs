@@ -88,6 +88,22 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    [Route("UpdateUserAge")]
+    [Authorize]
+    public void UpdateUserAge(UserModel user, int Age)
+    {
+        try
+        {
+            _userData.UpdateAge(user, Age);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+        }
+    }
+
+
+    [HttpPost]
     [Authorize]
     [Route("CreateRoles")]
     public async Task CreateRole(string roleName)

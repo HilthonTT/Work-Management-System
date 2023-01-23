@@ -47,4 +47,9 @@ public class UserData : IUserData
     {
         _sql.SaveData("dbo.spUser_Update", user, "WSMData");
     }
+
+    public void UpdateAge(UserModel user, int Age)
+    {
+        _sql.SaveData("dbo.spUser_UpdateAge", new { Id = user.Id, Age }, "WSMData");
+    }
 }

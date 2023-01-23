@@ -74,6 +74,50 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
+    public async Task UpdateUser(UserModel model)
+    {
+        var data = new
+        {
+            model.FirstName,
+            model.LastName,
+            model.EmailAddress,
+            model.PhoneNumber,
+            model.Age,
+            model.DepartmentId,
+            model.JobTitleId,
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/UpdateUser", data);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The user of name {firstName} {lastName} of {userId} has been updated", data.FirstName, data.LastName, model.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
+    public async Task UpdateUserAge(UserModel user, int Age)
+    {
+        var data = new
+        {
+            Id = user.Id,
+            Age = Age,
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/UpdateUserAge", data);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The user of Id {userId} has been updated", data.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+    
+
     public async Task AddUserToRole(string userId, string roleName)
     {
         var data = new { userId, roleName };
