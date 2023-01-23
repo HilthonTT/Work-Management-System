@@ -5,10 +5,10 @@
     [LastName] NVARCHAR(100) NOT NULL, 
     [EmailAddress] NVARCHAR(MAX) NOT NULL, 
     [PhoneNumber] NVARCHAR(50) NOT NULL, 
-    [Age] INT NOT NULL, 
+    [DateOfBirth] DATETIME2 NOT NULL, 
     [DepartmentId] INT NULL, 
     [JobTitleId] INT NULL, 
     [CreatedDate] DATETIME2 NOT NULL DEFAULT getutcdate(), 
-    CONSTRAINT [FK_User_ToDepartment] FOREIGN KEY (DepartmentId) REFERENCES Department(Id), 
-    CONSTRAINT [FK_User_ToJobTitle] FOREIGN KEY (JobTitleId) REFERENCES JobTitle(Id)
+    CONSTRAINT [FK_User_ToDepartment] FOREIGN KEY (DepartmentId) REFERENCES Department(Id) ON DELETE CASCADE, 
+    CONSTRAINT [FK_User_ToJobTitle] FOREIGN KEY (JobTitleId) REFERENCES JobTitle(Id) ON DELETE CASCADE
 )

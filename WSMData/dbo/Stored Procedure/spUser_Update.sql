@@ -4,7 +4,7 @@
 	@LastName nvarchar(100),
 	@EmailAddress nvarchar(MAX),
 	@PhoneNumber nvarchar(50),
-	@Age int,
+	@DateOfBirth datetime2,
 	@DepartmentId int,
 	@JobTitleId int,
 	@CreatedDate datetime2
@@ -17,7 +17,7 @@ begin
 	LastName = @LastName,
 	EmailAddress = @EmailAddress,
 	PhoneNumber = @PhoneNumber,
-	Age = @Age,
+	DateOfBirth = @DateOfBirth,
 	DepartmentId = @DepartmentId,
 	JobTitleId = @JobTitleId,
 	CreatedDate = @CreatedDate

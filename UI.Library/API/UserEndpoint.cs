@@ -56,7 +56,7 @@ public class UserEndpoint : IUserEndpoint
             model.LastName,
             model.EmailAddress,
             model.PhoneNumber,
-            model.Age,
+            model.DateOfBirth,
             model.DepartmentId,
             model.JobTitleId,
             model.Password
@@ -82,7 +82,7 @@ public class UserEndpoint : IUserEndpoint
             model.LastName,
             model.EmailAddress,
             model.PhoneNumber,
-            model.Age,
+            model.DateOfBirth,
             model.DepartmentId,
             model.JobTitleId,
         };

@@ -27,8 +27,8 @@ public class CreateUserModel
     public string PhoneNumber { get; set; }
 
     [Required]
-    [DisplayName("Age")]
-    public int Age { get; set; }
+    [DisplayName("Date Of Birth")]
+    public DateTime DateOfBirth { get; set; }
 
     [Required]
     public int DepartmentId { get; set; }

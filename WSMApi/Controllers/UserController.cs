@@ -126,7 +126,7 @@ public class UserController : ControllerBase
         string LastName,
         string EmailAddress,
         string PhoneNumber,
-        int Age,
+        DateTime DateOfBirth,
         int DepartmentId,
         int JobTitleId,
         string Password);
@@ -167,7 +167,7 @@ public class UserController : ControllerBase
                         LastName = user.LastName,
                         EmailAddress = user.EmailAddress,
                         PhoneNumber = user.PhoneNumber,
-                        Age = user.Age,
+                        DateOfBirth = user.DateOfBirth,
                         DepartmentId = user.DepartmentId,
                         JobTitleId = user.JobTitleId,
                     };
@@ -202,7 +202,7 @@ public class UserController : ControllerBase
                 LastName = user.LastName,
                 EmailAddress = user.EmailAddress,
                 PhoneNumber = user.PhoneNumber,
-                Age = user.Age,
+                DateOfBirth = user.DateOfBirth,
                 DepartmentId = user.DepartmentId,
                 JobTitleId = user.JobTitleId,
                 CreatedDate = user.CreatedDate

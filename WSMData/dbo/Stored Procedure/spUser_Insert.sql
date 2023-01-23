@@ -4,7 +4,7 @@
 	@LastName nvarchar(100),
 	@EmailAddress nvarchar(MAX),
 	@PhoneNumber nvarchar(50),
-	@Age int,
+	@DateOfBirth datetime2,
 	@DepartmentId int,
 	@JobTitleId int,
 	@CreatedDate datetime2
@@ -13,6 +13,6 @@ AS
 begin
 	set nocount on;
 
-	insert into [dbo].[User] (Id, FirstName, LastName, EmailAddress, PhoneNumber, Age, DepartmentId, JobTitleId, CreatedDate)
-	values (@Id, @FirstName, @LastName, @EmailAddress, @PhoneNumber, @Age, @DepartmentId, @JobTitleId, @CreatedDate)
+	insert into [dbo].[User] (Id, FirstName, LastName, EmailAddress, PhoneNumber, DateOfBirth, DepartmentId, JobTitleId, CreatedDate)
+	values (@Id, @FirstName, @LastName, @EmailAddress, @PhoneNumber, @DateOfBirth, @DepartmentId, @JobTitleId, @CreatedDate)
 end
