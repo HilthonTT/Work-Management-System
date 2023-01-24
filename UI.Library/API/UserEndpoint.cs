@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ public class UserEndpoint : IUserEndpoint
                      ILogger<UserEndpoint> logger)
     {
         _apiHelper = apiHelper;
-        _logger = logger;
+        _logger = logger ?? NullLogger<UserEndpoint>.Instance;
     }
 
     public async Task<List<UserModel>> GetAll()
