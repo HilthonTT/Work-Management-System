@@ -111,8 +111,8 @@ public class UserController : ControllerBase
         string EmailAddress,
         string PhoneNumber,
         DateTime DateOfBirth,
-        int DepartmentId,
-        int JobTitleId,
+        int? DepartmentId,
+        int? JobTitleId,
         string Password);
 
     [AllowAnonymous]

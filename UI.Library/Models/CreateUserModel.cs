@@ -31,10 +31,10 @@ public class CreateUserModel
     public DateTime DateOfBirth { get; set; }
 
     [Required]
-    public int DepartmentId { get; set; }
+    public int? DepartmentId { get; set; } = null;
 
     [Required]
-    public int JobTitleId { get; set; }
+    public int? JobTitleId { get; set; } = null;
 
     [Required]
     public string Password { get; set; }

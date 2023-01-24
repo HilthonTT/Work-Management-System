@@ -14,7 +14,7 @@ public class UserModel
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public int DepartmentId { get; set; }
-    public int JobTitleId { get; set; }
+    public int? DepartmentId { get; set; }
+    public int? JobTitleId { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 }
