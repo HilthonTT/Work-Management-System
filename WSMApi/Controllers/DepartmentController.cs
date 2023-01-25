@@ -38,7 +38,7 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("InsertDepartment")]
     public void InsertDepartment(DepartmentModel department)
     {
@@ -46,7 +46,7 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("UpdateDepartment")]
     public void UpdateDepartment(DepartmentModel department) 
     { 

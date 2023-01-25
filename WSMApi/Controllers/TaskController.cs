@@ -59,7 +59,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("InsertTask")]
     public void InsertTask(TaskModel task)
     {
@@ -75,7 +75,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("UpdateTask")]
     public void UpdateTask(TaskModel task) 
     {

@@ -94,7 +94,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    [Route("CreateRoles")]
+    [Route("Admin/CreateRole")]
     public async Task CreateRole(string roleName)
     {
         IdentityRole identityRole = new()
@@ -172,7 +172,7 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("Admin/GetAllUsers")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public List<ApplicationUserModel> GetAllUsers()
     {
         List<ApplicationUserModel> output = new();
@@ -206,7 +206,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/GetAllRoles")]
     public Dictionary<string, string> GetAllRoles()
     {
@@ -216,7 +216,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/AddUserToRole")]
     public async Task AddUserToRole(UserRolePairModel pairing)
     {
@@ -231,7 +231,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/RemoveUserFromRole")]
     public async Task RemoveUserFromRole(UserRolePairModel pairing)
     {

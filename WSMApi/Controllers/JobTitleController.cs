@@ -39,7 +39,7 @@ public class JobTitleController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("InsertJobTitle")]
     public void InsertJobTitle(JobTitleModel jobTitle)
     {
@@ -47,7 +47,7 @@ public class JobTitleController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("UpdateJobTitle")]
     public void UpdateJobTitle(JobTitleModel jobTitle)
     {

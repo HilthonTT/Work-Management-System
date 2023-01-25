@@ -38,7 +38,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("InsertCompany")]
     public void InsertCompany(CompanyModel company)
     {
@@ -46,7 +46,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("UpdateCompany")]
     public void UpdateCompany(CompanyModel company)
     {
