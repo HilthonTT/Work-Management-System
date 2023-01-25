@@ -14,8 +14,8 @@ public class LoggedInUserModel : ILoggedInUserModel
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
     public int Age { get; set; }
-    public int DepartmentId { get; set; }
-    public int JobTitleId { get; set; }
+    public int? DepartmentId { get; set; }
+    public int? JobTitleId { get; set; }
     public DateTime CreatedDate { get; set; }
 
     public void ResetUserModel()
