@@ -119,6 +119,24 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
+    public async Task CreateRole(string roleName)
+    {
+        var data = new { roleName };
+
+        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/CreateRole", data))
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("The role of name {roleName} has been added to the database", roleName);
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+        }
+    }
+
+
     public async Task AddUserToRole(string userId, string roleName)
     {
         var data = new { userId, roleName };
