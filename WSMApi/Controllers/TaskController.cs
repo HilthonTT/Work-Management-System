@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WSMApi.Library.DataAccess;
 using WSMApi.Library.Models;
 
@@ -32,6 +33,17 @@ public class TaskController : ControllerBase
     {
         return _taskData.GetTaskByUserId(UserId);
     }
+
+    [HttpGet]
+    [Authorize]
+    [Route("GetMyTasks")]
+    public List<TaskModel> GetMyTasks()
+    {
+        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        return _taskData.GetTaskByUserId(userId);
+    }
+
 
     [HttpGet]
     [Authorize]

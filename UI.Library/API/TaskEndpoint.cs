@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using UI.Library.Models;
@@ -35,9 +36,9 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByUserId(string userId)
+    public async Task<List<TaskModel>> GetByUserId()
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByUserId", userId);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Task/GetMyTasks");
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<TaskModel>>();
@@ -80,7 +81,13 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task UpdatePercentage(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTaskPercentage", task);
+        var data = new
+        {
+            Id = task.Id,
+            PercentageDone = task.PercentageDone
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTaskPercentage", data);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of Id ({Id}) has successfully been updated to the database", task.Id);
