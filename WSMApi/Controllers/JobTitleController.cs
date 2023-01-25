@@ -26,12 +26,16 @@ public class JobTitleController : ControllerBase
         return _jobTitleData.GetJobTitles();
     }
 
-    [HttpGet]
+    public record GetJobName(
+        string JobName
+    );
+
+    [HttpPost]
     [Authorize]
     [Route("GetJobTitlesByName")]
-    public List<JobTitleModel> GetJobTitleByName(string JobName)
+    public List<JobTitleModel> GetJobTitleByName(GetJobName jobName)
     {
-        return _jobTitleData.GetJobTitleByName(JobName);
+        return _jobTitleData.GetJobTitleByName(jobName.JobName);
     }
 
     [HttpPost]

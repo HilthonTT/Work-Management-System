@@ -26,12 +26,17 @@ public class TaskController : ControllerBase
         return _taskData.GetTasks();
     }
 
-    [HttpGet]
+    public record GettingUserId 
+    (
+        string UserId
+    );
+
+    [HttpPost]
     [Authorize]
     [Route("GetTasksByUserId")]
-    public List<TaskModel> GetTasksByUserId(string UserId)
+    public List<TaskModel> GetTasksByUserId(GettingUserId user)
     {
-        return _taskData.GetTaskByUserId(UserId);
+        return _taskData.GetTaskByUserId(user.UserId);
     }
 
     [HttpGet]

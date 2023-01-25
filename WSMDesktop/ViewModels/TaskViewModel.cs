@@ -77,7 +77,7 @@ public class TaskViewModel : Screen
 
     public async Task LoadTasks()
     {
-        var taskList = await _taskEndpoint.GetByUserId();
+        var taskList = await _taskEndpoint.GetByUserId(_user.Id);
         var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList);
         Tasks = new BindingList<TaskDisplayModel>(tasks);
     }
@@ -86,7 +86,7 @@ public class TaskViewModel : Screen
     {
         if (_IsFilteredByDone == false)
         {
-            var taskList = await _taskEndpoint.GetByUserId();
+            var taskList = await _taskEndpoint.GetByUserId(_user.Id);
             var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList);
             var tasksIsDone = tasks.Where(x => x.IsDone).ToList();
             Tasks = new BindingList<TaskDisplayModel>(tasksIsDone);

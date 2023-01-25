@@ -25,12 +25,16 @@ public class DepartmentController : ControllerBase
         return _departmentData.GetDepartments();
     }
 
-    [HttpGet]
+    public record GetDepartmentName(
+        string DepartmentName
+    );
+
+    [HttpPost]
     [Authorize]
     [Route("GetDepartmentByName")] 
-    public List<DepartmentModel> GetDepartmentsByName(string DepartmentName)
+    public List<DepartmentModel> GetDepartmentsByName(GetDepartmentName departmentName)
     {
-        return _departmentData.GetDepartmentByName(DepartmentName);
+        return _departmentData.GetDepartmentByName(departmentName.DepartmentName);
     }
 
     [HttpPost]

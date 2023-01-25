@@ -35,6 +35,26 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
+
+    public async Task<List<UserModel>> GetById(string Id)
+    {
+        var data = new
+        {
+            Id
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/GetAllUsers", data);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadAsAsync<List<UserModel>>();
+            return result;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
     public async Task<Dictionary<string, string>> GetAllRoles()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/User/Admin/GetAllRoles");

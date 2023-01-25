@@ -6,7 +6,7 @@ namespace UI.Library.API
     {
         Task<List<TaskModel>> GetAll();
         Task<List<TaskModel>> GetByDepartmentId(string departmentId);
-        Task<List<TaskModel>> GetByUserId();
+        Task<List<TaskModel>> GetByUserId(string userId);
         Task PostTask(TaskModel task);
         Task Update(TaskModel task);
         Task UpdatePercentage(TaskModel task);

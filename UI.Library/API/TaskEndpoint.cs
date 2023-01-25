@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,9 +37,14 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByUserId()
+    public async Task<List<TaskModel>> GetByUserId(string UserId)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Task/GetMyTasks");
+        var data = new
+        {
+            UserId = UserId
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByUserId", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<TaskModel>>();

@@ -25,12 +25,16 @@ public class CompanyController : ControllerBase
         return _companyData.GetCompanies();
     }
 
-    [HttpGet]
+    public record GetCompanyName(
+        string CompanyName
+    );
+
+    [HttpPost]
     [Authorize]
     [Route("GetCompanyByName")]
-    public List<CompanyModel> GetCompanyByName(string CompanyName)
+    public List<CompanyModel> GetCompanyByName(GetCompanyName companyName)
     {
-        return _companyData.GetCompanyByName(CompanyName);
+        return _companyData.GetCompanyByName(companyName.CompanyName);
     }
 
     [HttpPost]

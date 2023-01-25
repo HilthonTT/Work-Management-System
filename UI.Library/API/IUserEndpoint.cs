@@ -8,6 +8,7 @@ namespace UI.Library.API
         Task CreateUser(CreateUserModel model);
         Task<List<UserModel>> GetAll();
         Task<Dictionary<string, string>> GetAllRoles();
+        Task<List<UserModel>> GetById(string Id);
         Task RemoveUserFromRole(string userId, string roleName);
         Task UpdateUser(UserModel model);
     }

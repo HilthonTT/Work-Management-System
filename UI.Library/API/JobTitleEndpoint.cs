@@ -35,7 +35,12 @@ public class JobTitleEndpoint : IJobTitleEndpoint
 
     public async Task<List<JobTitleModel>> GetByName(string JobName)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/GetJobTitlesByName", JobName);
+        var data = new
+        {
+            JobName
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/GetJobTitlesByName", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<JobTitleModel>>();

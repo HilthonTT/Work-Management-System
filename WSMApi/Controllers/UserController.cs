@@ -44,19 +44,24 @@ public class UserController : ControllerBase
         return _userData.GetUserById(userId).First();
     }
 
-    [HttpGet]
+
+    public record GetUserId(
+        string userId
+    );
+
+    [HttpPost]
     [Authorize]
     [Route("GetById")]
-    public UserModel GetById(string userId)
+    public UserModel GetById(GetUserId user)
     {
         try
         {
-            return _userData.GetUserById(userId).First();
+            return _userData.GetUserById(user.userId).First();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
             return _userData.GetUserById(userId).First();
         }

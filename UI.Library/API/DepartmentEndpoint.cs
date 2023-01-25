@@ -36,7 +36,12 @@ public class DepartmentEndpoint : IDepartmentEndpoint
 
     public async Task<List<DepartmentModel>> GetByName(string DepartmentName)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Department/GetDepartmentByName");
+        var data = new
+        {
+            DepartmentName
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/GetDepartmentByName", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<DepartmentModel>>();

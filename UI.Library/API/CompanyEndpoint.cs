@@ -37,7 +37,12 @@ public class CompanyEndpoint : ICompanyEndpoint
 
     public async Task<List<CompanyModel>> GetByName(string CompanyName)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyByName", CompanyName);
+        var data = new
+        {
+            CompanyName 
+        };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyByName", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<CompanyModel>>();
