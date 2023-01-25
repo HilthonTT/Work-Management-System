@@ -1,0 +1,299 @@
+﻿<UserControl x:Class="WSMDesktop.Views.TaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WSMDesktop.Views"
+             mc:Ignorable="d" 
+             Background="#282828"
+             FontFamily="Comic Sans MS"
+             Foreground="White"
+             d:DesignHeight="850" d:DesignWidth="1400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Header -->
+        
+        <TextBlock Text="My Tasks" 
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="50" />
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        
+        <!-- Filter Tasks by IsDone == false OR IsDone == true -->
+
+        <Button x:Name="FilterByIsDone" Content="Filter By 'Is Done'"
+                Grid.Row="1"
+                Grid.Column="0"
+                FontSize="24"
+                Grid.RowSpan="2"
+                Margin="0 100 0 0">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#555555" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="230" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+
+        <!-- Tasks List -->
+
+        <ListBox x:Name="Tasks"
+                 Height="120"
+                 SelectedItem="{Binding SelectedTask}"
+                 FontSize="24"
+                 Grid.Row="1"
+                 Grid.Column="0"
+                 Grid.ColumnSpan="3"
+                 Margin="15 0 15 0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding DisplayText}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Displaying Title -->
+
+            <StackPanel Grid.Row="2"
+                    Grid.Column="1">
+            <TextBlock Text="Title:"
+                   HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBlock x:Name="Title"
+                        HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+        
+        <!-- Displaying the Description -->
+
+        <StackPanel Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Grid.RowSpan="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            
+            <TextBlock Text="Description:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBlock x:Name="Description"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+        
+       <!-- Displaying date dued -->
+
+        <StackPanel Grid.Row="4"
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10 0 0 50"
+                    Orientation="Horizontal">
+
+            <TextBlock Text="Date dued: "
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBlock x:Name="DateDue"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Displaying percentage done -->
+
+        <StackPanel Grid.Row="4"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10 0 0 50"
+                    Orientation="Horizontal">
+
+            <TextBlock Text="Percentage Done: "
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBlock x:Name="Percentage"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Displaying Date Created -->
+
+        <StackPanel Grid.Row="4"
+                    Grid.Column="2"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10 0 0 50"
+                    Orientation="Horizontal">
+
+            <TextBlock Text="Task Created On: "
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBlock x:Name="DateCreated"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+        
+        <!-- Setting the percentage for chosen Task -->
+
+        <StackPanel Grid.Row="5"
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+            <TextBox x:Name="PercentageNumber"
+                     Width="250"
+                     Height="70"
+                     Margin="0 0 15 0"
+                     FontSize="24">
+                
+            </TextBox> 
+
+            <Button x:Name="SetPercentage" Content="Set Percentage"
+                FontSize="24"
+                Grid.RowSpan="2">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding SetPercentageButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="200" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>

@@ -16,5 +16,5 @@ public class TaskModel
     public DateTime DateDue { get; set; }
     public int PercentageDone { get; set; }
     public bool IsDone { get; set; }
-    public DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 }

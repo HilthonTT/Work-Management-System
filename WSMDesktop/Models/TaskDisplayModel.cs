@@ -18,11 +18,16 @@ public class TaskDisplayModel
     public bool IsDone { get; set; }
     public DateTime DateCreated { get; set; }
 
+    public string FormattedDateDue()
+    {
+        return DateDue.ToString("dd/MM/yyyy");
+    }
+
     public string DisplayText
     {
         get
         {
-            return $"{Title} dued {DateDue}";
+            return $"{Title} dued {FormattedDateDue()} -- {PercentageDone}%";
         }
     }
 }

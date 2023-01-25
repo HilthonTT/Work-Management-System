@@ -22,7 +22,7 @@ public class LoginViewModel : Screen
         _events = events;
     }
 
-	private string _email;
+	private string _email = "elevate4you9@gmail.com";
 
 	public string Email
 	{
@@ -36,7 +36,7 @@ public class LoginViewModel : Screen
         }
 	}
 
-	private string _password;
+	private string _password = "Pwd12345.";
 
 	public string Password
 	{

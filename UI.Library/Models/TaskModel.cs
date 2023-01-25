@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,5 +17,5 @@ public class TaskModel
     public DateTime DateDue { get; set; }
     public int PercentageDone { get; set; }
     public bool IsDone { get; set; }
-    public DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 }
