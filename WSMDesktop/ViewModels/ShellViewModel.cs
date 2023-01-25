@@ -11,10 +11,12 @@ using WSMDesktop.EventModels;
 
 namespace WSMDesktop.ViewModels;
 
-public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>, 
+public class ShellViewModel : Conductor<object>, 
+    IHandle<LogOnEvent>, 
     IHandle<PostTaskEvent>, 
     IHandle<OpeningRegisterPageEvent>,
-    IHandle<RegisteredEvent>
+    IHandle<RegisteredEvent>,
+    IHandle<UpdatedTaskPercentage>
 {
     private readonly IEventAggregator _events;
     private readonly ILoggedInUserModel _user;
@@ -51,6 +53,16 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>,
         {
             return !IsLoggedIn;
         }
+    }
+
+    public async Task Maintenance()
+    {
+        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
+    }
+
+    public async Task MyTasks()
+    {
+        await ActivateItemAsync(IoC.Get<TaskViewModel>(), new CancellationToken());
     }
 
     public async Task LogIn()
@@ -92,5 +104,10 @@ public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>,
     public async Task HandleAsync(RegisteredEvent message, CancellationToken cancellationToken)
     {
         await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
+    }
+
+    public async Task HandleAsync(UpdatedTaskPercentage message, CancellationToken cancellationToken)
+    {
+        await ActivateItemAsync(IoC.Get<TaskViewModel>(), new CancellationToken());
     }
 }

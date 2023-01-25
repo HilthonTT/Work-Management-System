@@ -27,7 +27,7 @@
               MouseDown="Grid_MouseDown">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="310"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="180"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -50,7 +50,88 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
+            
+            <!-- Maintenance Button -->
 
+            <Button x:Name="Maintenance"
+                    Content="Maintenance"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="10 0 0 0"
+                    Grid.Column="1"
+                    FontSize="24"
+                    Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="TextElement.FontFamily" Value="Comic Sans MS" />
+                        <Setter Property="Background" Value="#121212" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#121212" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="35"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+
+            <!-- My Tasks Button -->
+
+            <Button x:Name="MyTasks"
+                    Content="My Tasks"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="10 0 0 0"
+                    Grid.Column="2"
+                    FontSize="24"
+                    Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="TextElement.FontFamily" Value="Comic Sans MS" />
+                        <Setter Property="Background" Value="#121212" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#121212" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="35"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+
+            <!-- Log In Button -->
 
             <Button x:Name="LogIn"
                     Content="Log In"
@@ -88,6 +169,8 @@
                 </Button.Template>
             </Button>
 
+            <!-- Log Out Button -->
+            
             <Button x:Name="LogOut"
                     Content="Log Out"
                     VerticalAlignment="Center"
@@ -124,6 +207,8 @@
                 </Button.Template>
 
             </Button>
+            
+            <!-- Exit Button -->
 
             <Button x:Name="Exit"
                     Content="Exit"
@@ -163,6 +248,8 @@
             </Button>
         </Grid>
 
+        <!-- It puts the User Control views underneath the Navbar -->
+        
         <ContentControl x:Name="ActiveItem"
                         Margin="20 5 20 20"
                         Grid.ColumnSpan="2"
