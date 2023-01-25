@@ -51,7 +51,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <TextBox x:Name="FirstName"
                  Grid.Row="1"
@@ -65,7 +65,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <TextBox x:Name="LastName"
                  Grid.Row="2"
@@ -79,7 +79,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <TextBox x:Name="EmailAddress"
                  Grid.Row="3"
@@ -93,7 +93,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <TextBox x:Name="PhoneNumber"
                  Grid.Row="4"
@@ -108,7 +108,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <DatePicker x:Name="DateOfBirth"
                      Grid.Row="5"
@@ -123,7 +123,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <PasswordBox x:Name="Password"
                      Grid.Row="6"
@@ -137,7 +137,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Right"
-                   FontSize="30"/>
+                   FontSize="24"/>
 
         <PasswordBox x:Name="ConfirmPassword"
                      Grid.Row="7"
@@ -149,7 +149,8 @@
         <TextBlock Text="Password must contain at least 1 uncharacterized character and at least 6 letters."
                    Grid.Row="6"
                    Grid.Column="3"
-                   Grid.RowSpan="2">
+                   Grid.RowSpan="2"
+                   FontSize="24">
 
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
@@ -165,7 +166,8 @@
                    Grid.Row="9"
                    Grid.Column="1" 
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Center">
+                   HorizontalAlignment="Center"
+                   FontSize="24">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground" Value="Red" />
