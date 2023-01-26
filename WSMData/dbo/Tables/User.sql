@@ -3,7 +3,7 @@
 	[Id] NVARCHAR(128) NOT NULL PRIMARY KEY, 
     [FirstName] NVARCHAR(100) NOT NULL, 
     [LastName] NVARCHAR(100) NOT NULL, 
-    [EmailAddress] NVARCHAR(MAX) NOT NULL, 
+    [EmailAddress] NVARCHAR(255) NOT NULL, 
     [PhoneNumber] NVARCHAR(50) NOT NULL, 
     [DateOfBirth] DATETIME2 NOT NULL, 
     [DepartmentId] INT NULL, 

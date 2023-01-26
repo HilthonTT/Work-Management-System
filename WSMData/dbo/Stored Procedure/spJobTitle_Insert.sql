@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spJobTitle_Insert]
 	@Id int output,
 	@JobName nvarchar(100),
-	@Description nvarchar(MAX),
+	@Description nvarchar(255),
 	@DepartmentId int
 AS
 begin

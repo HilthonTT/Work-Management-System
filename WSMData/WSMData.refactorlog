@@ -35,4 +35,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="DateOfBirth" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="dfd7852c-31f5-478b-bd89-8ca8d2dccb4c" ChangeDateTime="01/26/2023 19:14:00">
+    <Property Name="ElementName" Value="[dbo].[Machine].[Price]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Machine]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PurchasedPrice" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="40e3d534-882c-494d-bc10-f1fbcca111b0" ChangeDateTime="01/26/2023 19:15:42">
+    <Property Name="ElementName" Value="[dbo].[Machine].[EEAN]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Machine]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="European Article Number" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9b28752b-ebee-4a56-8ee3-8809c0da55cd" ChangeDateTime="01/26/2023 19:16:29">
+    <Property Name="ElementName" Value="[dbo].[Machine].[European Article Number]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Machine]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="EuropeanArticleNumber" />
+  </Operation>
 </Operations>

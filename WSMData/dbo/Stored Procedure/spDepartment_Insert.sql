@@ -4,7 +4,7 @@
 	@DepartmentName nvarchar(100),
 	@ChairPersonId nvarchar(128),
 	@Budget money,
-	@Description nvarchar(MAX),
+	@Description nvarchar(255),
 	@CreatedDate datetime2
 AS
 begin

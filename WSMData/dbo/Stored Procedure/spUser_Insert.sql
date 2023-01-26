@@ -2,7 +2,7 @@
 	@Id nvarchar(128),
 	@FirstName nvarchar(100),
 	@LastName nvarchar(100),
-	@EmailAddress nvarchar(MAX),
+	@EmailAddress nvarchar(255),
 	@PhoneNumber nvarchar(50),
 	@DateOfBirth datetime2,
 	@DepartmentId int,

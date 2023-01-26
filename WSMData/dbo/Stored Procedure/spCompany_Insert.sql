@@ -4,7 +4,7 @@
 	@PhoneNumber nvarchar(50),
 	@NumberOfEmployees int,
 	@ChairPersonId nvarchar(128),
-	@Description nvarchar(MAX),
+	@Description nvarchar(255),
 	@Revenue money,
 	@StockPrices money,
 	@DateFounded datetime2

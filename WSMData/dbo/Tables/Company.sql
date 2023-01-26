@@ -5,7 +5,7 @@
     [PhoneNumber] NVARCHAR(50) NOT NULL, 
     [NumberOfEmployees] INT NOT NULL DEFAULT 1, 
     [ChairPersonId] NVARCHAR(128) NULL, 
-    [Description] NVARCHAR(MAX) NOT NULL, 
+    [Description] NVARCHAR(255) NOT NULL, 
     [Revenue] MONEY NOT NULL, 
     [StockPrices] MONEY NOT NULL, 
     [DateFounded] DATETIME2 NOT NULL DEFAULT getutcdate(), 
