@@ -12,7 +12,7 @@ public class CompanyModel
     public string CompanyName { get; set; }
     public string PhoneNumber { get; set; }
     public int NumberOfEmployees { get; set; }
-    public string ChairPersonId { get; set; }
+    public string? ChairPersonId { get; set; }
     public string Description { get; set; }
     public decimal Revenue { get; set; }
     public decimal StockPrices { get; set; }
