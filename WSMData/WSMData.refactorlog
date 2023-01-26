@@ -56,4 +56,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="EuropeanArticleNumber" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="796fd8c5-5d0e-4c06-9b3f-d52a6e14d9c6" ChangeDateTime="01/26/2023 19:30:41">
+    <Property Name="ElementName" Value="[dbo].[Part].[PartModel]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Part]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PartModelName" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="23f21d5d-e9c1-4e85-a7fa-b80d4c647883" ChangeDateTime="01/26/2023 19:31:05">
+    <Property Name="ElementName" Value="[dbo].[Part].[PartModelName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Part]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ModelName" />
+  </Operation>
 </Operations>
