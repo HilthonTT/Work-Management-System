@@ -17,6 +17,7 @@ public class StockData : IStockData
         _sql = sql;
     }
 
+    // All the stored procedures for the Machine Table
     public List<MachineModel> GetMachines()
     {
         var output = _sql.LoadData<MachineModel, dynamic>("dbo.spMachine_GetAll", new { }, "WSMData");
@@ -52,4 +53,43 @@ public class StockData : IStockData
     {
         _sql.SaveData("dbo.spMachine_Delete", new { Id }, "WSMData");
     }
+
+    // All the stored procedures for the Part Table
+
+    public List<PartModel> GetParts()
+    {
+        var output = _sql.LoadData<PartModel, dynamic>("dbo.spPart_GetAll", new { }, "WSMData");
+
+        return output;
+    }
+
+    public List<PartModel> GetPartByModelName(string ModelName)
+    {
+        var output = _sql.LoadData<PartModel, dynamic>("dbo.spPart_GetByModelName", new { ModelName }, "WSMData");
+
+        return output;
+    }
+
+    public List<PartModel> GetPartById(int Id)
+    {
+        var output = _sql.LoadData<PartModel, dynamic>("dbo.spPart_GetById", new { Id }, "WSMData");
+
+        return output;
+    }
+
+    public void InsertPart(PartModel part)
+    {
+        _sql.SaveData("dbo.spPart_Insert", part, "WSMData");
+    }
+
+    public void UpdatePart(PartModel part)
+    {
+        _sql.SaveData("dbo.spPart_Update", part, "WSMData");
+    }
+
+    public void DeletePart(int Id)
+    {
+        _sql.SaveData("dbo.spPart_Delete", new { Id }, "WSMData");
+    }
+
 }
