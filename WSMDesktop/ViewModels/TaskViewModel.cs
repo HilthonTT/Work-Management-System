@@ -79,6 +79,7 @@ public class TaskViewModel : Screen
     {
         var taskList = await _taskEndpoint.GetByUserId(_user.Id);
         var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList);
+        tasks = tasks.Where(x => x.IsDone == false).ToList();
         Tasks = new BindingList<TaskDisplayModel>(tasks);
     }
 
@@ -244,6 +245,14 @@ public class TaskViewModel : Screen
             DateCreated = SelectedTask.DateCreated
         };
 
+        if (t.PercentageDone is 100)
+        {
+            t.IsDone = true;
+        }
+        else
+        {
+            t.IsDone = false;
+        }
 
         await _events.PublishOnCurrentThreadAsync(new UpdatedTaskPercentage(), new CancellationToken());
         await _taskEndpoint.UpdatePercentage(t);

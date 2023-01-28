@@ -90,7 +90,8 @@ public class TaskEndpoint : ITaskEndpoint
         var data = new
         {
             Id = task.Id,
-            PercentageDone = task.PercentageDone
+            PercentageDone = task.PercentageDone,
+            IsDone = task.IsDone
         };
 
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTaskPercentage", data);

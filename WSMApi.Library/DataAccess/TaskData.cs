@@ -45,7 +45,7 @@ public class TaskData : ITaskData
 
     public void UpdatePercentage(TaskModel task)
     {
-        _sql.SaveData("dbo.spTask_UpdatePercentage", new { task.Id, task.PercentageDone }, "WSMData");
+        _sql.SaveData("dbo.spTask_UpdatePercentage", new { task.Id, task.PercentageDone, task.IsDone }, "WSMData");
     }
 
     public void UpdateTask(TaskModel task)
