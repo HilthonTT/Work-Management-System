@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UI.Library.Models;
+
+public class PartModel
+{
+    public int Id { get; set; }
+    public string ModelName { get; set; }
+    public int? MachineId { get; set; }
+    public DateTime DatePurchased { get; set; }
+}
