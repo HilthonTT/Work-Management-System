@@ -29,10 +29,10 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("GetMachineByName")]
-    public List<MachineModel> GetMachineByName(string MachineName)
+    [Route("GetMachineByModelName")]
+    public List<MachineModel> GetMachineByModelName(string ModelName)
     {
-        return _stockData.GetMachineByName(MachineName);
+        return _stockData.GetMachineByName(ModelName);
     }
 
     [HttpPost]
@@ -111,6 +111,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
+    [Route("DeletePart")]
     public void DeletePart(int Id)
     {
         _stockData.DeletePart(Id);
