@@ -86,7 +86,7 @@ public class ShellViewModel : Conductor<object>,
 
     public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
     {
-        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<TaskViewModel>(), new CancellationToken());
         NotifyOfPropertyChange(() => IsLoggedIn);
         NotifyOfPropertyChange(() => IsLoggedOut);
     }

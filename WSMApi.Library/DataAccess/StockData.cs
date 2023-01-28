@@ -91,5 +91,4 @@ public class StockData : IStockData
     {
         _sql.SaveData("dbo.spPart_Delete", new { Id }, "WSMData");
     }
-
 }
