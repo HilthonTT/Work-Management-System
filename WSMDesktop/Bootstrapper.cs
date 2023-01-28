@@ -64,6 +64,7 @@ public class Bootstrapper : BootstrapperBase
             .PerRequest<IDepartmentEndpoint, DepartmentEndpoint>()
             .PerRequest<IJobTitleEndpoint, JobTitleEndpoint>()
             .PerRequest<IUserEndpoint, UserEndpoint>()
+            .PerRequest<IStockEndpoint, StockEndpoint>()
             .PerRequest<ITaskEndpoint, TaskEndpoint>();
 
         _container
