@@ -60,6 +60,11 @@ public class ShellViewModel : Conductor<object>,
         await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
     }
 
+    public async Task Stocks()
+    {
+        await ActivateItemAsync(IoC.Get<StockViewModel>(), new CancellationToken());
+    }
+
     public async Task MyTasks()
     {
         await ActivateItemAsync(IoC.Get<TaskViewModel>(), new CancellationToken());

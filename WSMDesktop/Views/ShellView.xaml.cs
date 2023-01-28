@@ -31,5 +31,14 @@ namespace WSMDesktop.Views
                 DragMove();
             }
         }
+        private void MenuItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            AdminMenu.IsSubmenuOpen = true;
+        }
+
+        private void MenuItem_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            AdminMenu.IsSubmenuOpen = false;
+        }
     }
 }
