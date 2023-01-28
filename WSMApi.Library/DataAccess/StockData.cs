@@ -25,9 +25,9 @@ public class StockData : IStockData
         return output;
     }
 
-    public List<MachineModel> GetMachineByName(string MachineName)
+    public List<MachineModel> GetMachineByName(string ModelName)
     {
-        var output = _sql.LoadData<MachineModel, dynamic>("dbo.spMachine_GetByName", new { MachineName }, "WSMData");
+        var output = _sql.LoadData<MachineModel, dynamic>("dbo.spMachine_GetByModelName", new { ModelName }, "WSMData");
 
         return output;
     }
