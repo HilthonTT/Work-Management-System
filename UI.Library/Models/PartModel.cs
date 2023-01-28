@@ -9,6 +9,7 @@ namespace UI.Library.Models;
 public class PartModel
 {
     public int Id { get; set; }
+    public string PartName { get; set; }
     public string ModelName { get; set; }
     public int? MachineId { get; set; }
     public DateTime DatePurchased { get; set; }
