@@ -38,10 +38,7 @@ public class UserEndpoint : IUserEndpoint
 
     public async Task<List<UserModel>> GetById(string Id)
     {
-        var data = new
-        {
-            Id
-        };
+        var data = new { Id };
 
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/GetAllUsers", data);
         if (response.IsSuccessStatusCode)
