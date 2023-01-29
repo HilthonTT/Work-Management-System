@@ -1,0 +1,289 @@
+﻿<UserControl x:Class="WSMDesktop.Views.UserRolesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WSMDesktop.Views"
+             mc:Ignorable="d"
+             FontFamily="Comic Sans MS"
+             Foreground="White"
+             Background="#282828"
+             FontSize="24"
+             d:DesignHeight="850" d:DesignWidth="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Header -->
+
+        <TextBlock Text="User Management"
+                   FontSize="50"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="2"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+        
+        <!-- List of Users -->
+
+        <StackPanel Grid.Row="1"
+                    Grid.RowSpan="4">
+
+            <TextBlock Text="Users"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+            <ListBox x:Name="Users"
+                 Margin="10 0 0 0"
+                 Height="530"
+                 SelectedItem="{Binding SelectedUser}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding FullName}" />
+                            <TextBlock Text="{Binding JobList}" />
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding RoleList}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Selected User Name -->
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+
+            <TextBlock Text="Selected User's Name: " />
+            
+            <TextBlock x:Name="SelectedUserName"
+                       Text="Arthur Morgan"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+        
+        <!-- Current Roles  -->
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0 50 0 0"
+                    Grid.ColumnSpan="2">
+            <TextBlock Text="Current Roles"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   HorizontalAlignment="Center"/>
+            <ComboBox x:Name="UserRoles"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Height="60"
+                  Margin="10"/>
+        </StackPanel>
+
+        <!-- Available Roles -->
+
+        <StackPanel Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="0 50 0 0"
+                    Grid.ColumnSpan="2">
+            <TextBlock Text="Available Roles"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   HorizontalAlignment="Center" />
+            
+            <ComboBox x:Name="AvailableRoles"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Height="60"
+                  Margin="10"/>
+        </StackPanel>
+
+        <!-- Current Jobs -->
+
+        <StackPanel Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="0 50 0 0"
+                    Grid.ColumnSpan="2">
+            <TextBlock Text="Current Jobs"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   HorizontalAlignment="Center" />
+
+            <ComboBox x:Name="UserJobs"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Height="60"
+                  Margin="10"/>
+        </StackPanel>
+
+        <!-- Available Jobs -->
+
+        <StackPanel Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="0 50 0 0"
+                    Grid.ColumnSpan="2">
+            <TextBlock Text="Available Jobs"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   HorizontalAlignment="Center" />
+
+            <ComboBox x:Name="AvailableJobs"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Height="60"
+                  Margin="10"/>
+        </StackPanel>
+        
+        <!-- Add Selected Role Button -->
+
+        <Button x:Name="AddSelectedRole"
+                    Content="Add Selected Role"
+                    Foreground="White"
+                    FontWeight="Medium"
+                Grid.Row="1"
+                Grid.Column="4">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#555555" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <!-- Remove Selected Role Button -->
+
+        <Button x:Name="RemoveSelectedRole"
+                    Content="Remove Selected Role"
+                    Foreground="White"
+                    FontWeight="Medium"
+                Grid.Row="2"
+                Grid.Column="4">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#555555" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        
+        <!-- Add Selected Job Title -->
+
+        <Button x:Name="AddSelectedJob"
+                    Content="Add Selected Job"
+                    Foreground="White"
+                    FontWeight="Medium"
+                Grid.Row="3"
+                Grid.Column="4">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#555555" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <!-- Remove Selected Job Title -->
+
+        <Button x:Name="RemoveSelectedJob"
+                    Content="Remove Selected Job"
+                    Foreground="White"
+                    FontWeight="Medium"
+                Grid.Row="4"
+                Grid.Column="4">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#555555" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+    </Grid>
+</UserControl>
