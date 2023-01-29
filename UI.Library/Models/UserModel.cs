@@ -36,4 +36,12 @@ public class UserModel
             return string.Join(", ", JobTitles.Select(x => x.JobName));
         }
     }
+
+    public string FullName
+    {
+        get
+        {
+            return $"{FirstName} {LastName} ";
+        }
+    }
 }
