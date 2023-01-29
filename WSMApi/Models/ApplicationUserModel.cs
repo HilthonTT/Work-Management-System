@@ -1,4 +1,6 @@
-﻿namespace WSMApi.Models;
+﻿using WSMApi.Library.Models;
+
+namespace WSMApi.Models;
 
 public class ApplicationUserModel
 {
@@ -13,4 +15,5 @@ public class ApplicationUserModel
     public DateTime CreatedDate { get; set; }
 
     public Dictionary<string, string> Roles { get; set; } = new();
+    public List<JobTitleModel> JobTitles { get; set; } = new();
 }

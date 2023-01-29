@@ -19,18 +19,21 @@ public class UserController : ControllerBase
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserData _userData;
+    private readonly IJobTitleData _jobTitleData;
     private readonly ILogger<UserController> _logger;
 
     public UserController(ApplicationDbContext context,
 					   UserManager<IdentityUser> userManager,
 					   RoleManager<IdentityRole> roleManager,
 					   IUserData userData,
+                       IJobTitleData jobTitleData,
 					   ILogger<UserController> logger)
 	{
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
         _userData = userData;
+        _jobTitleData = jobTitleData;
         _logger = logger;
     }
 
@@ -198,6 +201,7 @@ public class UserController : ControllerBase
             };
 
             u.Roles = userRoles.Where(x => x.UserId == u.Id).ToDictionary(key => key.RoleId, val => val.Name);
+            u.JobTitles = _jobTitleData.GetJobTitles().Where(x => x.Id == u.JobTitleId).ToList();
 
             output.Add(u);
         }
