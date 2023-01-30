@@ -96,6 +96,22 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    [Route("Admin/UpdateUserJobId")]
+    [Authorize(Roles = "Admin")]
+    public async Task UpdateUserJobTitleId(UserModel user)
+    {
+        try
+        {
+            _userData.UpdateJobTitleId(user);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+        }
+    }
+
+
+    [HttpPost]
     [Authorize]
     [Route("Admin/CreateRole")]
     public async Task CreateRole(string roleName)

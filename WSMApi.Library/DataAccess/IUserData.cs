@@ -9,5 +9,6 @@ public interface IUserData
     List<UserModel> GetUsers();
     void InsertUser(UserModel user);
     void UpdateAge(UserModel user, int Age);
+    void UpdateJobTitleId(UserModel user);
     void UpdateUser(UserModel user);
 }

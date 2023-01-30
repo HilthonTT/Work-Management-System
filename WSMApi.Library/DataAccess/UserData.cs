@@ -52,4 +52,9 @@ public class UserData : IUserData
     {
         _sql.SaveData("dbo.spUser_UpdateAge", new { Id = user.Id, Age }, "WSMData");
     }
+
+    public void UpdateJobTitleId(UserModel user)
+    {
+        _sql.SaveData("dbo.spUser_UpdateJobId", new { user.Id, user.JobTitleId }, "WSMData");
+    }
 }
