@@ -17,7 +17,7 @@ using WSMDesktop.Models;
 
 namespace WSMDesktop.ViewModels;
 
-public class MaintenanceViewModel : Screen
+public class AdminMaintenanceViewModel : Screen
 {
     private readonly IEventAggregator _events;
     private readonly IWindowManager _window;
@@ -29,7 +29,7 @@ public class MaintenanceViewModel : Screen
     private readonly ITaskEndpoint _taskEndpoint;
     private readonly StatusViewModel _status;
 
-    public MaintenanceViewModel(IEventAggregator events,       
+    public AdminMaintenanceViewModel(IEventAggregator events,       
                                 IWindowManager window,
                                 IMapper mapper,
                                 ICompanyEndpoint companyEndpoint,

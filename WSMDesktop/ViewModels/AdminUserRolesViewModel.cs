@@ -12,14 +12,14 @@ using UI.Library.Models;
 
 namespace WSMDesktop.ViewModels;
 
-public class UserRolesViewModel : Screen
+public class AdminUserRolesViewModel : Screen
 {
     private readonly IUserEndpoint _userEndpoint;
     private readonly IJobTitleEndpoint _jobEndpoint;
     private readonly IWindowManager _window;
     private readonly StatusViewModel _status;
 
-    public UserRolesViewModel(IUserEndpoint userEndpoint,
+    public AdminUserRolesViewModel(IUserEndpoint userEndpoint,
 						   IJobTitleEndpoint jobEndpoint,
 						   IWindowManager window,
 						   StatusViewModel status)

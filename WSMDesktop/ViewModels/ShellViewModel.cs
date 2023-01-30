@@ -57,7 +57,7 @@ public class ShellViewModel : Conductor<object>,
 
     public async Task Maintenance()
     {
-        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<AdminMaintenanceViewModel>(), new CancellationToken());
     }
 
     public async Task Stocks()
@@ -67,7 +67,7 @@ public class ShellViewModel : Conductor<object>,
 
     public async Task Users()
     {
-        await ActivateItemAsync(IoC.Get<UserRolesViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<AdminUserRolesViewModel>(), new CancellationToken());
     }
 
     public async Task MyTasks()
@@ -103,7 +103,7 @@ public class ShellViewModel : Conductor<object>,
 
     public async Task HandleAsync(PostTaskEvent message, CancellationToken cancellationToken)
     {
-        await ActivateItemAsync(IoC.Get<MaintenanceViewModel>(), new CancellationToken());
+        await ActivateItemAsync(IoC.Get<AdminMaintenanceViewModel>(), new CancellationToken());
     }
 
     public async Task HandleAsync(OpeningRegisterPageEvent message, CancellationToken cancellationToken)

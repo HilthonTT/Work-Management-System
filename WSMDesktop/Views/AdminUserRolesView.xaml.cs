@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WSMDesktop.Views
 {
     /// <summary>
-    /// Interaction logic for MaintenanceView.xaml
+    /// Interaction logic for AdminUserRolesView.xaml
     /// </summary>
-    public partial class MaintenanceView : UserControl
+    public partial class AdminUserRolesView : UserControl
     {
-        public MaintenanceView()
+        public AdminUserRolesView()
         {
             InitializeComponent();
         }
