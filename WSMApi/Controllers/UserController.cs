@@ -53,7 +53,7 @@ public class UserController : ControllerBase
     );
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("GetById")]
     public UserModel GetById(GetUserId user)
     {
@@ -73,7 +73,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("UpdateUser")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task UpdateUser(UserModel user)
     {
         try
