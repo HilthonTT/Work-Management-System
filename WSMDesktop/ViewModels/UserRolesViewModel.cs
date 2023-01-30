@@ -158,6 +158,10 @@ public class UserRolesViewModel : Screen
         { 
             _selectedUserRole = value; 
             NotifyOfPropertyChange(() => SelectedUserRole);
+            NotifyOfPropertyChange(() => CanAddSelectedRole);
+            NotifyOfPropertyChange(() => CanRemoveSelectedRole);
+            NotifyOfPropertyChange(() => RemoveSelectedRoleButtonColor);
+            NotifyOfPropertyChange(() => AddSelectedRoleButtonColor);
         }
     }
 
@@ -182,6 +186,10 @@ public class UserRolesViewModel : Screen
         { 
             _selectedAvailableRole = value; 
             NotifyOfPropertyChange(() => SelectedAvailableRole);
+            NotifyOfPropertyChange(() => CanAddSelectedRole);
+            NotifyOfPropertyChange(() => CanRemoveSelectedRole);
+            NotifyOfPropertyChange(() => RemoveSelectedRoleButtonColor);
+            NotifyOfPropertyChange(() => AddSelectedRoleButtonColor);
         }
     }
 
@@ -206,6 +214,10 @@ public class UserRolesViewModel : Screen
         { 
             _selectedUserJob = value; 
             NotifyOfPropertyChange(() => SelectedUserJob);
+            NotifyOfPropertyChange(() => CanAddSelectedJob);
+            NotifyOfPropertyChange(() => CanRemoveSelectedJob);
+            NotifyOfPropertyChange(() => RemoveSelectedJobButtonColor);
+            NotifyOfPropertyChange(() => AddSelectedJobButtonColor);
         }
     }
 
@@ -232,28 +244,148 @@ public class UserRolesViewModel : Screen
         { 
             _selectedAvailableJob = value; 
             NotifyOfPropertyChange(() => SelectedAvailableJob);
+            NotifyOfPropertyChange(() => CanAddSelectedJob);
+            NotifyOfPropertyChange(() => CanRemoveSelectedJob);
+            NotifyOfPropertyChange(() => RemoveSelectedJobButtonColor);
+            NotifyOfPropertyChange(() => AddSelectedJobButtonColor);
+        }
+    }
+
+    public bool CanAddSelectedRole
+    {
+        get
+        {
+            if (SelectedUser is null || SelectedAvailableRole is null)
+                return false;
+
+            return true;
+        }
+    }
+
+    public string AddSelectedRoleButtonColor
+    {
+        get
+        {
+            if (CanAddSelectedRole is true)
+                return "#121212";
+
+            return "Red";
         }
     }
 
 
     public async Task AddSelectedRole()
     {
-        
+        await _userEndpoint.AddUserToRole(SelectedUser.Id, SelectedAvailableRole);
+
+        UserRoles.Add(SelectedAvailableRole);
+        AvailableRoles.Remove(SelectedAvailableRole);
+
+        NotifyOfPropertyChange(() => Users);
+    }
+
+    public bool CanRemoveSelectedRole
+    {
+        get
+        {
+            if (SelectedUser is null || SelectedUserRole is null)
+                return false;
+
+            return true;
+        }
+    }
+
+    public string RemoveSelectedRoleButtonColor
+    {
+        get
+        {
+            if (CanRemoveSelectedRole is true)
+                return "#121212";
+
+            return "Red";
+        }
     }
 
     public async Task RemoveSelectedRole()
     {
+        await _userEndpoint.RemoveUserFromRole(SelectedUser.Id, SelectedUserRole);
 
+        AvailableRoles.Add(SelectedAvailableRole);
+        UserRoles.Remove(SelectedAvailableRole);
+
+        NotifyOfPropertyChange(() => Users);
     }
+
+    public bool CanAddSelectedJob
+    {
+        get
+        {
+            if (SelectedUser is null || SelectedAvailableJob is null)
+                return false;
+
+            return true;
+        }
+    }
+
+    public string AddSelectedJobButtonColor
+    {
+        get
+        {
+            if (CanAddSelectedJob is true)
+                return "#121212";
+
+            return "Red";
+        }
+    }
+
 
     public async Task AddSelectedJob()
     {
+        var updatedUser = SelectedUser;
+        var chosenJob = await _jobEndpoint.GetByName(SelectedAvailableJob);
+        updatedUser.JobTitleId = chosenJob.FirstOrDefault().Id;
 
+        await _userEndpoint.UpdateUserJobTitleId(updatedUser);
+
+        UserJobs.Add(SelectedAvailableJob);
+        AvailableJobs.Remove(SelectedAvailableJob);
+
+        NotifyOfPropertyChange(() => Users);
+    }
+
+    public bool CanRemoveSelectedJob
+    {
+        get
+        {
+            if (SelectedUser is null || SelectedUserJob is null)
+                return false;
+
+            return true;
+        }
+    }
+
+    public string RemoveSelectedJobButtonColor
+    {
+        get
+        {
+            if (CanRemoveSelectedJob is true)
+                return "#121212";
+
+            return "Red";
+        }
     }
 
     public async Task RemoveSelectedJob()
     {
+        var updatedUser = SelectedUser;
+        updatedUser.JobTitleId = null;
 
+        await _userEndpoint.UpdateUserJobTitleId(updatedUser);
+
+        UserJobs.Remove(SelectedAvailableJob);
+        AvailableJobs.Add(SelectedAvailableJob);
+
+        NotifyOfPropertyChange(() => Users);
     }
 
 }

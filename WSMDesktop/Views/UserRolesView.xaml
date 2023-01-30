@@ -159,7 +159,7 @@
                 Grid.Column="4">
             <Button.Style>
                 <Style TargetType="Button">
-                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Background" Value="{Binding AddSelectedRoleButtonColor}" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Cursor" Value="Hand" />
 
@@ -193,7 +193,7 @@
                 Grid.Column="4">
             <Button.Style>
                 <Style TargetType="Button">
-                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Background" Value="{Binding RemoveSelectedRoleButtonColor}" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Cursor" Value="Hand" />
 
@@ -227,7 +227,7 @@
                 Grid.Column="4">
             <Button.Style>
                 <Style TargetType="Button">
-                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Background" Value="{Binding AddSelectedJobButtonColor}" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Cursor" Value="Hand" />
 
@@ -261,7 +261,7 @@
                 Grid.Column="4">
             <Button.Style>
                 <Style TargetType="Button">
-                    <Setter Property="Background" Value="#121212" />
+                    <Setter Property="Background" Value="{Binding RemoveSelectedJobButtonColor}" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Cursor" Value="Hand" />
 

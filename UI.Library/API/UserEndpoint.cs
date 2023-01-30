@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UI.Library.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UI.Library.API;
 
@@ -109,6 +110,21 @@ public class UserEndpoint : IUserEndpoint
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The user of name {firstName} {lastName} of {userId} has been updated", data.FirstName, data.LastName, model.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
+    public async Task UpdateUserJobTitleId(UserModel model)
+    {
+        var data = new { model.Id ,model.JobTitleId };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/UpdateUserJobId", data);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The user of {userId} has been updated", model.Id);
         }
         else
         {

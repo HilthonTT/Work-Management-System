@@ -12,5 +12,6 @@ namespace UI.Library.API
         Task<List<UserModel>> GetById(string Id);
         Task RemoveUserFromRole(string userId, string roleName);
         Task UpdateUser(UserModel model);
+        Task UpdateUserJobTitleId(UserModel model);
     }
 }
