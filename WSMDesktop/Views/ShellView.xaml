@@ -55,12 +55,12 @@
             
             <!-- Maintenance Button -->
 
-            <Button x:Name="Maintenance"
-                    Content="Maintenance"
+            <Button x:Name="Stocks"
+                    Content="Stocks"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Margin="10 0 0 0"
-                    Grid.Column="1"
+                    Margin="0 0 0 0"
+                    Grid.Column="2"
                     FontSize="24"
                     Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Button.Style>
@@ -98,8 +98,8 @@
                     Content="My Tasks"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Margin="10 0 0 0"
-                    Grid.Column="2"
+                    Margin="0 0 0 0"
+                    Grid.Column="1"
                     FontSize="24"
                     Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Button.Style>
@@ -136,9 +136,9 @@
                       Grid.Column="6"
                       Header="Admin"
                       Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-
-                <MenuItem x:Name="Stocks"
-                          Header="_Stocks"
+                
+                <MenuItem x:Name="Users"
+                          Header="_Users"
                           Background="#282828">
                     <MenuItem.Style>
                         <Style TargetType="MenuItem">
@@ -161,8 +161,8 @@
                     </MenuItem.Style>
                 </MenuItem>
 
-                <MenuItem x:Name="Users"
-                          Header="_Users"
+                <MenuItem x:Name="Maintenance"
+                          Header="_Maintenance"
                           Background="#282828">
                     <MenuItem.Style>
                         <Style TargetType="MenuItem">
