@@ -98,7 +98,7 @@ public class UserController : ControllerBase
     [HttpPost]
     [Route("Admin/UpdateUserJobId")]
     [Authorize(Roles = "Admin")]
-    public async Task UpdateUserJobTitleId(UserModel user)
+    public void UpdateUserJobTitleId(UserModel user)
     {
         try
         {
