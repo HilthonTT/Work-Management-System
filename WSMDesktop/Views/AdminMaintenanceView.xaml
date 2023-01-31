@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WSMDesktop.Views"
              Background="#282828"
              FontFamily="Comic Sans MS"
-             Height="850" Width="1400">
+             d:DesignHeight="850" d:DesignWidth="1400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
