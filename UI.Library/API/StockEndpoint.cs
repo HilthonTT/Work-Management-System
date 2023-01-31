@@ -39,6 +39,23 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
+    // Added this method for the WPF AdminStockViewModel so only admin can only access this page
+    // Gives out an error when ViewLoaded.
+    public async Task<List<MachineModel>> GetAllMachinesAdmin()
+    {
+        using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/Admin/GetMachines");
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadAsAsync<List<MachineModel>>();
+
+            return result;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
     public async Task<List<MachineModel>> GetMachineByModelName(string ModelName)
     {
         var data = new { ModelName };
@@ -75,7 +92,7 @@ public class StockEndpoint : IStockEndpoint
 
     public async Task InsertMachine(MachineModel machine)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/InsertMachine", machine);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/InsertMachine", machine);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The machine of ModelName {ModelName} has been added to the database", machine.ModelName);
@@ -88,7 +105,7 @@ public class StockEndpoint : IStockEndpoint
 
     public async Task UpdateMachine(MachineModel machine)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/UpdateMachine", machine);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/UpdateMachine", machine);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The machine of Id {MachineId} has been updated in the database", machine.Id);
@@ -103,7 +120,7 @@ public class StockEndpoint : IStockEndpoint
     {
         var data = new { Id };
 
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/DeleteMachine", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/DeleteMachine", data);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The machine of Id {Id} has been deleted from the database.", data.Id);
@@ -119,6 +136,20 @@ public class StockEndpoint : IStockEndpoint
     public async Task<List<PartModel>> GetAllParts()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/GetParts");
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadAsAsync<List<PartModel>>();
+
+            return result;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+    public async Task<List<PartModel>> GetAllPartsAdmin()
+    {
+        using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/Admin/GetParts");
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<PartModel>>();
@@ -167,7 +198,7 @@ public class StockEndpoint : IStockEndpoint
 
     public async Task InsertPart(PartModel part)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/InsertPart", part);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/InsertPart", part);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The part of ModelName {ModelName} has been added the database", part.ModelName);
@@ -180,7 +211,7 @@ public class StockEndpoint : IStockEndpoint
 
     public async Task UpdatePart(PartModel part)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/DeletePart", part);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/UpdatePart", part);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The part of Id {Id} and of ModelName {ModelName} has been updated in the database", part.Id, part.ModelName);
@@ -195,7 +226,7 @@ public class StockEndpoint : IStockEndpoint
     {
         var data = new { Id };
 
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/InsertPart", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/DeletePart", data);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The part of Id {Id} has been deleted database", data.Id);

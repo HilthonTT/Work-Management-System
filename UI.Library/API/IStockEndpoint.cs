@@ -7,7 +7,9 @@ namespace UI.Library.API
         Task DeleteMachine(int Id);
         Task DeletePart(int Id);
         Task<List<MachineModel>> GetAllMachines();
+        Task<List<MachineModel>> GetAllMachinesAdmin();
         Task<List<PartModel>> GetAllParts();
+        Task<List<PartModel>> GetAllPartsAdmin();
         Task<List<MachineModel>> GetMachineById(int Id);
         Task<List<MachineModel>> GetMachineByModelName(string ModelName);
         Task<List<PartModel>> GetPartById(int Id);

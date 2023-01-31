@@ -20,15 +20,26 @@ public class StockController : ControllerBase
     // Machine Table section
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("GetMachines")]
     public List<MachineModel> GetMachines()
     {
         return _stockData.GetMachines();
     }
 
+    
+    // Added this method for the WPF AdminStockViewModel so only admin can only access this page
+    // Gives out an error when ViewLoaded.
+    [HttpGet]
+    [Authorize]
+    [Route("Admin/GetMachines")]
+    public List<MachineModel> GetMachinesAdmin()
+    {
+        return _stockData.GetMachines();
+    }
+
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("GetMachineByModelName")]
     public List<MachineModel> GetMachineByModelName(string ModelName)
     {
@@ -36,7 +47,7 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("GetMachineById")]
     public List<MachineModel> GetMachineById(int Id)
     {
@@ -45,7 +56,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("InsertMachine")]
+    [Route("Admin/InsertMachine")]
     public void InsertMachine(MachineModel machine)
     {
         _stockData.InsertMachine(machine);
@@ -53,7 +64,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("UpdateMachine")]
+    [Route("Admin/UpdateMachine")]
     public void UpdateMachine(MachineModel machine)
     {
         _stockData.UpdateMachine(machine);
@@ -61,7 +72,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("DeleteMachine")]
+    [Route("Admin/DeleteMachine")]
     public void DeleteMachine(int Id)
     {
         _stockData.DeleteMachine(Id);
@@ -70,15 +81,26 @@ public class StockController : ControllerBase
     // Part Table section
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("GetParts")]
     public List<PartModel> GetParts() 
     {
         return _stockData.GetParts();
     }
 
+
+    // Added this method for the WPF AdminStockViewModel so only admin can only access this page
+    // Gives out an error when ViewLoaded.
+    [HttpGet]
+    [Authorize]
+    [Route("Admin/GetParts")]
+    public List<PartModel> GetPartsAdmin()
+    {
+        return _stockData.GetParts();
+    }
+
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("GetPartByModelName")]
     public List<PartModel> GetPartByModelName(string ModelName)
     {
@@ -86,7 +108,7 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("GetPartById")]
     public List<PartModel> GetPartById(int Id)
     {
@@ -95,7 +117,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("InsertPart")]
+    [Route("Admin/InsertPart")]
     public void InsertPart(PartModel part)
     {
         _stockData.InsertPart(part);
@@ -103,7 +125,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("UpdatePart")]
+    [Route("Admin/UpdatePart")]
     public void UpdatePart(PartModel part)
     {
         _stockData.UpdatePart(part);
@@ -111,7 +133,7 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("DeletePart")]
+    [Route("Admin/DeletePart")]
     public void DeletePart(int Id)
     {
         _stockData.DeletePart(Id);
