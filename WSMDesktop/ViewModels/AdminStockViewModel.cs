@@ -57,11 +57,11 @@ public class AdminStockViewModel : Screen
 
     public async Task LoadAllPart()
     {
-        await _stockEndpoint.GetAllParts();
+        await _stockEndpoint.GetAllPartsAdmin();
     }
 
     public async Task LoadAllMachines()
     {
-        await _stockEndpoint.GetAllMachines();
+        await _stockEndpoint.GetAllMachinesAdmin();
     }
 }

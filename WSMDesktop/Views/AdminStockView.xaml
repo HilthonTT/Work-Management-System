@@ -1,0 +1,229 @@
+﻿<UserControl x:Class="WSMDesktop.Views.AdminStockView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WSMDesktop.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="1400"
+             Background="#282828"
+             FontFamily="Comic Sans MS"
+             Foreground="White"
+             FontSize="18">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Header -->
+
+        <TextBlock Text="Admin Stocks"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="50"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="2"/>
+        
+        <!-- Machine List-->
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.RowSpan="4">
+            
+            <TextBlock Text="Machines" 
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="24"/>
+            
+            <ListBox x:Name="Machines"
+                     Height="530"
+                     SelectedItem="{Binding SelectedMachine}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DisplayText}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Part List-->
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="3"
+                    Grid.RowSpan="4">
+
+            <TextBlock Text="Parts" 
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="24"/>
+
+            <ListBox x:Name="Parts"
+                     Height="530"
+                     SelectedItem="{Binding SelectedPart}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DisplayText}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        
+        <!-- Add Machine Form -->
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.RowSpan="4"
+                    Margin="10 0 10 0">
+
+            <TextBlock Text="Machine Form"
+                       HorizontalAlignment="Center"
+                       FontSize="24" />
+
+            <TextBlock Text="Machine Name"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0"/>
+
+            <TextBox x:Name="MachineName"
+                     Margin="0 10 0 0" 
+                     Height="50" 
+                     FontSize="18"/>
+
+            <TextBlock Text="Model Name"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0" />
+
+            <TextBox x:Name="ModelNameMachine"
+                     Margin="0 10 0 0" 
+                     Height="50" 
+                     FontSize="18"/>
+
+            <TextBlock Text="European Article Number"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0"/>
+
+            <TextBox x:Name="EuropeanArticleNumber"
+                     Margin="0 10 0 0" 
+                     Height="50" 
+                      FontSize="18"/>
+
+            <TextBlock Text="Date Purchased"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0"/>
+
+            <DatePicker x:Name="DatePurchasedMachine"
+                        Margin="0 10 0 0" 
+                        Height="50" 
+                        FontSize="18" />
+
+            <Button x:Name="AddMachine"
+                    Content="Add Machine To DataBase"
+                    Foreground="White"
+                    FontWeight="Medium"
+                    Margin="0 15 0 0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding AddMachineButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+        
+        <!-- Add Part Form -->
+        
+        <!-- PartName, ModelName, MachineId, DatePurchased -->
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="2"
+                    Grid.RowSpan="4">
+
+            <TextBlock Text="Part Form"
+                       HorizontalAlignment="Center"
+                       FontSize="24" />
+
+            <TextBlock Text="Part Name"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0"/>
+
+            <TextBox x:Name="PartName"
+                     Margin="0 10 0 0" 
+                     Height="50" 
+                     FontSize="18"/>
+
+            <TextBlock Text="Model Name"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0" />
+
+            <TextBox x:Name="ModelNamePart"
+                     Margin="0 10 0 0" 
+                     Height="50" 
+                     FontSize="18"/>
+
+            <TextBlock Text="Matching Machine"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0" />
+
+            <TextBlock x:Name="SelectedMachine"
+                         Text="No Machine Selected"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         FontSize="18"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Date Purchased"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0"/>
+
+            <DatePicker x:Name="DatePurchasedPart"
+                        Margin="0 10 0 0" 
+                        Height="50" 
+                        FontSize="18" />
+        </StackPanel>
+    </Grid>
+</UserControl>
