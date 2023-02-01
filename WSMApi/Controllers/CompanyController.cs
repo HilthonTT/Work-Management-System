@@ -52,4 +52,12 @@ public class CompanyController : ControllerBase
     {
         _companyData.UpdateCompany(company);
     }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [Route("DeleteCompany")]
+    public void DeleteCompany(CompanyModel company)
+    {
+        _companyData.DeleteCompany(company);
+    }
 }

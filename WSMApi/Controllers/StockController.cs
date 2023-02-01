@@ -70,12 +70,18 @@ public class StockController : ControllerBase
         _stockData.UpdateMachine(machine);
     }
 
+
+    public record GettingId
+    (
+        int Id
+    );
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("Admin/DeleteMachine")]
-    public void DeleteMachine(int Id)
+    public void DeleteMachine(GettingId model)
     {
-        _stockData.DeleteMachine(Id);
+        _stockData.DeleteMachine(model.Id);
     }
 
     // Part Table section
@@ -99,20 +105,26 @@ public class StockController : ControllerBase
         return _stockData.GetParts();
     }
 
+
+    public record GettingModelName 
+    (
+        string ModelName
+    );
+
     [HttpPost]
     [Authorize]
     [Route("GetPartByModelName")]
-    public List<PartModel> GetPartByModelName(string ModelName)
+    public List<PartModel> GetPartByModelName(GettingModelName model)
     {
-        return _stockData.GetPartByModelName(ModelName);
+        return _stockData.GetPartByModelName(model.ModelName);
     }
 
     [HttpPost]
     [Authorize]
     [Route("GetPartById")]
-    public List<PartModel> GetPartById(int Id)
+    public List<PartModel> GetPartById(GettingId model)
     {
-        return _stockData.GetPartById(Id);
+        return _stockData.GetPartById(model.Id);
     }
 
     [HttpPost]
@@ -134,8 +146,8 @@ public class StockController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("Admin/DeletePart")]
-    public void DeletePart(int Id)
+    public void DeletePart(GettingId model)
     {
-        _stockData.DeletePart(Id);
+        _stockData.DeletePart(model.Id);
     }
 }

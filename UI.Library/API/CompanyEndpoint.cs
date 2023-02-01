@@ -80,4 +80,16 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
+    public async Task DeleteCompany(CompanyModel company)
+    {
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/DeleteCompany", company);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The company of Id ({Id}) has sucessfully been deleted.", company.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
 }
