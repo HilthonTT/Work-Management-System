@@ -12,6 +12,7 @@ public class PartDisplayModel
     public string PartName { get; set; }
     public string ModelName { get; set; }
     public int? MachineId { get; set; }
+    public decimal PurchasedPrice { get; set; }
     public DateTime DatePurchased { get; set; }
 
     public string DisplayText
