@@ -3,13 +3,14 @@
 	@PartName nvarchar(100),
 	@ModelName nvarchar(255),
 	@MachineId int,
+	@PurchasedPrice money,
 	@DatePurchased datetime2
 AS
 begin
 	set nocount on;
 
-	insert dbo.Part(PartName, ModelName, MachineId, DatePurchased)
-	values (@PartName, @ModelName, @MachineId, @DatePurchased)
+	insert dbo.Part(PartName, ModelName, MachineId, DatePurchased, PurchasedPrice)
+	values (@PartName, @ModelName, @MachineId, @DatePurchased, @PurchasedPrice)
 
 	select @Id = SCOPE_IDENTITY()
 end

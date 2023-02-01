@@ -3,6 +3,7 @@
 	@PartName nvarchar(100),
 	@ModelName nvarchar(255),
 	@MachineId int,
+	@PurchasedPrice money,
 	@DatePurchased datetime2
 AS
 begin
@@ -12,6 +13,7 @@ begin
 	PartName = @PartName,
 	ModelName = @ModelName,
 	MachineId = @MachineId,
+	PurchasedPrice = @PurchasedPrice,
 	DatePurchased = @DatePurchased
 
 	where Id = @Id
