@@ -102,6 +102,10 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => SelectedMachine);
             NotifyOfPropertyChange(() => SelectedMachineName);
             NotifyOfPropertyChange(() => CanAddMachine);
+            NotifyOfPropertyChange(() => CanDeleteSelectedMachine);
+            NotifyOfPropertyChange(() => DeleteMachineButtonColor);
+            NotifyOfPropertyChange(() => CanAddPart);
+            NotifyOfPropertyChange(() => AddPartButtonColor);
         }
     }
 
@@ -126,6 +130,8 @@ public class AdminStockViewModel : Screen
         { 
             _selectedPart = value; 
             NotifyOfPropertyChange(() => SelectedPart);
+            NotifyOfPropertyChange(() => CanDeleteSelectedPart);
+            NotifyOfPropertyChange(() => DeletePartButtonColor);
         }
     }
 
@@ -322,6 +328,7 @@ public class AdminStockViewModel : Screen
             DatePurchasedMachine = SqlDateTime.MinValue.Value;
 
             await _stockEndpoint.InsertMachine(machine);
+            await LoadAllMachines();
         }
         else
         {
@@ -389,6 +396,7 @@ public class AdminStockViewModel : Screen
             SelectedMachine = null;
 
             await _stockEndpoint.InsertPart(part);
+            await LoadAllPart();
         }
         else
         {
@@ -400,5 +408,69 @@ public class AdminStockViewModel : Screen
             _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
             await _window.ShowDialogAsync(_status, null, settings);
         }
+    }
+
+    public bool CanDeleteSelectedMachine
+    {
+        get
+        {
+            if (SelectedMachine is not null)
+                return true;
+
+            return false;
+        }
+    }
+
+    public string DeleteMachineButtonColor
+    {
+        get
+        {
+            if (CanDeleteSelectedMachine)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+
+    public async Task DeleteSelectedMachine()
+    {
+        await _stockEndpoint.DeleteMachine(SelectedMachine.Id);
+        Machines.Remove(SelectedMachine);
+    }
+
+
+    public bool CanDeleteSelectedPart
+    {
+        get
+        {
+            if (SelectedPart is not null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public string DeletePartButtonColor
+    {
+        get
+        {
+            if (CanDeleteSelectedPart)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task DeleteSelectedPart()
+    {
+        await _stockEndpoint.DeletePart(SelectedPart.Id);
+        Parts.Remove(SelectedPart);
     }
 }

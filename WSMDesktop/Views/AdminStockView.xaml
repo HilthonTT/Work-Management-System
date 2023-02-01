@@ -39,7 +39,7 @@
 
         <StackPanel Grid.Row="1"
                     Grid.Column="0"
-                    Grid.RowSpan="4">
+                    Grid.RowSpan="5">
             
             <TextBlock Text="Machines" 
                        VerticalAlignment="Center"
@@ -58,13 +58,46 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
+            <!-- Delete Selected Machine Button -->
+            <Button x:Name="DeleteSelectedMachine"
+                    Content="Delete Machine From DataBase"
+                    Foreground="White"
+                    FontWeight="Medium"
+                    Margin="0 15 0 0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding DeleteMachineButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            
         </StackPanel>
 
         <!-- Part List-->
 
         <StackPanel Grid.Row="1"
                     Grid.Column="3"
-                    Grid.RowSpan="4"
+                    Grid.RowSpan="5"
                     Margin="10 0 0 0">
 
             <TextBlock Text="Parts" 
@@ -81,6 +114,40 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
+            <!-- Delete Selected Part -->
+            <Button x:Name="DeleteSelectedPart"
+                    Content="Delete Part From DataBase"
+                    Foreground="White"
+                    FontWeight="Medium"
+                    Margin="0 15 0 0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding DeletePartButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            
+            
         </StackPanel>
         
         <!-- Add Machine Form -->
