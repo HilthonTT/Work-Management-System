@@ -51,7 +51,10 @@
                      SelectedItem="{Binding SelectedMachine}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding DisplayText}" />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding MachineName}" />
+                            <TextBlock Text="{Binding ModelName}" />
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -61,7 +64,8 @@
 
         <StackPanel Grid.Row="1"
                     Grid.Column="3"
-                    Grid.RowSpan="4">
+                    Grid.RowSpan="4"
+                    Margin="10 0 0 0">
 
             <TextBlock Text="Parts" 
                        VerticalAlignment="Center"
@@ -83,7 +87,7 @@
 
         <StackPanel Grid.Row="1"
                     Grid.Column="1"
-                    Grid.RowSpan="4"
+                    Grid.RowSpan="5"
                     Margin="10 0 10 0">
 
             <TextBlock Text="Machine Form"
@@ -113,15 +117,26 @@
                      FontSize="18"/>
 
             <TextBlock Text="European Article Number"
-                       Foreground="LightGray"
-                       HorizontalAlignment="Center"
-                       FontSize="18"
-                       Margin="0 10 0 0"/>
+                    Foreground="LightGray"
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    Margin="0 10 0 0" />
 
             <TextBox x:Name="EuropeanArticleNumber"
-                     Margin="0 10 0 0" 
-                     Height="50" 
-                      FontSize="18"/>
+                    Margin="0 10 0 0" 
+                    Height="50" 
+                    FontSize="18"/>
+
+            <TextBlock Text="Purchased Price"
+                    Foreground="LightGray"
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    Margin="0 10 0 0" />
+
+            <TextBox x:Name="PurchasedPriceMachine"
+                    Margin="0 10 0 0" 
+                    Height="50" 
+                    FontSize="18" />
 
             <TextBlock Text="Date Purchased"
                        Foreground="LightGray"
@@ -168,11 +183,9 @@
         
         <!-- Add Part Form -->
         
-        <!-- PartName, ModelName, MachineId, DatePurchased -->
-
         <StackPanel Grid.Row="1"
                     Grid.Column="2"
-                    Grid.RowSpan="4">
+                    Grid.RowSpan="5">
 
             <TextBlock Text="Part Form"
                        HorizontalAlignment="Center"
@@ -206,13 +219,25 @@
                        FontSize="18"
                        Margin="0 10 0 0" />
 
-            <TextBlock x:Name="SelectedMachine"
+            <TextBlock x:Name="SelectedMachineName"
                          Text="No Machine Selected"
                          Margin="0 10 0 0" 
                          Height="50" 
                          FontSize="18"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Purchased Price"
+                       Foreground="LightGray"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0 10 0 0" />
+
+            <TextBox x:Name="PurchasedPricePart"
+                     Margin="0 10 0 0" 
+                     Height="50" 
+                     FontSize="18" />
+
 
             <TextBlock Text="Date Purchased"
                        Foreground="LightGray"
@@ -224,6 +249,38 @@
                         Margin="0 10 0 0" 
                         Height="50" 
                         FontSize="18" />
+
+            <Button x:Name="AddPart"
+                    Content="Add Part To DataBase"
+                    Foreground="White"
+                    FontWeight="Medium"
+                    Margin="0 15 0 0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding AddPartButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="270" Height="55"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
         </StackPanel>
     </Grid>
 </UserControl>
