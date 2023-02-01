@@ -55,6 +55,12 @@ public class ShellViewModel : Conductor<object>,
         }
     }
 
+    public async Task AdminStock()
+    {
+        await ActivateItemAsync(IoC.Get<AdminStockViewModel>(), new CancellationToken());
+    }
+
+
     public async Task Maintenance()
     {
         await ActivateItemAsync(IoC.Get<AdminMaintenanceViewModel>(), new CancellationToken());
