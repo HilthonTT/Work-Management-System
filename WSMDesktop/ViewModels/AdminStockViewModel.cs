@@ -473,4 +473,56 @@ public class AdminStockViewModel : Screen
         await _stockEndpoint.DeletePart(SelectedPart.Id);
         Parts.Remove(SelectedPart);
     }
+
+
+    private string _searchMachineText;
+
+    public string SearchMachineText
+    {
+        get { return _searchMachineText; }
+        set 
+        {
+            _searchMachineText = value;
+            NotifyOfPropertyChange(() => SearchMachineText);
+            NotifyOfPropertyChange(() => CanSearchMachine);
+            NotifyOfPropertyChange(() => SearchMachineButtonColor);
+        }
+    }
+
+    public bool CanSearchMachine
+    {
+        get
+        {
+            return true;
+        }
+    }
+
+    public string SearchMachineButtonColor
+    {
+        get
+        {
+            if (CanSearchMachine is true)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+
+    public async Task SearchMachine()
+    {
+        if (string.IsNullOrWhiteSpace(SearchMachineText))
+        {
+            await LoadAllMachines();
+        }
+        else
+        {
+            var machineList = await _stockEndpoint.GetMachineByModelName(SearchMachineText);
+            var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
+
+            Machines = new BindingList<MachineDisplayModel>(machines);
+        }
+    }
 }

@@ -38,12 +38,16 @@ public class StockController : ControllerBase
         return _stockData.GetMachines();
     }
 
+    public record GetModelName(
+        string ModelName
+        );
+
     [HttpPost]
     [Authorize]
     [Route("GetMachineByModelName")]
-    public List<MachineModel> GetMachineByModelName(string ModelName)
+    public List<MachineModel> GetMachineByModelName(GetModelName model)
     {
-        return _stockData.GetMachineByName(ModelName);
+        return _stockData.GetMachineByName(model.ModelName);
     }
 
     [HttpPost]
