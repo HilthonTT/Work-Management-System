@@ -489,7 +489,7 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public bool CanSearchMachine
+    public static bool CanSearchMachine
     {
         get
         {
@@ -497,7 +497,7 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public string SearchMachineButtonColor
+    public static string SearchMachineButtonColor
     {
         get
         {
@@ -521,10 +521,65 @@ public class AdminStockViewModel : Screen
         {
             await LoadAllMachines();
 
-            var machineList = Machines.Where(x => x.ModelName.Contains(SearchMachineText)).ToList();
+            var machineList = Machines.Where(x => x.ModelName.Contains(SearchMachineText) || 
+                                             x.MachineName.Contains(SearchMachineText));
+
             var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
 
             Machines = new BindingList<MachineDisplayModel>(machines);
+        }
+    }
+
+    private string _searchPartText;
+
+    public string SearchPartText
+    {
+        get { return _searchPartText; }
+        set 
+        { 
+            _searchPartText = value; 
+            NotifyOfPropertyChange(() => SearchPartText);
+        }
+    }
+
+    public static bool CanSearchPart
+    {
+        get
+        {
+            return true;
+        }
+    }
+
+
+    public static string SearchPartButtonColor
+    {
+        get
+        {
+            if (CanSearchPart is true)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        } 
+    }
+
+    public async Task SearchPart()
+    {
+        if (string.IsNullOrWhiteSpace(SearchPartText))
+        {
+            await LoadAllPart();
+        }
+        else
+        {
+            await LoadAllPart();
+
+            var partList = Parts.Where(x => x.ModelName.Contains(SearchPartText) || 
+                                       x.PartName.Contains(SearchPartText));
+
+            var parts = _mapper.Map<List<PartDisplayModel>>(partList);
+
+            Parts = new BindingList<PartDisplayModel>(parts);
         }
     }
 }

@@ -50,8 +50,8 @@
                      Margin="0 0 0 20"/>
 
             <Button x:Name="SearchMachine"
-                    Content="Search Model"
-                    Width="130"
+                    Content="Search Machine"
+                    Width="150"
                     Height="50"
                     Margin="5 0 0 20">
 
@@ -70,7 +70,7 @@
                 </Button.Style>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
-                        <Border Width="130" Height="50"
+                        <Border Width="150" Height="50"
                             CornerRadius="8"
                             Background="{TemplateBinding Background}">
 
@@ -80,7 +80,6 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
-
         </StackPanel>
 
         <StackPanel Grid.Row="1"
@@ -140,6 +139,55 @@
         </StackPanel>
 
         <!-- Part List-->
+        <StackPanel Grid.Row="0"
+                    Grid.Column="2"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Grid.ColumnSpan="2">
+
+            <Button x:Name="SearchPart"
+                    Content="Search Part"
+                    Width="130"
+                    Height="50"
+                    Margin="0 0 10 20">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding SearchPartButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="130" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <TextBox x:Name="SearchPartText" 
+                     Height="50"
+                     Width="300"
+                     VerticalAlignment="Bottom"
+                     Margin="0 0 0 20"/>
+
+            
+
+        </StackPanel>
+        
 
         <StackPanel Grid.Row="1"
                     Grid.Column="3"
