@@ -519,7 +519,9 @@ public class AdminStockViewModel : Screen
         }
         else
         {
-            var machineList = await _stockEndpoint.GetMachineByModelName(SearchMachineText);
+            await LoadAllMachines();
+
+            var machineList = Machines.Where(x => x.ModelName.Contains(SearchMachineText)).ToList();
             var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
 
             Machines = new BindingList<MachineDisplayModel>(machines);
