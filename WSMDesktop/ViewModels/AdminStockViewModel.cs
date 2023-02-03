@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Dynamic;
-using System.IO.Packaging;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using UI.Library.API;
@@ -99,6 +97,12 @@ public class AdminStockViewModel : Screen
         set 
         { 
             _selectedMachine = value;
+            MachineName = value?.MachineName;
+            ModelNameMachine = value?.ModelName;
+            SelectedMachineName = value?.MachineName ?? "No Machine Selected";
+            EuropeanArticleNumber = value?. EuropeanArticleNumber;
+            PurchasedPriceMachine = value?.PurchasedPrice.ToString();
+            DatePurchasedMachine = value?.DatePurchased;
             NotifyOfPropertyChange(() => SelectedMachine);
             NotifyOfPropertyChange(() => SelectedMachineName);
             NotifyOfPropertyChange(() => CanAddMachine);
@@ -106,6 +110,8 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => DeleteMachineButtonColor);
             NotifyOfPropertyChange(() => CanAddPart);
             NotifyOfPropertyChange(() => AddPartButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateMachine);
+            NotifyOfPropertyChange(() => UpdateMachineButtonColor);
         }
     }
 
@@ -129,9 +135,16 @@ public class AdminStockViewModel : Screen
         set 
         { 
             _selectedPart = value; 
+            PartName = value?.PartName;
+            ModelNamePart = value?.ModelName;
+            PurchasedPricePart = value?.PurchasedPrice.ToString();
+            SelectedMachineName = Machines.Where(x => x.Id == value?.MachineId).FirstOrDefault()?.MachineName;
+            DatePurchasedPart = value?.DatePurchased;
             NotifyOfPropertyChange(() => SelectedPart);
             NotifyOfPropertyChange(() => CanDeleteSelectedPart);
             NotifyOfPropertyChange(() => DeletePartButtonColor);
+            NotifyOfPropertyChange(() => CanUpdatePart);
+            NotifyOfPropertyChange(() => UpdatePartButtonColor);
         }
     }
 
@@ -192,9 +205,9 @@ public class AdminStockViewModel : Screen
     }
 
 
-    private DateTime _datePurchasedMachine = SqlDateTime.MinValue.Value;
+    private DateTime? _datePurchasedMachine = SqlDateTime.MinValue.Value;
 
-    public DateTime DatePurchasedMachine
+    public DateTime? DatePurchasedMachine
     {
         get { return _datePurchasedMachine; }
         set 
@@ -234,17 +247,18 @@ public class AdminStockViewModel : Screen
         }
     }
 
+    private string _selectedMachineName;
+
     public string SelectedMachineName
     {
-        get
-        {
-            if (SelectedMachine is not null)
-                return $"{SelectedMachine.MachineName}";
-
-            else
-                return "No Machine Selected.";
+        get { return _selectedMachineName; }
+        set 
+        { 
+            _selectedMachineName = value; 
+            NotifyOfPropertyChange(() => SelectedMachineName);
         }
     }
+
 
     private string _purchasedPricePart;
 
@@ -261,9 +275,9 @@ public class AdminStockViewModel : Screen
     }
 
 
-    private DateTime _datePurchasedPart = SqlDateTime.MinValue.Value;
+    private DateTime? _datePurchasedPart = SqlDateTime.MinValue.Value;
 
-    public DateTime DatePurchasedPart
+    public DateTime? DatePurchasedPart
     {
         get { return _datePurchasedPart; }
         set 
@@ -318,7 +332,7 @@ public class AdminStockViewModel : Screen
                 ModelName = ModelNameMachine,
                 EuropeanArticleNumber = EuropeanArticleNumber,
                 PurchasedPrice = PurchasedPrice,
-                DatePurchased = DatePurchasedMachine
+                DatePurchased = DatePurchasedMachine.Value
             };
 
             MachineName = "";
@@ -386,7 +400,7 @@ public class AdminStockViewModel : Screen
                 ModelName = ModelNamePart,
                 MachineId = SelectedMachine.Id,
                 PurchasedPrice = purchasedPrice,
-                DatePurchased = DatePurchasedPart
+                DatePurchased = DatePurchasedPart.Value
             };
 
             PartName = "";
@@ -582,4 +596,141 @@ public class AdminStockViewModel : Screen
             Parts = new BindingList<PartDisplayModel>(parts);
         }
     }
+
+    public bool CanUpdateMachine
+    {
+        get
+        {
+            if (SelectedMachine is not null && CanAddMachine is true)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public string UpdateMachineButtonColor
+    {
+        get
+        {
+            if (CanUpdateMachine is true)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task UpdateMachine()
+    {
+        bool isConvertedToDecimal = decimal.TryParse(PurchasedPriceMachine, out var PurchasedPrice);
+
+        if (isConvertedToDecimal is true)
+        {
+            MachineModel machine = new()
+            {
+                Id = SelectedMachine.Id,
+                MachineName = MachineName,
+                ModelName = ModelNameMachine,
+                EuropeanArticleNumber = EuropeanArticleNumber,
+                DatePurchased = DatePurchasedMachine.Value,
+                PurchasedPrice = PurchasedPrice
+            };
+
+            MachineName = "";
+            ModelNameMachine = "";
+            EuropeanArticleNumber = "";
+            DatePurchasedMachine = DateTime.MinValue;
+            PurchasedPriceMachine = "";
+
+            await _stockEndpoint.UpdateMachine(machine);
+            await LoadAllMachines();
+        }
+        else
+        {
+            dynamic settings = new ExpandoObject();
+            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            settings.ResizeMode = ResizeMode.NoResize;
+            settings.Title = "System Error";
+
+            _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
+            await _window.ShowDialogAsync(_status, null, settings);
+        }
+    }
+
+    public bool CanUpdatePart
+    {
+        get
+        {
+            if (SelectedPart is not null &&
+                string.IsNullOrWhiteSpace(SelectedMachineName) == false && 
+                string.IsNullOrWhiteSpace(PartName) == false &&
+                string.IsNullOrWhiteSpace(ModelNamePart) == false &&
+                string.IsNullOrWhiteSpace(PurchasedPricePart) == false &&
+                DatePurchasedPart >= SqlDateTime.MinValue.Value)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public string UpdatePartButtonColor
+    {
+        get
+        {
+            if (CanUpdatePart is true)
+            {
+                return "#121212";
+            }
+
+            else
+            {
+                return "Red";
+            }
+        }
+    }
+
+    public async Task UpdatePart()
+    {
+        bool isConvertedToDecimal = decimal.TryParse(PurchasedPricePart, out var PurchasedPrice);
+
+        if(isConvertedToDecimal is true)
+        {
+            PartModel part = new()
+            {
+                Id = SelectedPart.Id,
+                PartName = PartName,
+                ModelName = ModelNamePart,
+                PurchasedPrice = PurchasedPrice,
+                MachineId = Machines.Where(x => x.MachineName == SelectedMachineName).FirstOrDefault().Id,
+                DatePurchased = DatePurchasedPart.Value
+            };
+
+            MachineName = "";
+            ModelNameMachine = "";
+            EuropeanArticleNumber = "";
+            DatePurchasedMachine = DateTime.MinValue;
+            PurchasedPriceMachine = "";
+
+            await _stockEndpoint.UpdatePart(part);
+            await LoadAllPart();
+        }
+        else
+        {
+            dynamic settings = new ExpandoObject();
+            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            settings.ResizeMode = ResizeMode.NoResize;
+            settings.Title = "System Error";
+
+            _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
+            await _window.ShowDialogAsync(_status, null, settings);
+        }
+
+    }
+
+
 }
