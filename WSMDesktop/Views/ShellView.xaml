@@ -135,6 +135,7 @@
             <MenuItem x:Name="AdminMenu"
                       Grid.Column="6"
                       Header="Admin"
+                      Foreground="LightGray"
                       Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 
                 <MenuItem x:Name="Users"
