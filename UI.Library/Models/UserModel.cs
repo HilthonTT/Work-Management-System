@@ -41,7 +41,7 @@ public class UserModel
     {
         get
         {
-            return $"{FirstName} {LastName} ";
+            return $"{FirstName} {LastName}";
         }
     }
 }
