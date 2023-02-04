@@ -12,14 +12,14 @@ using WSMDesktop.Models;
 
 namespace WSMDesktop.ViewModels;
 
-public class AdminCompanyViewModel : Screen
+public class AdminBranchViewModel : Screen
 {
     private readonly ICompanyEndpoint _companyEndpoint;
     private readonly StatusViewModel _status;
     private readonly IMapper _mapper;
     private readonly IWindowManager _window;
 
-    public AdminCompanyViewModel(ICompanyEndpoint companyEndpoint,
+    public AdminBranchViewModel(ICompanyEndpoint companyEndpoint,
                                  StatusViewModel status,
                                  IMapper mapper,
                                  IWindowManager window)

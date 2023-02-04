@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UI.Library.API;
 using UI.Library.Models;
 using WSMDesktop.EventModels;
+using WSMDesktop.Views;
 
 namespace WSMDesktop.ViewModels;
 
@@ -53,6 +54,11 @@ public class ShellViewModel : Conductor<object>,
         {
             return !IsLoggedIn;
         }
+    }
+
+    public async Task Branch()
+    {
+        await ActivateItemAsync(IoC.Get<AdminBranchViewModel>(), new CancellationToken());
     }
 
     public async Task AdminStock()
