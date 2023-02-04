@@ -3,7 +3,7 @@ AS
 begin
 	set nocount on;
 
-	select [Id], [CompanyId], [DepartmentName], [ChairPersonId], [Budget], [Description], [CreatedDate]
+	select [Id], [CompanyId], [DepartmentName], [Address], [PhoneNumber], [ChairPersonId], [Description], [CreatedDate]
 	from dbo.Department
 
 	order by DepartmentName

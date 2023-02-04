@@ -5,8 +5,7 @@
 	@NumberOfEmployees int,
 	@ChairPersonId nvarchar(128),
 	@Description nvarchar(MAX),
-	@Revenue money,
-	@StockPrices money
+	@Address nvarchar(255)
 
 AS
 begin
@@ -15,11 +14,9 @@ begin
 	UPDATE dbo.Company set 
 	CompanyName = @CompanyName,
 	PhoneNumber = @PhoneNumber,
-	NumberOfEmployees = @NumberOfEmployees,
 	ChairPersonId = @ChairPersonId,
 	[Description] = @Description,
-	Revenue = @Revenue,
-	StockPrices = @StockPrices
+	[Address] = @Address
 
 	WHERE Id = @Id
 end

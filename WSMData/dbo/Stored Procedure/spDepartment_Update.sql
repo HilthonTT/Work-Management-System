@@ -2,8 +2,9 @@
 	@Id int,
 	@CompanyId int,
 	@DepartmentName nvarchar(100),
+	@Address nvarchar(255),
 	@ChairPersonId nvarchar(128),
-	@Budget money,
+	@PhoneNumber nvarchar(50),
 	@Description nvarchar(MAX)
 
 AS
@@ -13,8 +14,9 @@ begin
 	UPDATE dbo.Department set
 	CompanyId = @CompanyId,
 	DepartmentName = @DepartmentName,
+	[Address] = @Address,
 	ChairPersonId = @ChairPersonId,
-	Budget = @Budget,
+	PhoneNumber = @PhoneNumber,
 	[Description] = @Description
 
 	WHERE Id = @Id

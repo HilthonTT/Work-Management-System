@@ -6,7 +6,7 @@ AS
 begin
 	set nocount on;
 
-	select [Id], [CompanyName], [PhoneNumber], [NumberOfEmployees], [ChairPersonId], [Description], [Revenue], [StockPrices], [DateFounded] 
+	select [Id], [CompanyName], [PhoneNumber], [ChairPersonId], [Address] ,[Description], [DateFounded] 
 	from dbo.Company
 	where CompanyName LIKE @CompanyName
 end

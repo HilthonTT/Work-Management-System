@@ -2,16 +2,17 @@
 	@Id int output,
 	@CompanyId int,
 	@DepartmentName nvarchar(100),
+	@Address nvarchar(255),
 	@ChairPersonId nvarchar(128),
-	@Budget money,
+	@PhoneNumber nvarchar(50),
 	@Description nvarchar(255),
 	@CreatedDate datetime2
 AS
 begin
 	set nocount on;
 
-	insert into dbo.Department(CompanyId, DepartmentName, ChairPersonId, Budget, CreatedDate)
-	values (@CompanyId, @DepartmentName, @ChairPersonId, @Budget, @CreatedDate)
+	insert into dbo.Department(CompanyId, DepartmentName, [Address], ChairPersonId, PhoneNumber ,[Description], CreatedDate)
+	values (@CompanyId, @DepartmentName, @Address, @ChairPersonId, @PhoneNumber, @Description, @CreatedDate)
 
 	select @Id = SCOPE_IDENTITY()
 end
