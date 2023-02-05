@@ -25,7 +25,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
+
         <!-- Header -->
 
         <TextBlock Grid.Row="0"
@@ -281,17 +281,18 @@
 
         <StackPanel Grid.Row="2"
                     Grid.Column="1"
-                    Margin="10 125 10 10"
+                    Margin="10 125 10 15"
                     Grid.RowSpan="3"
                     Grid.ColumnSpan="2">
 
             <TextBlock Text="The Chairperson" 
                        Foreground="LightGray"
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center" />
 
             <ListBox x:Name="Users"
-                     Height="80" 
-                     SelectedItem="{Binding SelectedUser}">
+                     Height="60" 
+                     SelectedItem="{Binding SelectedUser}"
+                     Margin="0 0 0 0">
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -299,6 +300,18 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
+            <!-- Selected Company/Department Text -->
+
+            <DockPanel>
+                <TextBlock x:Name="SelectedCompanyText"
+                           HorizontalAlignment="Left"
+                           Foreground="Red"/>
+
+                <TextBlock x:Name="SelectedDepartmentText"
+                           HorizontalAlignment="Right"
+                           Foreground="Red"/>
+            </DockPanel>
 
         </StackPanel>
 
@@ -371,7 +384,7 @@
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="DescriptionDeparment" 
+            <TextBox x:Name="DescriptionDepartment" 
                      Height="50"
                      FontSize="18"
                      Margin="0 10 0 0"/>
