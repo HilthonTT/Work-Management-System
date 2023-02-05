@@ -44,6 +44,6 @@ public class DepartmentData : IDepartmentData
 
     public void DeleteDepartment(DepartmentModel department)
     {
-        _sql.SaveData("dbo.Delete", new { department.Id }, "WSMData");
+        _sql.SaveData("dbo.spDepartment_Delete", new { department.Id }, "WSMData");
     }
 }

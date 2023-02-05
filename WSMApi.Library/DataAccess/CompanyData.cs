@@ -43,6 +43,6 @@ public class CompanyData : ICompanyData
 
     public void DeleteCompany(CompanyModel company)
     {
-        _sql.SaveData("dbo_spCompany_Delete", new { company.Id }, "WSMData");
+        _sql.SaveData("dbo.spCompany_Delete", new { company.Id }, "WSMData");
     }
 }
