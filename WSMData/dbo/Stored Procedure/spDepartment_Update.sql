@@ -5,7 +5,8 @@
 	@Address nvarchar(255),
 	@ChairPersonId nvarchar(128),
 	@PhoneNumber nvarchar(50),
-	@Description nvarchar(MAX)
+	@Description nvarchar(MAX),
+	@CreatedDate datetime2
 
 AS
 begin
@@ -17,7 +18,8 @@ begin
 	[Address] = @Address,
 	ChairPersonId = @ChairPersonId,
 	PhoneNumber = @PhoneNumber,
-	[Description] = @Description
+	[Description] = @Description,
+	CreatedDate = @CreatedDate
 
 	WHERE Id = @Id
 end
