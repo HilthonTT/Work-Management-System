@@ -343,7 +343,7 @@
                          FontSize="18"
                          Margin="0 10 0 0" />
 
-            <TextBlock Text="Address " 
+            <TextBlock Text="Address" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
