@@ -535,12 +535,10 @@ public class AdminStockViewModel : Screen
         {
             await LoadAllMachines();
 
-            var machineList = Machines.Where(x => x.ModelName.Contains(SearchMachineText) || 
-                                             x.MachineName.Contains(SearchMachineText));
+            var machineList = Machines.Where(x => x.ModelName.Contains(SearchMachineText) ||
+                                             x.MachineName.Contains(SearchMachineText)).ToList();
 
-            var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
-
-            Machines = new BindingList<MachineDisplayModel>(machines);
+            Machines = new BindingList<MachineDisplayModel>(machineList);
         }
     }
 
@@ -589,11 +587,9 @@ public class AdminStockViewModel : Screen
             await LoadAllPart();
 
             var partList = Parts.Where(x => x.ModelName.Contains(SearchPartText) || 
-                                       x.PartName.Contains(SearchPartText));
+                                       x.PartName.Contains(SearchPartText)).ToList();
 
-            var parts = _mapper.Map<List<PartDisplayModel>>(partList);
-
-            Parts = new BindingList<PartDisplayModel>(parts);
+            Parts = new BindingList<PartDisplayModel>(partList);
         }
     }
 
