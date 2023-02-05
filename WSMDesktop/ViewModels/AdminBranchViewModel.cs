@@ -152,6 +152,9 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => SelectedCompany);
             NotifyOfPropertyChange(() => CanUpdateCompany);
             NotifyOfPropertyChange(() => UpdateCompanyButtonColor);
+            NotifyOfPropertyChange(() => SelectedCompanyText);
+            NotifyOfPropertyChange(() => CanDeleteSelectedCompany);
+            NotifyOfPropertyChange(() => DeleteCompanyButtonColor);
         }
     }
 
@@ -185,6 +188,7 @@ public class AdminBranchViewModel : Screen
     {
         var mappedCompany = _mapper.Map<CompanyModel>(SelectedCompany);
 
+        Companies.Remove(SelectedCompany);
         await _companyEndpoint.DeleteCompany(mappedCompany);
     }
 
@@ -197,6 +201,14 @@ public class AdminBranchViewModel : Screen
         {
             _searchDepartmentText = value;
             NotifyOfPropertyChange(() => SearchDepartmentText);
+        }
+    }
+
+    public static string SearchDepartmentButtonColor
+    {
+        get
+        {
+            return "#121212";
         }
     }
 
@@ -232,8 +244,18 @@ public class AdminBranchViewModel : Screen
         get { return _selectedDepartment; }
         set 
         {
-            _selectedDepartment = value; 
+            _selectedDepartment = value;
+            DepartmentName = value?.DepartmentName;
+            AddressDepartment = value?.Address;
+            SelectedUser = Users.Where(x => x.Id == value?.ChairPersonId)?.FirstOrDefault();
+            SelectedCompany = Companies.Where(x => x.Id == value?.CompanyId)?.FirstOrDefault();
+            PhoneNumberDepartment = value?.PhoneNumber;
+            DescriptionDepartment = value?.Description;
+            DateFoundedDepartment = value?.CreatedDate;
             NotifyOfPropertyChange(() => SelectedDepartment);
+            NotifyOfPropertyChange(() => SelectedDepartmentText);
+            NotifyOfPropertyChange(() => CanDeleteSelectedDepartment);
+            NotifyOfPropertyChange(() => DeleteDepartmentButtonColor);
         }
     }
 
@@ -267,6 +289,7 @@ public class AdminBranchViewModel : Screen
     {
         var mappedDepartment = _mapper.Map<DepartmentModel>(SelectedDepartment);
 
+        Departments.Remove(SelectedDepartment);
         await _departmentEndpoint.DeleteDepartment(mappedDepartment);
     }
 
@@ -336,8 +359,40 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => SelectedUser);
             NotifyOfPropertyChange(() => CanCreateCompany);
             NotifyOfPropertyChange(() => CreateCompanyButtonColor);
+            NotifyOfPropertyChange(() => CanCreateDepartment);
+            NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateDepartment);
+            NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
         }
     }
+
+    public string SelectedCompanyText
+    {
+        get
+        {
+            if (SelectedCompany is not null)
+            {
+                return $"{SelectedCompany.CompanyName}";
+            }
+
+            return "No Company Selected";
+        }
+    }
+
+    public string SelectedDepartmentText
+    {
+        get
+        {
+            if (SelectedDepartment is not null)
+            {
+                return $"{SelectedDepartment.DepartmentName}";
+            }
+
+            return "No Department Selected";
+        }
+    }
+
+
 
     private string _descriptionCompany;
 
@@ -376,6 +431,10 @@ public class AdminBranchViewModel : Screen
         { 
             _departmentName = value; 
             NotifyOfPropertyChange(() => DepartmentName);
+            NotifyOfPropertyChange(() => CanCreateDepartment);
+            NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateDepartment);
+            NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
         }
     }
 
@@ -388,6 +447,11 @@ public class AdminBranchViewModel : Screen
         { 
             _addressDepartment = value; 
             NotifyOfPropertyChange(() => AddressDepartment);
+            NotifyOfPropertyChange(() => CanCreateDepartment);
+            NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateDepartment);
+            NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+
         }
     }
 
@@ -400,6 +464,10 @@ public class AdminBranchViewModel : Screen
         { 
             _phoneNumberDepartment = value; 
             NotifyOfPropertyChange(() => PhoneNumberDepartment);
+            NotifyOfPropertyChange(() => CanCreateDepartment);
+            NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateDepartment);
+            NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
         }
     }
 
@@ -412,18 +480,26 @@ public class AdminBranchViewModel : Screen
         { 
             _descriptionDepartment = value; 
             NotifyOfPropertyChange(() => DescriptionDepartment);
+            NotifyOfPropertyChange(() => CanCreateDepartment);
+            NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateDepartment);
+            NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
         }
     }
 
-    private DateTime _dateFoundedDepartment = SqlDateTime.MinValue.Value;
+    private DateTime? _dateFoundedDepartment = SqlDateTime.MinValue.Value;
 
-    public DateTime DateFoundedDepartment
+    public DateTime? DateFoundedDepartment
     {
         get { return _dateFoundedDepartment; }
         set 
         { 
             _dateFoundedDepartment = value; 
             NotifyOfPropertyChange(() => DateFoundedDepartment);
+            NotifyOfPropertyChange(() => CanCreateDepartment);
+            NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateDepartment);
+            NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
         }
     }
 
@@ -534,5 +610,117 @@ public class AdminBranchViewModel : Screen
 
         await _companyEndpoint.UpdateCompany(company);
         await LoadAllCompanies();
+    }
+
+    public bool CanCreateDepartment
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(DepartmentName) == false &&
+                string.IsNullOrWhiteSpace(AddressDepartment) == false &&
+                string.IsNullOrWhiteSpace(PhoneNumberDepartment) == false &&
+                string.IsNullOrWhiteSpace(DescriptionDepartment) == false &&
+                DateFoundedDepartment >= SqlDateTime.MinValue.Value &&
+                SelectedUser is not null &&
+                SelectedCompany is not null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public string CreateDepartmentButtonColor
+    {
+        get
+        {
+            if (CanCreateDepartment is true)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task CreateDepartment()
+    {
+        DepartmentModel department = new()
+        {
+            CompanyId = SelectedCompany.Id,
+            DepartmentName = DepartmentName,
+            Address = AddressDepartment,
+            ChairPersonId = SelectedUser.Id,
+            PhoneNumber = PhoneNumberDepartment,
+            Description = DescriptionDepartment,
+            CreatedDate = DateFoundedDepartment.Value
+        };
+
+        DepartmentName = "";
+        AddressDepartment = "";
+        SelectedUser = null;
+        PhoneNumberDepartment = "";
+        DescriptionDepartment = "";
+        DateFoundedDepartment = SqlDateTime.MinValue.Value;
+        
+        var mappedDepartment = _mapper.Map<DepartmentDisplayModel>(department);
+
+        Departments.Add(mappedDepartment);
+        await _departmentEndpoint.PostDepartment(department);
+    }
+
+    public bool CanUpdateDepartment
+    {
+        get
+        {
+            if (SelectedDepartment is not null && 
+                SelectedUser is not null && 
+                SelectedCompany is not null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public string UpdateDepartmentButtonColor
+    {
+        get
+        {
+            if (CanUpdateDepartment is true)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task UpdateDepartment()
+    {
+        DepartmentModel department = new()
+        {
+            Id = SelectedDepartment.Id,
+            CompanyId = SelectedCompany.Id,
+            DepartmentName = DepartmentName,
+            Address = AddressDepartment,
+            ChairPersonId = SelectedUser.Id,
+            PhoneNumber = PhoneNumberDepartment,
+            Description = DescriptionDepartment,
+            CreatedDate = DateFoundedDepartment.Value
+        };
+
+        SelectedCompany = null;
+        DepartmentName = "";
+        AddressDepartment = "";
+        SelectedUser = null;
+        PhoneNumberDepartment = "";
+        DescriptionDepartment = "";
+        DateFoundedDepartment = DateTime.MinValue;
+
+        await _departmentEndpoint.UpdateDepartment(department);
+        await LoadAllDepartments();
     }
 }
