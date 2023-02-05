@@ -39,6 +39,8 @@ public class Bootstrapper : BootstrapperBase
             cfg.CreateMap<TaskModel, TaskDisplayModel>();
             cfg.CreateMap<MachineModel, MachineDisplayModel>();
             cfg.CreateMap<PartModel, PartDisplayModel>();
+            cfg.CreateMap<DepartmentDisplayModel, DepartmentModel>();
+            cfg.CreateMap<CompanyDisplayModel, CompanyModel>();
         });
 
         var output = config.CreateMapper();
