@@ -52,4 +52,13 @@ public class DepartmentController : ControllerBase
     { 
         _departmentData.UpdateDepartment(department);
     }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [Route("DeleteDepartment")]
+    public void DeleteDepartment(DepartmentModel department)
+    {
+        _departmentData.DeleteDepartment(department);
+    }
+
 }

@@ -79,4 +79,17 @@ public class DepartmentEndpoint : IDepartmentEndpoint
             throw new Exception(response.ReasonPhrase);
         }
     }
+
+    public async Task DeleteDepartment(DepartmentModel department)
+    {
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/DeleteDepartment", department);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The department of Id {Id} has successfully been updated.", department.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace UI.Library.API
 {
     public interface IDepartmentEndpoint
     {
+        Task DeleteDepartment(DepartmentModel department);
         Task<List<DepartmentModel>> GetAll();
         Task<List<DepartmentModel>> GetByName(string DepartmentName);
         Task PostDepartment(DepartmentModel department);
