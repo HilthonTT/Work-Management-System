@@ -1,11 +1,12 @@
 ﻿CREATE PROCEDURE [dbo].[spCompany_Update]
 	@Id int,
 	@CompanyName nvarchar(100),
+	@Address nvarchar(255),
 	@PhoneNumber nvarchar(50),
-	@NumberOfEmployees int,
 	@ChairPersonId nvarchar(128),
 	@Description nvarchar(MAX),
-	@Address nvarchar(255)
+	@DateFounded datetime2
+	
 
 AS
 begin
@@ -13,10 +14,11 @@ begin
 	
 	UPDATE dbo.Company set 
 	CompanyName = @CompanyName,
+	[Address] = @Address,
 	PhoneNumber = @PhoneNumber,
 	ChairPersonId = @ChairPersonId,
 	[Description] = @Description,
-	[Address] = @Address
+	DateFounded = @DateFounded
 
 	WHERE Id = @Id
 end
