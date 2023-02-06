@@ -138,7 +138,8 @@
 
             <TextBox x:Name="Title" 
                      Height="50"
-                     IsReadOnly="True" />
+                     IsReadOnly="True" 
+                     Cursor="Arrow"/>
 
             
 
@@ -155,7 +156,8 @@
             <TextBox x:Name="Description" 
                      Grid.ColumnSpan="3"
                      Height="50"
-                     IsReadOnly="True"/>
+                     IsReadOnly="True"
+                     Cursor="Arrow"/>
         </StackPanel>
 
 
@@ -170,7 +172,8 @@
 
             <TextBox x:Name="DateDue" 
                      Height="50"
-                     IsReadOnly="True" />
+                     IsReadOnly="True" 
+                     Cursor="Arrow"/>
         </StackPanel>
 
         <StackPanel Grid.Row="4"
