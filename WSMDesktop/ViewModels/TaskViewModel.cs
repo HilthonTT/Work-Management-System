@@ -83,6 +83,20 @@ public class TaskViewModel : Screen
         Tasks = new BindingList<TaskDisplayModel>(tasks);
     }
 
+
+    public string FilterIsDoneButtonColor
+    {
+        get
+        {
+            if (_IsFilteredByDone == true)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
     public async Task FilterByIsDone()
     {
         if (_IsFilteredByDone == false)
@@ -98,6 +112,36 @@ public class TaskViewModel : Screen
             await LoadTasks();
             _IsFilteredByDone = false;
         }
+
+        NotifyOfPropertyChange(() => FilterIsDoneButtonColor);
+    }
+
+    private string _searchTaskText;
+
+    public string SearchTaskText
+    {
+        get { return _searchTaskText; }
+        set 
+        { 
+            _searchTaskText = value; 
+            NotifyOfPropertyChange(() => SearchTaskText);
+        }
+    }
+
+    public async Task SearchTask()
+    {
+        if (string.IsNullOrWhiteSpace(SearchTaskText))
+        {
+            await LoadTasks();
+        }
+        else
+        {
+            var taskList = Tasks.Where(x => x.Title.Contains(SearchTaskText) || 
+                                        x.Description.Contains(SearchTaskText)).ToList();
+            
+            Tasks = new BindingList<TaskDisplayModel>(taskList);
+        }
+
     }
 
     private BindingList<TaskDisplayModel> _tasks;
