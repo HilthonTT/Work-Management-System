@@ -58,7 +58,6 @@ public class AdminMaintenanceViewModel : Screen
             await LoadCompanies();
             await LoadDepartments();
             await LoadUsers();
-            await LoadJobs();
         }
         catch (Exception ex)
         {
@@ -100,12 +99,6 @@ public class AdminMaintenanceViewModel : Screen
         Users = new BindingList<UserModel>(userList);
     }
 
-    public async Task LoadJobs()
-    {
-        var jobList = await _jobEndpoint.GetAll();
-        JobTitles = new BindingList<JobTitleModel>(jobList);
-    }
-
     private BindingList<CompanyDisplayModel> _companies;
 
     public BindingList<CompanyDisplayModel> Companies
@@ -126,28 +119,11 @@ public class AdminMaintenanceViewModel : Screen
         set 
         { 
             _selectedCompany = value;
-            SelectedCompanyName = $"*{value.CompanyName}";
             NotifyOfPropertyChange(() => SelectedCompany);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
-            NotifyOfPropertyChange(() => SelectedCompanyName);
         }
     }
-
-    private string _selectedCompanyName;
-
-    public string SelectedCompanyName
-    {
-        get { return _selectedCompanyName; }
-        set 
-        { 
-            _selectedCompanyName = value;
-            NotifyOfPropertyChange(() => SelectedCompanyName);
-        }
-    }
-
-
-
 
     private BindingList<DepartmentDisplayModel> _departments;
 
@@ -169,64 +145,12 @@ public class AdminMaintenanceViewModel : Screen
         set 
         { 
             _selectedDepartment = value; 
-            SelectedDepartmentName = $"*{value.DepartmentName}";
             NotifyOfPropertyChange(() => SelectedDepartment);
-            NotifyOfPropertyChange(() => SelectedDepartmentName);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
         }
     }
 
-    private string _selectedDepartmentName;
-
-    public string SelectedDepartmentName
-    {
-        get { return _selectedDepartmentName; }
-        set 
-        { 
-            _selectedDepartmentName = value; 
-            NotifyOfPropertyChange(() => SelectedDepartmentName);
-        }
-    }
-
-    private BindingList<JobTitleModel> _jobTitles;
-
-    public BindingList<JobTitleModel> JobTitles
-    {
-        get { return _jobTitles; }
-        set 
-        { 
-            _jobTitles = value; 
-            NotifyOfPropertyChange(() => JobTitles);
-        }
-    }
-
-    private JobTitleModel _selectedJobTitle;
-
-    public JobTitleModel SelectedJobTitle
-    {
-        get { return _selectedJobTitle; }
-        set 
-        { 
-            _selectedJobTitle = value;
-            SelectedJobTitleName = $"*{value.JobName}";
-            NotifyOfPropertyChange(() => SelectedJobTitle);
-            NotifyOfPropertyChange(() => AssignTaskButtonColor);
-            NotifyOfPropertyChange(() => CanAssignTask);
-        }
-    }
-
-    private string _selectedJobTitleName;
-
-    public string SelectedJobTitleName
-    {
-        get { return _selectedJobTitleName; }
-        set 
-        { 
-            _selectedJobTitleName = value; 
-            NotifyOfPropertyChange(() => SelectedJobTitleName);
-        }
-    }
 
     private BindingList<UserModel> _users;
 
@@ -248,25 +172,11 @@ public class AdminMaintenanceViewModel : Screen
         set 
         {
             _selectedUser = value;
-            SelectedUserName = $"*{value.FirstName} {value.LastName}";
             NotifyOfPropertyChange(() => SelectedUser);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
         }
     }
-
-    private string _selectedUserName;
-
-    public string SelectedUserName
-    {
-        get { return _selectedUserName; }
-        set 
-        { 
-            _selectedUserName = value; 
-            NotifyOfPropertyChange(() => SelectedUserName);
-        }
-    }
-
 
     private string _title;
 
@@ -341,11 +251,9 @@ public class AdminMaintenanceViewModel : Screen
         {
             if (SelectedCompany is not null &&
                 SelectedDepartment is not null &&
-                SelectedJobTitle is not null &&
-                SelectedUser is not null &&
                 string.IsNullOrWhiteSpace(Title) == false &&
                 string.IsNullOrWhiteSpace(TaskDescription) == false &&
-                DateDue >= SqlDateTime.MinValue.Value == true)
+                DateDue >= SqlDateTime.MinValue.Value)
             {
                 return true;
             }

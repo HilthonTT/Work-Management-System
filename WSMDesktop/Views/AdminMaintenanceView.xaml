@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:WSMDesktop.Views"
              Background="#282828"
              FontFamily="Comic Sans MS"
+             Foreground="White"
+             FontSize="18"
              Height="850" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
@@ -22,59 +22,32 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
+        
         <!-- Header -->
-        <StackPanel Orientation="Horizontal"
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
 
-            <TextBlock Text="Maintenance"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="50" />
-                        <Setter Property="Foreground" Value="White" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <TextBlock Text=" Tasks"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="50" />
-                        <Setter Property="Foreground" Value="White" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-        </StackPanel>
+        <TextBlock Grid.Row="0"
+                   Grid.ColumnSpan="2"
+                   Grid.Column="1"
+                   Text="Maintenance"
+                   FontSize="50" 
+                   HorizontalAlignment="Center" />
 
-        <!-- Company List To Assign -->
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="0 15 0 0"
-                    Grid.RowSpan="2">
+        
+        <!-- Company List -->
+
+        <StackPanel Grid.Row="1"
+                    Grid.RowSpan="4"
+                    Grid.Column="0">
 
             <TextBlock Text="Companies"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                       FontSize="24"
+                       HorizontalAlignment="Center"/>
 
-            <ListBox x:Name="Companies"
-                     Height="80"
-                     SelectedItem="{Binding SelectedCompany}"
-                     FontSize="20">
+            <ListBox x:Name="Companies" 
+                     Height="530"
+                     SelectedItem="{Binding SelectedCompany}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding DisplayText}" />
@@ -82,30 +55,20 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
+        
+        <!-- Department List -->
 
-        <!-- Department List To Assign -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Margin="0 30 0 0"
-                    Grid.RowSpan="2">
+        <StackPanel Grid.Row="1"
+                    Grid.RowSpan="4"
+                    Grid.Column="3">
 
             <TextBlock Text="Departments"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
 
             <ListBox x:Name="Departments"
-                     Height="80"
-                     SelectedItem="{Binding SelectedDepartment}"
-                     FontSize="20">
+                     Height="530"
+                     SelectedItem="{Binding SelectedDepartment}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding DisplayText}" />
@@ -114,299 +77,68 @@
             </ListBox>
         </StackPanel>
 
-        <!-- Job Titles To Assign -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="3"
-                    Grid.Column="0"
-                    Margin="0 40 0 0"
-                    Grid.RowSpan="2">
-
-            <TextBlock Text="Job Titles"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-            <ListBox x:Name="JobTitles"
-                     Height="80"
-                     SelectedItem="{Binding SelectedJobTitle}"
-                     FontSize="20">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding JobName}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
-
-
-        <!-- Job Titles To Assign -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="4"
-                    Grid.Column="0"
-                    Margin="0 50 0 0"
-                    Grid.RowSpan="2">
+         <!-- User List -->
+        
+        <StackPanel Grid.Row="1"
+                    Grid.RowSpan="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Margin="10 0 10 0">
 
             <TextBlock Text="Users"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
 
             <ListBox x:Name="Users"
-                     Height="80"
-                     SelectedItem="{Binding SelectedUser}"
-                     FontSize="20">
+                     Height="135"
+                     SelectedItem="{Binding SelectedUser}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding FirstName}" />
-                            <TextBlock Text=" " />
-                            <TextBlock Text="{Binding LastName}" />
-                        </StackPanel>
+                        <TextBlock Text="{Binding FullName}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
 
-        <!-- Task Title -->
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
+        <StackPanel Grid.Row="2"
                     Grid.Column="1"
-                    Margin="10 15 0 0"
-                    Grid.RowSpan="2">
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="2"
+                    Margin="10 10 10 0">
 
-            <TextBlock Text="Task Title"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+            <TextBlock Text="Title"
+                       Foreground="LightGray" 
+                       HorizontalAlignment="Center" />
 
             <TextBox x:Name="Title"
-                     Height="80">
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
-        </StackPanel>
+                     Height="50"/>
 
-        <!-- Task Description -->
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Margin="10 30 0 0"
-                    Grid.RowSpan="2">
-            <TextBlock Text="Task Description"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+            <TextBlock Text="Description"
+                       Foreground="LightGray" 
+                       HorizontalAlignment="Center" 
+                       Margin="0 10 0 0"/>
 
             <TextBox x:Name="TaskDescription"
-                     Height="80">
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
-        </StackPanel>
+                     TextWrapping="Wrap"
+                     Height="80"/>
 
-        <!-- Task Date -->
+            <TextBlock Text="Date Dued"
+                       Foreground="LightGray" 
+                       HorizontalAlignment="Center" 
+                       Margin="0 10 0 0"/>
 
-        <StackPanel Grid.Row="3"
-                    Grid.Column="1"
-                    Margin="10 40 0 0"
-                    Grid.RowSpan="2">
-            <TextBlock Text="Date Due:"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="24"/>
-                        <Setter Property="Foreground" Value="LightGray" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-            <DatePicker x:Name="DateDue">
-                <DatePicker.Style>
-                    <Style TargetType="DatePicker">
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </DatePicker.Style>
-            </DatePicker>
-        </StackPanel>
-
-        <!-- Error Message -->
-        <TextBlock x:Name="ErrorMesssage"
-                   Grid.Row="5"
-                   Grid.Column="1"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   TextWrapping="Wrap">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground" Value="Red" />
-                    <Setter Property="FontSize" Value="24" />
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-
-        <!-- Displaying Selected Company Name -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2">
-            <TextBlock Margin="10 10 0 0"
-                       Text="Selected Company: "
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-            <TextBlock Margin="10 10 0 0"
-                       Text="{Binding SelectedCompanyName}"
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-        </StackPanel>
-
-        <!-- Displaying Selected Department Name -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2">
-            <TextBlock Margin="10 10 0 0"
-                       Text="Selected Department: "
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-            <TextBlock Margin="10 10 0 0"
-                       Text="{Binding SelectedDepartmentName}"
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-        </StackPanel>
-
-        <!-- Displaying Selected Job Title -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2">
-            <TextBlock Margin="10 10 0 0"
-                       Text="Selected Job Title: "
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-            <TextBlock Margin="10 10 0 0"
-                       Text="{Binding SelectedJobTitleName}"
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-        </StackPanel>
-
-        <!-- Displaying Selected User Name -->
-
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="4"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2">
-            <TextBlock Margin="10 10 0 0"
-                       Text="Selected User Name: "
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-            <TextBlock Margin="10 10 0 0"
-                       Text="{Binding SelectedUserName}"
-                       TextWrapping="Wrap">
-
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+            <DatePicker x:Name="DateDue"
+                        Height="70" />
         </StackPanel>
 
         <!-- Assign Button -->
 
         <Button x:Name="AssignTask"
-                Grid.Row="7"
+                Grid.Row="4"
                 Grid.Column="1"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
                 Content="Assign Task"
                 FontSize="30">
             <Button.Style>
