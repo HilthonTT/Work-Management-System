@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Task]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-    [UserId] NVARCHAR(128) NOT NULL, 
+    [UserId] NVARCHAR(128) NULL, 
     [DepartmentId] INT NULL, 
     [Title] NVARCHAR(50) NOT NULL, 
     [Description] NVARCHAR(255) NOT NULL, 
