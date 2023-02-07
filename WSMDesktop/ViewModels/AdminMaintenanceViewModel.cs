@@ -55,7 +55,6 @@ public class AdminMaintenanceViewModel : Screen
         base.OnViewLoaded(view);
         try
         {
-            await LoadCompanies();
             await LoadDepartments();
             await LoadUsers();
         }
@@ -79,13 +78,6 @@ public class AdminMaintenanceViewModel : Screen
         }
     }
 
-    public async Task LoadCompanies()
-    {
-        var companyList = await _companyEndpoint.GetAll();
-        var companies = _mapper.Map<List<CompanyDisplayModel>>(companyList);
-        Companies = new BindingList<CompanyDisplayModel>(companies);
-    }
-
     public async Task LoadDepartments()
     {
         var departmentList = await _departmentEndpoint.GetAll();
@@ -97,32 +89,6 @@ public class AdminMaintenanceViewModel : Screen
     {
         var userList = await _userEndpoint.GetAll();
         Users = new BindingList<UserModel>(userList);
-    }
-
-    private BindingList<CompanyDisplayModel> _companies;
-
-    public BindingList<CompanyDisplayModel> Companies
-    {
-        get { return _companies; }
-        set 
-        { 
-            _companies = value; 
-            NotifyOfPropertyChange(() => Companies);
-        }
-    }
-
-    private CompanyDisplayModel _selectedCompany;
-
-    public CompanyDisplayModel SelectedCompany
-    {
-        get { return _selectedCompany; }
-        set 
-        { 
-            _selectedCompany = value;
-            NotifyOfPropertyChange(() => SelectedCompany);
-            NotifyOfPropertyChange(() => AssignTaskButtonColor);
-            NotifyOfPropertyChange(() => CanAssignTask);
-        }
     }
 
     private BindingList<DepartmentDisplayModel> _departments;
@@ -249,12 +215,15 @@ public class AdminMaintenanceViewModel : Screen
     {
         get
         {
-            if (SelectedCompany is not null &&
-                SelectedDepartment is not null &&
-                string.IsNullOrWhiteSpace(Title) == false &&
+            if (string.IsNullOrWhiteSpace(Title) == false &&
                 string.IsNullOrWhiteSpace(TaskDescription) == false &&
                 DateDue >= SqlDateTime.MinValue.Value)
             {
+                if (SelectedUser is null && SelectedDepartment is null)
+                {
+                    return false;
+                }
+
                 return true;
             }
 
