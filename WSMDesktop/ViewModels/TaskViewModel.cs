@@ -77,9 +77,11 @@ public class TaskViewModel : Screen
 
     public async Task LoadTasks()
     {
-        var taskList = await _taskEndpoint.GetByUserId(_user.Id);
-        var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList);
-        tasks = tasks.Where(x => x.IsDone == false).ToList();
+        var taskList = await _taskEndpoint.GetAll();
+        var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList)
+            .Where(x => x.IsDone == false && x.DepartmentId == _user.DepartmentId)
+            .ToList();
+        
         Tasks = new BindingList<TaskDisplayModel>(tasks);
     }
 
