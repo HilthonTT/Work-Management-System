@@ -64,14 +64,14 @@ public class AdminStockViewModel : Screen
 
     public async Task LoadAllPart()
     {
-        var partList = await _stockEndpoint.GetAllPartsAdmin();
+        var partList = await _stockEndpoint.GetAllPartsAdminAsync();
         var parts = _mapper.Map<List<PartDisplayModel>>(partList);
         Parts = new BindingList<PartDisplayModel>(parts);
     }
 
     public async Task LoadAllMachines()
     {
-        var machineList = await _stockEndpoint.GetAllMachinesAdmin();
+        var machineList = await _stockEndpoint.GetAllMachinesAdminAsync();
         var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
         Machines = new BindingList<MachineDisplayModel>(machines);
     }
@@ -341,7 +341,7 @@ public class AdminStockViewModel : Screen
             PurchasedPriceMachine = "";
             DatePurchasedMachine = SqlDateTime.MinValue.Value;
 
-            await _stockEndpoint.InsertMachine(machine);
+            await _stockEndpoint.InsertMachineAsync(machine);
             await LoadAllMachines();
         }
         else
@@ -409,7 +409,7 @@ public class AdminStockViewModel : Screen
             DatePurchasedMachine = SqlDateTime.MinValue.Value;
             SelectedMachine = null;
 
-            await _stockEndpoint.InsertPart(part);
+            await _stockEndpoint.InsertPartAsync(part);
             await LoadAllPart();
         }
         else
@@ -451,7 +451,7 @@ public class AdminStockViewModel : Screen
 
     public async Task DeleteSelectedMachine()
     {
-        await _stockEndpoint.DeleteMachine(SelectedMachine.Id);
+        await _stockEndpoint.DeleteMachineAsync(SelectedMachine.Id);
         Machines.Remove(SelectedMachine);
     }
 
@@ -484,7 +484,7 @@ public class AdminStockViewModel : Screen
 
     public async Task DeleteSelectedPart()
     {
-        await _stockEndpoint.DeletePart(SelectedPart.Id);
+        await _stockEndpoint.DeletePartAsync(SelectedPart.Id);
         Parts.Remove(SelectedPart);
     }
 
@@ -641,7 +641,7 @@ public class AdminStockViewModel : Screen
             DatePurchasedMachine = DateTime.MinValue;
             PurchasedPriceMachine = "";
 
-            await _stockEndpoint.UpdateMachine(machine);
+            await _stockEndpoint.UpdateMachineAsync(machine);
             await LoadAllMachines();
         }
         else
@@ -712,7 +712,7 @@ public class AdminStockViewModel : Screen
             DatePurchasedMachine = DateTime.MinValue;
             PurchasedPriceMachine = "";
 
-            await _stockEndpoint.UpdatePart(part);
+            await _stockEndpoint.UpdatePartAsync(part);
             await LoadAllPart();
         }
         else

@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Library.Models;
 
 namespace UI.Library.API;
@@ -19,7 +14,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
         _logger = logger;
     }
 
-    public async Task<List<JobTitleModel>> GetAll()
+    public async Task<List<JobTitleModel>> GetAllAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/JobTitle/GetJobTitles");
         if (response.IsSuccessStatusCode)
@@ -33,7 +28,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
         }
     }
 
-    public async Task<List<JobTitleModel>> GetByName(string JobName)
+    public async Task<List<JobTitleModel>> GetByNameAsync(string JobName)
     {
         var data = new
         {
@@ -52,7 +47,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
         }
     }
 
-    public async Task PostJobTitle(JobTitleModel JobTitle)
+    public async Task PostJobTitleAsync(JobTitleModel JobTitle)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/InsertJobTitle", JobTitle);
         if (response.IsSuccessStatusCode)
@@ -65,7 +60,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
         }
     }
 
-    public async Task UpdateJobTitle(JobTitleModel JobTitle)
+    public async Task UpdateJobTitleAsync(JobTitleModel JobTitle)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/UpdateJobTitle", JobTitle);
         if (response.IsSuccessStatusCode)

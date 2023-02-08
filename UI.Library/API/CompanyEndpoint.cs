@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Library.Models;
 
 namespace UI.Library.API;
@@ -21,7 +16,7 @@ public class CompanyEndpoint : ICompanyEndpoint
     }
 
 
-    public async Task<List<CompanyModel>> GetAll()
+    public async Task<List<CompanyModel>> GetAllAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Company/GetCompanies");
         if (response.IsSuccessStatusCode)
@@ -35,7 +30,7 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task<List<CompanyModel>> GetByName(string CompanyName)
+    public async Task<List<CompanyModel>> GetByNameAsync(string CompanyName)
     {
         var data = new
         {
@@ -54,7 +49,7 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task PostCompany(CompanyModel company)
+    public async Task PostCompanyAsync(CompanyModel company)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/InsertCompany", company);
         if (response.IsSuccessStatusCode)
@@ -67,7 +62,7 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task UpdateCompany(CompanyModel company)
+    public async Task UpdateCompanyAsync(CompanyModel company)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/UpdateCompany", company);
         if (response.IsSuccessStatusCode)
@@ -80,7 +75,7 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task DeleteCompany(CompanyModel company)
+    public async Task DeleteCompanyAsync(CompanyModel company)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/DeleteCompany", company);
         if (response.IsSuccessStatusCode)

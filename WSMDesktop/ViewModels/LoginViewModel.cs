@@ -111,7 +111,7 @@ public class LoginViewModel : Screen
 			var result = await _apiHelper.Authenticate(Email, Password);
 
 			// Capture info about the user
-			await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+			await _apiHelper.GetLoggedInUserInfoAsync(result.Access_Token);
 
 			await _events.PublishOnCurrentThreadAsync(new LogOnEvent(), new CancellationToken());
 		}

@@ -4,10 +4,10 @@ namespace UI.Library.API
 {
     public interface ICompanyEndpoint
     {
-        Task DeleteCompany(CompanyModel company);
-        Task<List<CompanyModel>> GetAll();
-        Task<List<CompanyModel>> GetByName(string CompanyName);
-        Task PostCompany(CompanyModel company);
-        Task UpdateCompany(CompanyModel company);
+        Task DeleteCompanyAsync(CompanyModel company);
+        Task<List<CompanyModel>> GetAllAsync();
+        Task<List<CompanyModel>> GetByNameAsync(string CompanyName);
+        Task PostCompanyAsync(CompanyModel company);
+        Task UpdateCompanyAsync(CompanyModel company);
     }
 }

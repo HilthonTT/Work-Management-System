@@ -7,7 +7,7 @@ namespace UI.Library.API
         HttpClient ApiClient { get; }
 
         Task<AuthenticatedUser> Authenticate(string username, string password);
-        Task GetLoggedInUserInfo(string token);
+        Task GetLoggedInUserInfoAsync(string token);
         void LogOffUser();
     }
 }

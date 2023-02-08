@@ -80,14 +80,14 @@ public class AdminMaintenanceViewModel : Screen
 
     public async Task LoadDepartments()
     {
-        var departmentList = await _departmentEndpoint.GetAll();
+        var departmentList = await _departmentEndpoint.GetAllAsync();
         var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList);
         Departments = new BindingList<DepartmentDisplayModel>(departments);
     }
 
     public async Task LoadUsers()
     {
-        var userList = await _userEndpoint.GetAll();
+        var userList = await _userEndpoint.GetAllsAsync();
         Users = new BindingList<UserModel>(userList);
     }
 
@@ -248,7 +248,7 @@ public class AdminMaintenanceViewModel : Screen
             };
 
             await _events.PublishOnCurrentThreadAsync(new PostTaskEvent(), new CancellationToken());
-            await _taskEndpoint.PostTask(newTask);
+            await _taskEndpoint.PostTaskAsync(newTask);
         }
         catch (Exception ex)
         {

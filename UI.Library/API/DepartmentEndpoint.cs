@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Library.Models;
 
 namespace UI.Library.API;
@@ -20,7 +15,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         _logger = logger;
     }
 
-    public async Task<List<DepartmentModel>> GetAll()
+    public async Task<List<DepartmentModel>> GetAllAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Department/GetDepartments");
         if (response.IsSuccessStatusCode)
@@ -34,7 +29,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task<List<DepartmentModel>> GetByName(string DepartmentName)
+    public async Task<List<DepartmentModel>> GetByNameAsync(string DepartmentName)
     {
         var data = new
         {
@@ -53,7 +48,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task PostDepartment(DepartmentModel department)
+    public async Task PostDepartmentAsync(DepartmentModel department)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/InsertDepartment", department);
         if (response.IsSuccessStatusCode)
@@ -67,7 +62,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task UpdateDepartment(DepartmentModel department)
+    public async Task UpdateDepartmentAsync(DepartmentModel department)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/UpdateDepartment", department);
         if (response.IsSuccessStatusCode)
@@ -80,7 +75,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task DeleteDepartment(DepartmentModel department)
+    public async Task DeleteDepartmentAsync(DepartmentModel department)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/DeleteDepartment", department);
         if (response.IsSuccessStatusCode)

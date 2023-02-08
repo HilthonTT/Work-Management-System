@@ -67,7 +67,7 @@ public class APIHelper : IAPIHelper
         _apiClient.DefaultRequestHeaders.Clear();
     }
 
-    public async Task GetLoggedInUserInfo(string token)
+    public async Task GetLoggedInUserInfoAsync(string token)
     {
         _apiClient.DefaultRequestHeaders.Clear();
         _apiClient.DefaultRequestHeaders.Accept.Clear();

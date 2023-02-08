@@ -1,12 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Library.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UI.Library.API;
 
@@ -24,7 +18,7 @@ public class StockEndpoint : IStockEndpoint
 
     // Machine section //
 
-    public async Task<List<MachineModel>> GetAllMachines()
+    public async Task<List<MachineModel>> GetAllMachinesAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/GetMachines");
         if (response.IsSuccessStatusCode)
@@ -41,7 +35,7 @@ public class StockEndpoint : IStockEndpoint
 
     // Added this method for the WPF AdminStockViewModel so only admin can only access this page
     // Gives out an error when ViewLoaded.
-    public async Task<List<MachineModel>> GetAllMachinesAdmin()
+    public async Task<List<MachineModel>> GetAllMachinesAdminAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/Admin/GetMachines");
         if (response.IsSuccessStatusCode)
@@ -56,7 +50,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<List<MachineModel>> GetMachineByModelName(string ModelName)
+    public async Task<List<MachineModel>> GetMachineByModelNameAsync(string ModelName)
     {
         var data = new { ModelName };
 
@@ -73,7 +67,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<List<MachineModel>> GetMachineById(int Id)
+    public async Task<List<MachineModel>> GetMachineByIdAsync(int Id)
     {
         var data = new { Id };
 
@@ -90,7 +84,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task InsertMachine(MachineModel machine)
+    public async Task InsertMachineAsync(MachineModel machine)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/InsertMachine", machine);
         if (response.IsSuccessStatusCode)
@@ -103,7 +97,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task UpdateMachine(MachineModel machine)
+    public async Task UpdateMachineAsync(MachineModel machine)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/UpdateMachine", machine);
         if (response.IsSuccessStatusCode)
@@ -116,7 +110,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task DeleteMachine(int Id)
+    public async Task DeleteMachineAsync(int Id)
     {
         var data = new { Id };
 
@@ -133,7 +127,7 @@ public class StockEndpoint : IStockEndpoint
 
     // Part section //
 
-    public async Task<List<PartModel>> GetAllParts()
+    public async Task<List<PartModel>> GetAllPartsAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/GetParts");
         if (response.IsSuccessStatusCode)
@@ -147,7 +141,7 @@ public class StockEndpoint : IStockEndpoint
             throw new Exception(response.ReasonPhrase);
         }
     }
-    public async Task<List<PartModel>> GetAllPartsAdmin()
+    public async Task<List<PartModel>> GetAllPartsAdminAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Stock/Admin/GetParts");
         if (response.IsSuccessStatusCode)
@@ -162,7 +156,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<List<PartModel>> GetPartByModelName(string ModelName)
+    public async Task<List<PartModel>> GetPartByModelNameAsync(string ModelName)
     {
         var data = new { ModelName };
 
@@ -179,7 +173,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<List<PartModel>> GetPartById(int Id)
+    public async Task<List<PartModel>> GetPartByIdAsync(int Id)
     {
         var data = new { Id };
 
@@ -196,7 +190,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task InsertPart(PartModel part)
+    public async Task InsertPartAsync(PartModel part)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/InsertPart", part);
         if (response.IsSuccessStatusCode)
@@ -209,7 +203,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task UpdatePart(PartModel part)
+    public async Task UpdatePartAsync(PartModel part)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/UpdatePart", part);
         if (response.IsSuccessStatusCode)
@@ -222,7 +216,7 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task DeletePart(int Id)
+    public async Task DeletePartAsync(int Id)
     {
         var data = new { Id };
 

@@ -4,10 +4,10 @@ namespace UI.Library.API
 {
     public interface IDepartmentEndpoint
     {
-        Task DeleteDepartment(DepartmentModel department);
-        Task<List<DepartmentModel>> GetAll();
-        Task<List<DepartmentModel>> GetByName(string DepartmentName);
-        Task PostDepartment(DepartmentModel department);
-        Task UpdateDepartment(DepartmentModel department);
+        Task DeleteDepartmentAsync(DepartmentModel department);
+        Task<List<DepartmentModel>> GetAllAsync();
+        Task<List<DepartmentModel>> GetByNameAsync(string DepartmentName);
+        Task PostDepartmentAsync(DepartmentModel department);
+        Task UpdateDepartmentAsync(DepartmentModel department);
     }
 }

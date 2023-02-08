@@ -4,9 +4,9 @@ namespace UI.Library.API
 {
     public interface IJobTitleEndpoint
     {
-        Task<List<JobTitleModel>> GetAll();
-        Task<List<JobTitleModel>> GetByName(string JobName);
-        Task PostJobTitle(JobTitleModel JobTitle);
-        Task UpdateJobTitle(JobTitleModel JobTitle);
+        Task<List<JobTitleModel>> GetAllAsync();
+        Task<List<JobTitleModel>> GetByNameAsync(string JobName);
+        Task PostJobTitleAsync(JobTitleModel JobTitle);
+        Task UpdateJobTitleAsync(JobTitleModel JobTitle);
     }
 }

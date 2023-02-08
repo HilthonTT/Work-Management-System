@@ -178,7 +178,7 @@ public class RegisterViewModel : Screen
                 ConfirmPassword = ConfirmPassword
             };
 
-            await _userEndpoint.CreateUser(u);
+            await _userEndpoint.CreateUserAsync(u);
 
             await _events.PublishOnCurrentThreadAsync(new RegisteredEvent(), new CancellationToken());
         }

@@ -77,7 +77,7 @@ public class TaskViewModel : Screen
 
     public async Task LoadTasks()
     {
-        var taskList = await _taskEndpoint.GetAll();
+        var taskList = await _taskEndpoint.GetAllAsync();
         var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList)
             .Where(x => x.IsDone == false && x.DepartmentId == _user.DepartmentId)
             .ToList();
@@ -103,7 +103,7 @@ public class TaskViewModel : Screen
     {
         if (_IsFilteredByDone == false)
         {
-            var taskList = await _taskEndpoint.GetByUserId(_user.Id);
+            var taskList = await _taskEndpoint.GetByUserIdAsync(_user.Id);
             var tasks = _mapper.Map<List<TaskDisplayModel>>(taskList);
             var tasksIsDone = tasks.Where(x => x.IsDone).ToList();
             Tasks = new BindingList<TaskDisplayModel>(tasksIsDone);
@@ -301,6 +301,6 @@ public class TaskViewModel : Screen
         }
 
         await _events.PublishOnCurrentThreadAsync(new UpdatedTaskPercentage(), new CancellationToken());
-        await _taskEndpoint.UpdatePercentage(t);
+        await _taskEndpoint.UpdatePercentageAsync(t);
     }
 }

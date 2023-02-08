@@ -1,11 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Library.Models;
 
 namespace UI.Library.API;
@@ -22,7 +16,7 @@ public class TaskEndpoint : ITaskEndpoint
         _logger = logger;
     }
 
-    public async Task<List<TaskModel>> GetAll()
+    public async Task<List<TaskModel>> GetAllAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Task/GetTasks");
         if (response.IsSuccessStatusCode)
@@ -37,7 +31,7 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByUserId(string UserId)
+    public async Task<List<TaskModel>> GetByUserIdAsync(string UserId)
     {
         var data = new
         {
@@ -57,7 +51,7 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByDepartmentId(string departmentId)
+    public async Task<List<TaskModel>> GetByDepartmentIdAsync(string departmentId)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByDepartmentId", departmentId);
         if (response.IsSuccessStatusCode)
@@ -72,7 +66,7 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task PostTask(TaskModel task)
+    public async Task PostTaskAsync(TaskModel task)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/InsertTask", task);
         if (response.IsSuccessStatusCode)
@@ -85,7 +79,7 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task UpdatePercentage(TaskModel task)
+    public async Task UpdatePercentageAsync(TaskModel task)
     {
         var data = new
         {
@@ -105,7 +99,7 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task Update(TaskModel task)
+    public async Task UpdateAsync(TaskModel task)
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTask", task);
         if (response.IsSuccessStatusCode)

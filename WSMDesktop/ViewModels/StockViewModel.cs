@@ -62,14 +62,14 @@ public class StockViewModel : Screen
 
     public async Task LoadMachines()
     {
-        var machineList = await _stockEndpoint.GetAllMachines();
+        var machineList = await _stockEndpoint.GetAllMachinesAsync();
         var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
         Machines = new BindingList<MachineDisplayModel>(machines);
     }
 
     public async Task LoadParts()
     {
-        var partList = await _stockEndpoint.GetAllParts();
+        var partList = await _stockEndpoint.GetAllPartsAsync();
         var parts = _mapper.Map<List<PartDisplayModel>>(partList);
         Parts = new BindingList<PartDisplayModel>(parts);
     }

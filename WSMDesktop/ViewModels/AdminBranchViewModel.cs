@@ -72,21 +72,21 @@ public class AdminBranchViewModel : Screen
     
     private async Task LoadAllCompanies()
     {
-        var companyList = await _companyEndpoint.GetAll();
+        var companyList = await _companyEndpoint.GetAllAsync();
         var companies = _mapper.Map<List<CompanyDisplayModel>>(companyList);
         Companies = new BindingList<CompanyDisplayModel>(companies);
     }
 
     private async Task LoadAllDepartments()
     {
-        var departmentList = await _departmentEndpoint.GetAll();
+        var departmentList = await _departmentEndpoint.GetAllAsync();
         var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList);
         Departments = new BindingList<DepartmentDisplayModel>(departments);
     }
 
     private async Task LoadAllUsers()
     {
-        var userList = await _userEndpoint.GetAll();
+        var userList = await _userEndpoint.GetAllsAsync();
         Users = new BindingList<UserModel>(userList);
     }
 
@@ -189,7 +189,7 @@ public class AdminBranchViewModel : Screen
         var mappedCompany = _mapper.Map<CompanyModel>(SelectedCompany);
 
         Companies.Remove(SelectedCompany);
-        await _companyEndpoint.DeleteCompany(mappedCompany);
+        await _companyEndpoint.DeleteCompanyAsync(mappedCompany);
     }
 
     private string _searchDepartmentText;
@@ -290,7 +290,7 @@ public class AdminBranchViewModel : Screen
         var mappedDepartment = _mapper.Map<DepartmentModel>(SelectedDepartment);
 
         Departments.Remove(SelectedDepartment);
-        await _departmentEndpoint.DeleteDepartment(mappedDepartment);
+        await _departmentEndpoint.DeleteDepartmentAsync(mappedDepartment);
     }
 
 
@@ -557,7 +557,7 @@ public class AdminBranchViewModel : Screen
         DateFoundedCompany = DateTime.MinValue;
 
         Companies.Add(mappedCompany);
-        await _companyEndpoint.PostCompany(company);
+        await _companyEndpoint.PostCompanyAsync(company);
     }
 
 
@@ -608,7 +608,7 @@ public class AdminBranchViewModel : Screen
         DescriptionCompany = "";
         DateFoundedCompany = DateTime.MinValue;
 
-        await _companyEndpoint.UpdateCompany(company);
+        await _companyEndpoint.UpdateCompanyAsync(company);
         await LoadAllCompanies();
     }
 
@@ -667,7 +667,7 @@ public class AdminBranchViewModel : Screen
         var mappedDepartment = _mapper.Map<DepartmentDisplayModel>(department);
 
         Departments.Add(mappedDepartment);
-        await _departmentEndpoint.PostDepartment(department);
+        await _departmentEndpoint.PostDepartmentAsync(department);
     }
 
     public bool CanUpdateDepartment
@@ -720,7 +720,7 @@ public class AdminBranchViewModel : Screen
         DescriptionDepartment = "";
         DateFoundedDepartment = DateTime.MinValue;
 
-        await _departmentEndpoint.UpdateDepartment(department);
+        await _departmentEndpoint.UpdateDepartmentAsync(department);
         await LoadAllDepartments();
     }
 }

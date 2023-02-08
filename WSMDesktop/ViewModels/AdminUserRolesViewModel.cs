@@ -61,13 +61,13 @@ public class AdminUserRolesViewModel : Screen
 
     private async Task LoadUsers()
     {
-        var userList = await _userEndpoint.GetAll();
+        var userList = await _userEndpoint.GetAllsAsync();
         Users = new BindingList<UserModel>(userList);
     }
 
     private async Task LoadRoles()
     {
-        var roles = await _userEndpoint.GetAllRoles();
+        var roles = await _userEndpoint.GetAllRolesAsync();
 
         AvailableRoles.Clear();
 
@@ -82,7 +82,7 @@ public class AdminUserRolesViewModel : Screen
 
     private async Task LoadJobs()
     {
-        var jobs = await _jobEndpoint.GetAll();
+        var jobs = await _jobEndpoint.GetAllAsync();
 
         AvailableJobs.Clear();
 
@@ -276,7 +276,7 @@ public class AdminUserRolesViewModel : Screen
 
     public async Task AddSelectedRole()
     {
-        await _userEndpoint.AddUserToRole(SelectedUser.Id, SelectedAvailableRole);
+        await _userEndpoint.AddUserToRoleAsync(SelectedUser.Id, SelectedAvailableRole);
 
         UserRoles.Add(SelectedAvailableRole);
         AvailableRoles.Remove(SelectedAvailableRole);
@@ -308,7 +308,7 @@ public class AdminUserRolesViewModel : Screen
 
     public async Task RemoveSelectedRole()
     {
-        await _userEndpoint.RemoveUserFromRole(SelectedUser.Id, SelectedUserRole);
+        await _userEndpoint.RemoveUserFromRoleAsync(SelectedUser.Id, SelectedUserRole);
 
         AvailableRoles.Add(SelectedAvailableRole);
         UserRoles.Remove(SelectedAvailableRole);
@@ -342,10 +342,10 @@ public class AdminUserRolesViewModel : Screen
     public async Task AddSelectedJob()
     {
         var updatedUser = SelectedUser;
-        var chosenJob = await _jobEndpoint.GetByName(SelectedAvailableJob);
+        var chosenJob = await _jobEndpoint.GetByNameAsync(SelectedAvailableJob);
         updatedUser.JobTitleId = chosenJob.FirstOrDefault().Id;
 
-        await _userEndpoint.UpdateUserJobTitleId(updatedUser);
+        await _userEndpoint.UpdateUserJobTitleIdAsync(updatedUser);
 
         UserJobs.Add(SelectedAvailableJob);
         AvailableJobs.Remove(SelectedAvailableJob);
@@ -380,7 +380,7 @@ public class AdminUserRolesViewModel : Screen
         var updatedUser = SelectedUser;
         updatedUser.JobTitleId = null;
 
-        await _userEndpoint.UpdateUserJobTitleId(updatedUser);
+        await _userEndpoint.UpdateUserJobTitleIdAsync(updatedUser);
 
         UserJobs.Remove(SelectedAvailableJob);
         AvailableJobs.Add(SelectedAvailableJob);

@@ -4,11 +4,11 @@ namespace UI.Library.API
 {
     public interface ITaskEndpoint
     {
-        Task<List<TaskModel>> GetAll();
-        Task<List<TaskModel>> GetByDepartmentId(string departmentId);
-        Task<List<TaskModel>> GetByUserId(string userId);
-        Task PostTask(TaskModel task);
-        Task Update(TaskModel task);
-        Task UpdatePercentage(TaskModel task);
+        Task<List<TaskModel>> GetAllAsync();
+        Task<List<TaskModel>> GetByDepartmentIdAsync(string departmentId);
+        Task<List<TaskModel>> GetByUserIdAsync(string userId);
+        Task PostTaskAsync(TaskModel task);
+        Task UpdateAsync(TaskModel task);
+        Task UpdatePercentageAsync(TaskModel task);
     }
 }

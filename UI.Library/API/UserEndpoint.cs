@@ -1,12 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Library.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UI.Library.API;
 
@@ -22,7 +16,7 @@ public class UserEndpoint : IUserEndpoint
         _logger = logger ?? NullLogger<UserEndpoint>.Instance;
     }
 
-    public async Task<List<UserModel>> GetAll()
+    public async Task<List<UserModel>> GetAllsAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/User/Admin/GetAllUsers");
         if (response.IsSuccessStatusCode)
@@ -37,7 +31,7 @@ public class UserEndpoint : IUserEndpoint
     }
 
 
-    public async Task<List<UserModel>> GetById(string Id)
+    public async Task<List<UserModel>> GetByIdAsync(string Id)
     {
         var data = new { Id };
 
@@ -53,7 +47,7 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task<Dictionary<string, string>> GetAllRoles()
+    public async Task<Dictionary<string, string>> GetAllRolesAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/User/Admin/GetAllRoles");
         if (response.IsSuccessStatusCode)
@@ -67,7 +61,7 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task CreateUser(CreateUserModel model)
+    public async Task CreateUserAsync(CreateUserModel model)
     {
         var data = new
         {
@@ -93,7 +87,7 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task UpdateUser(UserModel model)
+    public async Task UpdateUserAsync(UserModel model)
     {
         var data = new
         {
@@ -117,7 +111,7 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task UpdateUserJobTitleId(UserModel model)
+    public async Task UpdateUserJobTitleIdAsync(UserModel model)
     {
         var data = new { model.Id ,model.JobTitleId };
 
@@ -132,7 +126,7 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task CreateRole(string roleName)
+    public async Task CreateRoleAsync(string roleName)
     {
         var data = new { roleName };
 
@@ -150,7 +144,7 @@ public class UserEndpoint : IUserEndpoint
     }
 
 
-    public async Task AddUserToRole(string userId, string roleName)
+    public async Task AddUserToRoleAsync(string userId, string roleName)
     {
         var data = new { userId, roleName };
 
@@ -165,7 +159,7 @@ public class UserEndpoint : IUserEndpoint
         }
     }
 
-    public async Task RemoveUserFromRole(string userId, string roleName)
+    public async Task RemoveUserFromRoleAsync(string userId, string roleName)
     {
         var data = new { userId, roleName };
 
