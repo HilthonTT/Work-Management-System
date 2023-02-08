@@ -1,10 +1,10 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Portal.Models;
+using WSMPortal.Models;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
-namespace Portal.Authentication;
+namespace WSMPortal.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
@@ -35,7 +35,7 @@ public class AuthenticationService : IAuthenticationService
             new KeyValuePair<string, string>("password", userForAuthentication.Password)
         });
 
-        string api = _config["api"] = _config["tokenEndpoint"];
+        string api = _config["api"] += _config["tokenEndpoint"];
         var authResult = await _client.PostAsync(api, data);
         var authContent = await authResult.Content.ReadAsStringAsync();
 

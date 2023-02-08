@@ -1,4 +1,4 @@
-﻿namespace Portal.Models;
+﻿namespace WSMPortal.Models;
 
 public class AuthenticatedUserModel
 {

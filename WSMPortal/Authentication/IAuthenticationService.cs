@@ -1,6 +1,6 @@
-﻿using Portal.Models;
+﻿using WSMPortal.Models;
 
-namespace Portal.Authentication
+namespace WSMPortal.Authentication
 {
     public interface IAuthenticationService
     {

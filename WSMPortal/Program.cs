@@ -1,6 +1,8 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Portal.Authentication;
+using WSMPortal.Authentication;
+using UI.Library.API;
+using UI.Library.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,12 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-// Authentication 
+// Authentication
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthentication();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+// Personal Services
+builder.Services.AddSingleton<IAPIHelper, APIHelper>();
+builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 
 
 var app = builder.Build();
@@ -31,6 +37,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

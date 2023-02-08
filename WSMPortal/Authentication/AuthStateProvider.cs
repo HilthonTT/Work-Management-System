@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using UI.Library.API;
 
-namespace Portal.Authentication;
+namespace WSMPortal.Authentication;
 
 public class AuthStateProvider : AuthenticationStateProvider
 {

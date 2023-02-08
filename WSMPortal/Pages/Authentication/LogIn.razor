@@ -1,0 +1,64 @@
+﻿@page "/login"
+@inject IAuthenticationService authService
+@inject NavigationManager navManager
+
+<h3>LogIn</h3>
+
+@if (showAuthenticationError is true)
+{
+    <div class="alert alert-danger" role="alert">
+        @authenticationErrorText
+    </div>
+}
+
+<EditForm Model="model" OnValidSubmit="ExecuteLogin" class="">
+    <div>
+        <div>
+            <label for="email" class="">Email Address</label>
+            <InputText id="email" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
+        </div>
+
+        <div>
+            <label for="password" class="">Password</label>
+            <InputText id="password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-success">Log In</button>
+        </div>
+
+        <div>
+            <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private AuthenticationUserModel model = new();
+
+    private bool showAuthenticationError = false;
+    private string authenticationErrorText = "";
+
+
+    private async Task ExecuteLogin()
+    {
+        showAuthenticationError = false;
+
+        AuthenticatedUserModel result = await authService.Login(model);
+
+        if (result is not null)
+        {
+            navManager.NavigateTo("");
+        }
+        else
+        {
+            authenticationErrorText = "There was an error when trying to login.";
+            showAuthenticationError = true;
+        }
+    }
+
+    private void RegisterUser()
+    {
+        navManager.NavigateTo("/register");
+    }
+}

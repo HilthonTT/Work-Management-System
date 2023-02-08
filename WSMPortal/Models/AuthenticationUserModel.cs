@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portal.Models;
+namespace WSMPortal.Models;
 
 public class AuthenticationUserModel
 {
