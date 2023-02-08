@@ -11,6 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 var Configuration = builder.Configuration;
 
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("OpenCorsPolicy", opt =>
+        opt.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+    );
+});
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -77,6 +86,9 @@ else
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("OpenCorsPolicy");
+
 app.UseStaticFiles();
 
 app.UseRouting();
