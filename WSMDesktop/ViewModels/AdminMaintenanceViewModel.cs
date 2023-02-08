@@ -22,9 +22,7 @@ public class AdminMaintenanceViewModel : Screen
     private readonly IEventAggregator _events;
     private readonly IWindowManager _window;
     private readonly IMapper _mapper;
-    private readonly ICompanyEndpoint _companyEndpoint;
     private readonly IDepartmentEndpoint _departmentEndpoint;
-    private readonly IJobTitleEndpoint _jobEndpoint;
     private readonly IUserEndpoint _userEndpoint;
     private readonly ITaskEndpoint _taskEndpoint;
     private readonly StatusViewModel _status;
@@ -32,9 +30,7 @@ public class AdminMaintenanceViewModel : Screen
     public AdminMaintenanceViewModel(IEventAggregator events,       
                                 IWindowManager window,
                                 IMapper mapper,
-                                ICompanyEndpoint companyEndpoint,
                                 IDepartmentEndpoint departmentEndpoint,
-                                IJobTitleEndpoint jobEndpoint,
                                 IUserEndpoint userEndpoint,
                                 ITaskEndpoint taskEndpoint,
                                 StatusViewModel status)
@@ -42,9 +38,7 @@ public class AdminMaintenanceViewModel : Screen
         _events = events;
         _window = window;
         _mapper = mapper;
-        _companyEndpoint = companyEndpoint;
         _departmentEndpoint = departmentEndpoint;
-        _jobEndpoint = jobEndpoint;
         _userEndpoint = userEndpoint;
         _taskEndpoint = taskEndpoint;
         _status = status;
