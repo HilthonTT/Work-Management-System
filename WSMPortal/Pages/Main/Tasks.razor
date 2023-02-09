@@ -1,0 +1,73 @@
+﻿@page "/Tasks"
+@inject ITaskEndpoint taskEndpoint
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navManager
+@inject ILoggedInUserModel loggedInUser
+@attribute [Authorize]
+
+<h1>Tasks</h1>
+
+<div class="container-fluid">
+    @if (tasks is null)
+    {
+       <div class="row">
+           <p>No tasks have been loaded.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var task in tasks)
+            {
+                <div class="col-xl-4 col-lg-6 mb-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="mb-4">
+                                    @task.Title
+                                </p>
+                                <p>
+                                    @task.Description
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<TaskModel> tasks;
+
+    private const string TaskListName = "taskList";
+    private const string TaskCacheDate = "taskCacheDate";
+    private double totalMinutes = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tasks = await localStorage.GetItemAsync<List<TaskModel>>(TaskListName);
+        DateTime? cacheDate = await localStorage.GetItemAsync<DateTime?>(TaskCacheDate);
+
+        if (cacheDate is not null)
+        {
+            totalMinutes = DateTime.UtcNow.Subtract((DateTime)cacheDate).TotalMinutes;
+        }
+
+        if (tasks is null || cacheDate is null || totalMinutes > 10)
+        {
+            try
+            {
+                tasks = await taskEndpoint.GetAllAsync();
+                tasks = tasks.Where(x => x.UserId == loggedInUser.Id || x.DepartmentId == loggedInUser.DepartmentId).ToList();
+                await localStorage.SetItemAsync(TaskListName, tasks);
+                await localStorage.SetItemAsync(TaskCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
+}
