@@ -40,6 +40,51 @@
             </TextBlock.Style>
         </TextBlock>
         
+        <!-- Machine Search Bar -->
+        
+        <DockPanel Grid.ColumnSpan="2">
+            <TextBox x:Name="MachineSearchText" 
+                     Height="50"
+                     Width="300"
+                     VerticalAlignment="Bottom"
+                     HorizontalAlignment="Left"
+                     Margin="0 30 0 0"/>
+
+            <Button x:Name="SearchMachine"
+                    Content="Search Machine"
+                    Width="150"
+                    Height="50"
+                    Margin="5 0 0 0"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Left">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding SearchMachineButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DockPanel>
+
         <!-- Machine List -->
 
         <StackPanel Grid.Row="1"
@@ -62,6 +107,56 @@
             </ListBox>
         </StackPanel>
         
+        
+        
+        <!-- Part Search Bar -->
+
+        <DockPanel Grid.Row="0"
+                   Grid.Column="2"
+                   Grid.ColumnSpan="2">
+
+            <Button x:Name="SearchPart"
+                    Content="Search Part"
+                    Width="150"
+                    Height="50"
+                    Margin="275 0 0 0"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding SearchPartButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <TextBox x:Name="PartSearchText" 
+                     Height="50"
+                     Width="300"
+                     VerticalAlignment="Bottom"
+                     HorizontalAlignment="Right"
+                     Margin="0 0 0 0"/>
+        </DockPanel>
+
         <!-- Part List -->
 
         <StackPanel Grid.Row="1"

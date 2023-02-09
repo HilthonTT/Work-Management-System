@@ -74,6 +74,82 @@ public class StockViewModel : Screen
         Parts = new BindingList<PartDisplayModel>(parts);
     }
 
+
+    private string _machineSearchText;
+
+    public string MachineSearchText
+    {
+        get { return _machineSearchText; }
+        set 
+        { 
+            _machineSearchText = value;
+            NotifyOfPropertyChange(() => MachineSearchText);
+        }
+    }
+
+    public static string SearchMachineButtonColor
+    {
+        get
+        {
+            return "#121212";
+        }
+    }
+
+
+    public async Task SearchMachine()
+    {
+        if (string.IsNullOrWhiteSpace(MachineSearchText))
+        {
+            await LoadMachines();
+        }
+        else
+        {
+            await LoadMachines();
+
+            var machineList = Machines.Where(x => x.ModelName.Contains(MachineSearchText) ||
+                                             x.MachineName.Contains(MachineSearchText)).ToList();
+
+            Machines = new BindingList<MachineDisplayModel>(machineList);
+        }
+    }
+
+    private string _partSearchText;
+
+    public string PartSearchText
+    {
+        get { return _partSearchText; }
+        set 
+        {
+            _partSearchText = value; 
+            NotifyOfPropertyChange(() => PartSearchText);
+        }
+    }
+
+    public static string SearchPartButtonColor
+    {
+        get
+        {
+            return "#121212";
+        }
+    }
+
+    public async Task SearchPart()
+    {
+        if (string.IsNullOrWhiteSpace(PartSearchText))
+        {
+            await LoadParts();
+        }
+        else
+        {
+            await LoadParts();
+
+            var part = Parts.Where(x => x.ModelName.Contains(PartSearchText) ||
+                                             x.PartName.Contains(PartSearchText)).ToList();
+
+            Parts = new BindingList<PartDisplayModel>(part);
+        }
+    }
+
     private BindingList<MachineDisplayModel> _machines;
 
     public BindingList<MachineDisplayModel> Machines
