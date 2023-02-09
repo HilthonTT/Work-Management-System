@@ -21,6 +21,11 @@ builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 builder.Services.AddSingleton<IAPIHelper, APIHelper>();
 builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 
+builder.Services.AddTransient<ICompanyEndpoint, CompanyEndpoint>();
+builder.Services.AddTransient<IDepartmentEndpoint, DepartmentEndpoint>();
+builder.Services.AddTransient<IJobTitleEndpoint, JobTitleEndpoint>();
+builder.Services.AddTransient<ITaskEndpoint, TaskEndpoint>();
+builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
 
 var app = builder.Build();
 
