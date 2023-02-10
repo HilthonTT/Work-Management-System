@@ -7,36 +7,20 @@
 
 <h1>Tasks</h1>
 
-<div class="container-fluid">
-    @if (tasks is null)
-    {
-       <div class="row">
-           <p>No tasks have been loaded.</p>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            @foreach (var task in tasks)
-            {
-                <div class="col-xl-4 col-lg-6 mb-3">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <p class="mb-4">
-                                    @task.Title
-                                </p>
-                                <p>
-                                    @task.Description
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-</div>
+@if (tasks is not null)
+{
+    <div>
+        <Virtualize Items="tasks" OverscanCount="10" Context="task">
+            <p>Title: @task.Title</p>
+            <p>Description: @task.Description</p>
+        </Virtualize>
+    </div>
+}
+else
+{
+    <h3>No Tasks loaded.</h3>
+}
+
 
 @code {
     private List<TaskModel> tasks;
