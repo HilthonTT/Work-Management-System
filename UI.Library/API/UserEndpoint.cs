@@ -16,7 +16,7 @@ public class UserEndpoint : IUserEndpoint
         _logger = logger ?? NullLogger<UserEndpoint>.Instance;
     }
 
-    public async Task<List<UserModel>> GetAllsAsync()
+    public async Task<List<UserModel>> GetAllAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/User/Admin/GetAllUsers");
         if (response.IsSuccessStatusCode)
