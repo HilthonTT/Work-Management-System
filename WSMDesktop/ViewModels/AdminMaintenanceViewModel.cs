@@ -81,7 +81,7 @@ public class AdminMaintenanceViewModel : Screen
 
     public async Task LoadUsers()
     {
-        var userList = await _userEndpoint.GetAllsAsync();
+        var userList = await _userEndpoint.GetAllAsync();
         Users = new BindingList<UserModel>(userList);
     }
 

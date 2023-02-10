@@ -86,7 +86,7 @@ public class AdminBranchViewModel : Screen
 
     private async Task LoadAllUsers()
     {
-        var userList = await _userEndpoint.GetAllsAsync();
+        var userList = await _userEndpoint.GetAllAsync();
         Users = new BindingList<UserModel>(userList);
     }
 
