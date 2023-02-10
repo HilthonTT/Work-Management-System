@@ -17,7 +17,6 @@
 
 <EditForm Model="model" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    
     <div class="row">
         @if (users is not null || departments is not null)
         {
@@ -33,7 +32,6 @@
                     }
                 </MyInputRadioGroup>
             </div>
-
             <label for="task-departmentId" class="col-md-2 col-form-label">Department: </label>
             <div class="col-md-10">
                 <MyInputRadioGroup id="departments" @bind-Value="model.DepartmentId">
@@ -48,35 +46,29 @@
             </div>
         } 
     </div>
-
     <div class="row">
         <label for="task-title" class="col-md-2 col-form-label">Title: </label>
         <div class="col-md-10">
             <InputText @bind-Value="model.Title" placeholder="Title" />
             <ValidationMessage For="@(() => model.Title)" />
         </div>
-
         <label for="task-description" class="col-md-2 col-form-label">Description: </label>
         <div class="col-md-10">
             <InputText @bind-Value="model.Description" placeholder="Description" />
             <ValidationMessage For="@(() => model.Description)" />
         </div>
-
          <label for="task-DateDue" class="col-md-2 col-form-label">Date Due: </label>
         <div class="col-md-10">
             <InputDate @bind-Value="model.DateDue" />
             <ValidationMessage For="@(() => model.DateDue)" />
         </div>
     </div>
-
     <div class="row">
         <button type="submit" class="btn btn-success">
             Submit
         </button>
     </div>
-
 </EditForm>
-
 
 @code {
     private double totalMinutesDepartment = 0;
