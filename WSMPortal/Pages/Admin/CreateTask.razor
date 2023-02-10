@@ -1,0 +1,154 @@
+﻿@page "/createTask"
+@inject ITaskEndpoint taskEndpoint
+@inject IDepartmentEndpoint departmentEndpoint
+@inject IUserEndpoint userEndpoint
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Create Task</h3>
+
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+<EditForm Model="model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="row">
+        @if (users is not null || departments is not null)
+        {
+            <label for="task-userId" class="col-md-2 col-form-label">User: </label>
+            <div class="col-md-10">
+                <MyInputRadioGroup id="users" @bind-Value="model.UserId">
+                    @foreach (var user in users)
+                    {
+                        <div>
+                            <InputRadio Value="@user.Id" id="@user.Id" />
+                            <label for="@user.Id">@user.FullName</label>
+                        </div>
+                    }
+                </MyInputRadioGroup>
+            </div>
+            <label for="task-departmentId" class="col-md-2 col-form-label">Department: </label>
+            <div class="col-md-10">
+                <MyInputRadioGroup id="departments" @bind-Value="model.DepartmentId">
+                    @foreach (var department in departments)
+                    {
+                        <div>
+                            <InputRadio Value="@department.Id" id="@department.Id" />
+                            <label for="@department.Id">@department.DepartmentName</label>
+                        </div>
+                    }
+                </MyInputRadioGroup>
+            </div>
+        } 
+    </div>
+    <div class="row">
+        <label for="task-title" class="col-md-2 col-form-label">Title: </label>
+        <div class="col-md-10">
+            <InputText @bind-Value="model.Title" placeholder="Title" />
+            <ValidationMessage For="@(() => model.Title)" />
+        </div>
+        <label for="task-description" class="col-md-2 col-form-label">Description: </label>
+        <div class="col-md-10">
+            <InputText @bind-Value="model.Description" placeholder="Description" />
+            <ValidationMessage For="@(() => model.Description)" />
+        </div>
+         <label for="task-DateDue" class="col-md-2 col-form-label">Date Due: </label>
+        <div class="col-md-10">
+            <InputDate @bind-Value="model.DateDue" />
+            <ValidationMessage For="@(() => model.DateDue)" />
+        </div>
+    </div>
+    <div class="row">
+        <button type="submit" class="btn btn-success">
+            Submit
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    private double totalMinutesDepartment = 0;
+    private double totalMinutesUser = 0;
+
+    private List<DepartmentModel> departments;
+    private const string DepartmentListName = "departmentList";
+    private const string DepartmentCacheDate = "departmentCacheDate";
+
+    private List<UserModel> users;
+    private const string UserListName = "userListName";
+    private const string UserCacheDate = "userCacheDate";
+
+    private CreateTaskModel model = new();
+    private string errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        departments = await localStorage.GetItemAsync<List<DepartmentModel>>(DepartmentListName);
+        users = await localStorage.GetItemAsync<List<UserModel>>(UserListName);
+
+        DateTime? cacheDateDepartments = await localStorage.GetItemAsync<DateTime?>(DepartmentCacheDate);
+        DateTime? cacheDateUsers = await localStorage.GetItemAsync<DateTime?>(UserCacheDate);
+
+        if (cacheDateDepartments is not null || cacheDateUsers is not null)
+        {
+            totalMinutesDepartment = DateTime.UtcNow.Subtract((DateTime)cacheDateDepartments).TotalMinutes;
+            totalMinutesUser = DateTime.UtcNow.Subtract((DateTime)cacheDateUsers).TotalMinutes;
+        }
+
+        if (departments is null || users is null || totalMinutesDepartment > 10 || totalMinutesUser > 10)
+        {
+            try
+            {
+                departments = await departmentEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(DepartmentListName, departments);
+                await localStorage.SetItemAsync(DepartmentCacheDate, DateTime.UtcNow);
+
+                users = await userEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(UserListName, users);
+                await localStorage.SetItemAsync(UserCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        errorMessage = "";
+
+        if (model.UserId is null && model.DepartmentId is null || model.DateDue < DateTime.UtcNow.Date)
+        {
+            errorMessage = "Oops Something Went Wrong...Maybe a user/department wasn't selected or the chosen date was lower than today.";
+        }
+        else
+        {
+            try
+            {
+                TaskModel task = new()
+                {
+                    UserId = model.UserId,
+                    DepartmentId = model.DepartmentId,
+                    Title = model.Title,
+                    Description = model.Description,
+                    DateDue = model.DateDue,
+                    PercentageDone = 0,
+                    IsDone = false,
+                    DateCreated = DateTime.UtcNow
+                };
+
+                await taskEndpoint.PostTaskAsync(task);
+                navManager.NavigateTo("");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+    }
+}
