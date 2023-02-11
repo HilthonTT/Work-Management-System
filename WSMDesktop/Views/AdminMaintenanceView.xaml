@@ -34,8 +34,53 @@
                    FontSize="50" 
                    HorizontalAlignment="Center" />
 
+        <!-- Search User -->
         
-        <!-- Company List -->
+        <DockPanel Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2">
+            
+            <TextBox x:Name="UserSearchText"
+                     VerticalAlignment="Bottom" 
+                     Width="350" 
+                     Height="50" />
+
+            <Button x:Name="SearchUser"
+                    Content="Search User"
+                    Width="180"
+                    Height="50"
+                    Margin="0 0 0 0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding SearchUserButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="180" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DockPanel>
+
+        <!-- User List -->
 
         <StackPanel Grid.Row="1"
                     Grid.RowSpan="4"
@@ -57,6 +102,52 @@
         </StackPanel>
         
         <!-- Department List -->
+
+        <DockPanel Grid.Row="0"
+                   Grid.Column="2"
+                   Grid.ColumnSpan="2"
+                   Margin="170 0 0 0">
+
+            <Button x:Name="SearchDepartment"
+                    Content="Search Department"
+                    Width="180"
+                    Height="50"
+                    Margin="0 0 0 0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{Binding SearchDepartmentButtonColor}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Cursor" Value="Hand" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="180" Height="50"
+                            CornerRadius="8"
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <TextBox x:Name="DepartmentSearchText"
+                     VerticalAlignment="Bottom" 
+                     Width="350" 
+                     Height="50" />
+
+        </DockPanel>
 
         <StackPanel Grid.Row="1"
                     Grid.RowSpan="4"

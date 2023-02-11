@@ -72,6 +72,66 @@ public class AdminMaintenanceViewModel : Screen
         }
     }
 
+    private string _userSearchText;
+
+    public string UserSearchText
+    {
+        get { return _userSearchText; }
+        set 
+        { 
+            _userSearchText = value; 
+            NotifyOfPropertyChange(() => UserSearchText);
+        }
+    }
+
+    public async Task SearchUser()
+    {
+        if (string.IsNullOrWhiteSpace(UserSearchText))
+        {
+            await LoadUsers();
+        }
+        else
+        {
+            await LoadUsers();
+
+            var userList = Users.Where(x => x.FirstName.Contains(UserSearchText) || 
+                                        x.LastName.Contains(UserSearchText)).ToList();
+
+            Users = new BindingList<UserModel>(userList);
+        }
+    }
+
+    private string _departmentSearchText;
+
+    public string DepartmentSearchText
+    {
+        get { return _departmentSearchText; }
+        set 
+        { 
+            _departmentSearchText = value; 
+            NotifyOfPropertyChange(() => DepartmentSearchText);
+        }
+    }
+
+    public async Task SearchDepartment()
+    {
+        if (string.IsNullOrWhiteSpace(DepartmentSearchText))
+        {
+            await LoadDepartments();
+        }
+        else
+        {
+            await LoadDepartments();
+
+            var departmentList = Departments.Where(x => x.DepartmentName.Contains(DepartmentSearchText) ||
+                                                    x.Description.Contains(DepartmentSearchText)).ToList();
+
+            Departments = new BindingList<DepartmentDisplayModel>(departmentList);
+        }
+    }
+
+
+
     public async Task LoadDepartments()
     {
         var departmentList = await _departmentEndpoint.GetAllAsync();
