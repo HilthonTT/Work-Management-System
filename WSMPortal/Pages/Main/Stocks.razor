@@ -7,10 +7,11 @@
 
 <h1>Stocks</h1>
 
+<h2>Parts</h2>
+
 @if (parts is not null)
 {
-    <div>
-        <strong>Parts</strong>
+    <div class="container">
         <Virtualize Items="parts" Context="part" OverscanCount="10">
             <p>Part Name: @part.PartName</p>
             <p>Part Model: @part.ModelName</p>
@@ -21,13 +22,14 @@
 }
 else
 {
-    <div>No Part Loaded.</div>
+    <div class="alert alert-danger">No Part Loaded.</div>
 }
+
+<h2>Machines</h2>
 
 @if (machines is not null)
 {
-    <div>
-        <strong>Machines</strong>
+    <div class="container">
         <Virtualize Items="machines" Context="machine" OverscanCount="10">
             <p>Machine Name: @machine.MachineName</p>
             <p>Machine Model: @machine.ModelName</p>
@@ -39,7 +41,7 @@ else
 }
 else
 {
-    <div>No Machine Loaded</div>
+    <div class="alert alert-danger">No Machine Loaded</div>
 }
 
 
