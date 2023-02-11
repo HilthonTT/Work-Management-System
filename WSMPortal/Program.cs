@@ -6,6 +6,9 @@ using UI.Library.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var serviceProvider = builder.Services.BuildServiceProvider();
+var logger = serviceProvider.GetService<ILogger<StockEndpoint>>();
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -26,6 +29,9 @@ builder.Services.AddTransient<IDepartmentEndpoint, DepartmentEndpoint>();
 builder.Services.AddTransient<IJobTitleEndpoint, JobTitleEndpoint>();
 builder.Services.AddTransient<ITaskEndpoint, TaskEndpoint>();
 builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
+builder.Services.AddTransient<IStockEndpoint, StockEndpoint>();
+builder.Services.AddSingleton<ILogger, Logger<StockEndpoint>>();
+
 
 var app = builder.Build();
 
