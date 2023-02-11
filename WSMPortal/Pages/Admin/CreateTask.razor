@@ -93,9 +93,13 @@
         DateTime? cacheDateDepartments = await localStorage.GetItemAsync<DateTime?>(DepartmentCacheDate);
         DateTime? cacheDateUsers = await localStorage.GetItemAsync<DateTime?>(UserCacheDate);
 
-        if (cacheDateDepartments is not null || cacheDateUsers is not null)
+        if (cacheDateDepartments is not null)
         {
             totalMinutesDepartment = DateTime.UtcNow.Subtract((DateTime)cacheDateDepartments).TotalMinutes;
+        }
+
+        if (cacheDateUsers is not null)
+        {
             totalMinutesUser = DateTime.UtcNow.Subtract((DateTime)cacheDateUsers).TotalMinutes;
         }
 
