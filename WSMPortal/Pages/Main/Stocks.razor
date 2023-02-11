@@ -1,0 +1,94 @@
+﻿@page "/Stocks"
+@inject IStockEndpoint stockEndpoint
+@inject ILoggedInUserModel loggedInUser
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h1>Stocks</h1>
+
+@if (parts is not null)
+{
+    <div>
+        <strong>Parts</strong>
+        <Virtualize Items="parts" Context="part" OverscanCount="10">
+            <p>Part Name: @part.PartName</p>
+            <p>Part Model: @part.ModelName</p>
+            <p>Machine Id: @part.MachineId</p>
+            <p>Date Purchased: @part.DatePurchased</p>
+        </Virtualize>
+    </div>
+}
+else
+{
+    <div>No Part Loaded.</div>
+}
+
+@if (machines is not null)
+{
+    <div>
+        <strong>Machines</strong>
+        <Virtualize Items="machines" Context="machine" OverscanCount="10">
+            <p>Machine Name: @machine.MachineName</p>
+            <p>Machine Model: @machine.ModelName</p>
+            <p>Purchased Price: @machine.PurchasedPrice</p>
+            <p>EAN: @machine.EuropeanArticleNumber</p>
+            <p>Date Purchased: @machine.DatePurchased</p>
+        </Virtualize>
+    </div>
+}
+else
+{
+    <div>No Machine Loaded</div>
+}
+
+
+@code {
+    private List<PartModel> parts;
+    private const string PartListName = "partList";
+    private const string PartCacheDate = "partCacheDate";
+    private double totalMinutesPart = 0;
+
+    private List<MachineModel> machines;
+    private const string MachineListName = "machineList";
+    private const string MachineCacheDate = "machineCacheDate";
+    private double totalMinutesMachine = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        parts = await localStorage.GetItemAsync<List<PartModel>>(PartListName);
+        DateTime? cacheDatePart = await localStorage.GetItemAsync<DateTime?>(PartCacheDate);
+
+        machines = await localStorage.GetItemAsync<List<MachineModel>>(MachineListName);
+        DateTime? cacheDateMachine = await localStorage.GetItemAsync<DateTime?>(MachineCacheDate);
+
+        if (cacheDatePart is not null)
+        {
+            totalMinutesPart = DateTime.UtcNow.Subtract((DateTime)cacheDatePart).TotalMinutes;
+        }
+
+        if (cacheDateMachine is not null)
+        {
+            totalMinutesMachine = DateTime.UtcNow.Subtract((DateTime)cacheDateMachine).TotalMinutes;
+        }
+
+        if (parts is null || machines is null || 
+            cacheDatePart is null || cacheDateMachine is null || 
+            totalMinutesPart > 10 || totalMinutesMachine > 10)
+        {
+            try
+            {
+                parts = await stockEndpoint.GetAllPartsAsync();
+                await localStorage.SetItemAsync(PartListName, parts);
+                await localStorage.SetItemAsync(PartCacheDate, DateTime.UtcNow);
+                machines = await stockEndpoint.GetAllMachinesAsync();
+                await localStorage.SetItemAsync(MachineListName, machines);
+                await localStorage.SetItemAsync(MachineCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+    }
+}
