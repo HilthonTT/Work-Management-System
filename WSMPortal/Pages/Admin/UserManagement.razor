@@ -1,0 +1,125 @@
+﻿@page "/admin/userManagement"
+@inject IUserEndpoint userEndpoint
+@inject IJobTitleEndpoint jobTitleEndpoint
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>User Management</h1>
+
+<hr />
+@if (users is not null)
+{
+    <div class="">
+        <h2>Users</h2>
+        <Virtualize Items="users" Context="user" OverscanCount="10">
+            <p>Full Name: @user.FullName</p>
+        </Virtualize>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">No users loaded.</div>
+}
+
+<hr />
+
+@if (jobs is not null)
+{
+    <div class="">
+        <h2>Jobs</h2>
+        <Virtualize Items="jobs" Context="job" OverscanCount="10">
+            <p>Name: @job.JobName</p>
+        </Virtualize>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">No Jobs loaded.</div>
+}
+
+<hr />
+
+@if (roles is not null)
+{
+    <div class="">
+        <h2>Roles</h2>
+        <Virtualize Items="roles" Context="role" OverscanCount="10">
+            <p>Name: @role.Value</p>
+        </Virtualize>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">No Jobs loaded.</div>
+}
+
+<hr />
+
+@code {
+    private List<UserModel> users;
+    private UserModel selectedUser;
+    private const string UserListName = "userList";
+    private const string UserCacheDate = "userCacheDate";
+    private double totalMinutesUser = 0;
+
+    private List<JobTitleModel> jobs;
+    private JobTitleModel selectedJob;
+    private const string JobListName = "jobList";
+    private const string JobCacheDate = "jobCacheDate";
+    private double totalMinutesJob = 0;
+
+    private Dictionary<string, string> roles;
+    private const string RoleListName = "roleList";
+    private const string RoleCacheDate = "roleCacheDate";
+    private double totalMinutesRole = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await localStorage.GetItemAsync<List<UserModel>>(UserListName);
+        DateTime? cacheDateUser = await localStorage.GetItemAsync<DateTime?>(UserCacheDate);
+
+        jobs = await localStorage.GetItemAsync<List<JobTitleModel>>(JobListName);
+        DateTime? cacheDateJob = await localStorage.GetItemAsync<DateTime?>(JobCacheDate);
+
+        roles = await localStorage.GetItemAsync<Dictionary<string, string>>(RoleListName);
+        DateTime? cacheDateRole = await localStorage.GetItemAsync<DateTime?>(RoleCacheDate);
+
+        if (cacheDateUser is not null)
+        {
+            totalMinutesUser = DateTime.UtcNow.Subtract((DateTime)cacheDateUser).TotalMinutes;
+        }
+
+        if (cacheDateJob is not null)
+        {
+            totalMinutesJob = DateTime.UtcNow.Subtract((DateTime)cacheDateJob).TotalMinutes;
+        }
+
+        if (cacheDateRole is not null)
+        {
+            totalMinutesRole = DateTime.UtcNow.Subtract((DateTime)cacheDateRole).TotalMinutes;
+        }
+
+        if (users is null || jobs is null || roles is null || 
+            cacheDateUser is null || cacheDateJob is null || cacheDateRole is null ||
+            totalMinutesUser > 10 || totalMinutesJob > 10 || totalMinutesRole > 10)
+        {
+            try
+            {
+                users = await userEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(UserListName, users);
+                await localStorage.SetItemAsync(UserCacheDate, DateTime.UtcNow);
+                jobs = await jobTitleEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(JobListName, jobs);
+                await localStorage.SetItemAsync(JobCacheDate, DateTime.UtcNow);
+                var allRoles = await userEndpoint.GetAllRolesAsync();
+                await localStorage.SetItemAsync(RoleListName, roles);
+                await localStorage.SetItemAsync(RoleCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+    }
+}

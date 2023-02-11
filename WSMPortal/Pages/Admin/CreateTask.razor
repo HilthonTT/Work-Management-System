@@ -1,4 +1,4 @@
-﻿@page "/createTask"
+﻿@page "/admin/createTask"
 @inject ITaskEndpoint taskEndpoint
 @inject IDepartmentEndpoint departmentEndpoint
 @inject IUserEndpoint userEndpoint
@@ -49,17 +49,17 @@
     <div class="row">
         <label for="task-title" class="col-md-2 col-form-label">Title: </label>
         <div class="col-md-10">
-            <InputText @bind-Value="model.Title" placeholder="Title" />
+            <InputText @bind-Value="model.Title" placeholder="Title" class="form-control"/>
             <ValidationMessage For="@(() => model.Title)" />
         </div>
         <label for="task-description" class="col-md-2 col-form-label">Description: </label>
         <div class="col-md-10">
-            <InputText @bind-Value="model.Description" placeholder="Description" />
+            <InputText @bind-Value="model.Description" placeholder="Description" class="form-control"/>
             <ValidationMessage For="@(() => model.Description)" />
         </div>
          <label for="task-DateDue" class="col-md-2 col-form-label">Date Due: </label>
         <div class="col-md-10">
-            <InputDate @bind-Value="model.DateDue" />
+            <InputDate @bind-Value="model.DateDue" class="form-control" />
             <ValidationMessage For="@(() => model.DateDue)" />
         </div>
     </div>
