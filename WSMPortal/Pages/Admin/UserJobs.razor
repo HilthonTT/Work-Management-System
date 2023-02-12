@@ -1,0 +1,159 @@
+﻿@page "/admin/userJobs"
+@inject IUserEndpoint userEndpoint
+@inject IJobTitleEndpoint jobTitleEndpoint
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>User Jobs</h1>
+
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+@if (users is not null && jobs is not null)
+{
+    <div class="">
+        <div class="row">
+            <div class="col-sm">
+                <EditForm Model="selectedUserJobPair" OnValidSubmit="AddSelectedJob">
+                    <div class="row">
+                        <label for="user-id" class="col-md-2 col-form-label">User: </label>
+                        <div class="col-md-10">
+                            <MyInputRadioGroup id="users" @bind-Value="selectedUserJobPair.Id">
+                                @foreach (var user in users)
+                                {
+                                    <div>
+                                        <InputRadio Value="@user.Id" id="@user.Id" />
+                                        <label for="@user.Id">@user.FullName</label>
+                                    </div>
+                                }
+                            </MyInputRadioGroup>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label for="job-id" class="col-md-2 col-form-label">Job Title: </label>
+                        <div class="col-md-10">
+                            <MyInputRadioGroup id="jobs" @bind-Value="selectedUserJobPair.JobId">
+                                @foreach (var job in jobs)
+                                {
+                                    <div>
+                                        <InputRadio Value="@job.Id" id="@job.Id" />
+                                        <label for="@job.Id">@job.JobName</label>
+                                    </div>
+                                }
+                            </MyInputRadioGroup>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Add Selected Job
+                    </button>
+                    <button type="button" class="btn btn-secondary" @onclick="RemoveSelectedJob">
+                        Remove Selected Job
+                    </button>
+                </EditForm>
+            </div>
+            <div class="col-sm">
+                <Virtualize Items="users" Context="user" OverscanCount="10">
+                    <div>
+                        <div>@user.FullName @user.JobList</div>
+                    </div>
+                </Virtualize>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string errorMessage = "";
+    private UserJobPairModel selectedUserJobPair = new();
+
+    private List<JobTitleModel> jobs;
+    private const string JobListName = "jobList";
+    private const string JobCacheDate = "jobCacheDate";
+    private double totalMinutesJob = 0;
+
+    private List<UserModel> users;
+    private const string UserListName = "userList";
+    private const string UserCacheDate = "userCacheDate";
+    private double totalMinutesUser = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await localStorage.GetItemAsync<List<UserModel>>(UserListName);
+        DateTime? cacheDateUser = await localStorage.GetItemAsync<DateTime?>(UserCacheDate);
+
+        jobs = await localStorage.GetItemAsync<List<JobTitleModel>>(JobListName);
+        DateTime? cacheDateJob = await localStorage.GetItemAsync<DateTime?>(JobCacheDate);
+
+        if (cacheDateUser is not null)
+        {
+            totalMinutesUser = DateTime.UtcNow.Subtract((DateTime)cacheDateUser).TotalMinutes;
+        }
+
+        if (cacheDateJob is not null)
+        {
+            totalMinutesJob = DateTime.UtcNow.Subtract((DateTime)cacheDateJob).TotalMinutes;
+        }
+
+
+        if (users is null || jobs is null ||
+            cacheDateUser is null || cacheDateJob is null ||
+            totalMinutesUser > 10 || totalMinutesJob > 10)
+        {
+            try
+            {
+                users = await userEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(UserListName, users);
+                await localStorage.SetItemAsync(UserCacheDate, DateTime.UtcNow);
+                jobs = await jobTitleEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(JobListName, jobs);
+                await localStorage.SetItemAsync(JobCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+        }
+    }
+
+    private async Task AddSelectedJob()
+    {
+        try
+        {
+            UserModel user = new()
+            {
+                Id = selectedUserJobPair.Id,
+                JobTitleId = selectedUserJobPair.JobId
+            };
+
+            await userEndpoint.UpdateUserJobTitleIdAsync(user);
+        }
+        catch
+        {
+            errorMessage = "A User Or A Job Title Must Be Selected.";
+        }
+    }
+
+    private async Task RemoveSelectedJob()
+    {
+        try
+        {
+            UserModel user = new()
+                {
+                    Id = selectedUserJobPair.Id,
+                    JobTitleId = null
+                };
+
+            await userEndpoint.UpdateUserJobTitleIdAsync(user);
+        }
+        catch
+        {
+            errorMessage = "A User Or A Job Title Must Be Selected.";
+        }
+    }
+}
