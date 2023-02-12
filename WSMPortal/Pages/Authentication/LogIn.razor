@@ -2,7 +2,7 @@
 @inject IAuthenticationService authService
 @inject NavigationManager navManager
 
-<h3>LogIn</h3>
+<h1>Log In</h1>
 
 @if (showAuthenticationError is true)
 {
@@ -11,25 +11,32 @@
     </div>
 }
 
-<EditForm Model="model" OnValidSubmit="ExecuteLogin" class="">
+<EditForm Model="model" OnValidSubmit="ExecuteLogin">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <label for="first-name" class="col-md-2 col-form-label">Email Address: </label>
+        <div class="md-10">
+            <InputText id="first-name" class="form-control mb-4" @bind-Value="model.Email" />
+            <ValidationMessage For="@(() => model.Email)" />
+        </div>
+    </div>
+    <div class="row">
+        <label for="last-name" class="col-md-2 col-form-label">Password: </label>
+        <div class="md-10">
+            <InputText id="last-name" type="password" class="form-control mb-4" @bind-Value="model.Password" />
+            <ValidationMessage For="@(() => model.Password)" />
+        </div>
+    </div>
     <div>
-        <div>
-            <label for="email" class="">Email Address</label>
-            <InputText id="email" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
-        </div>
+       <div class="col-md-12 text-center">
+           <button class="btn btn-success">Login</button>
+       </div>
+    </div>
 
-        <div>
-            <label for="password" class="">Password</label>
-            <InputText id="password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
-        </div>
-
-        <div>
-            <button type="submit" class="btn btn-success">Log In</button>
-        </div>
-
-        <div>
-            <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
-        </div>
+    <div class="mt-1">
+       <div class="col-md-12 text-center">
+           <button class="btn btn-secondary" @onclick="RegisterUser">Register</button>
+       </div>
     </div>
 </EditForm>
 
@@ -48,7 +55,7 @@
 
         if (result is not null)
         {
-            navManager.NavigateTo("");
+            navManager.NavigateTo("/");
         }
         else
         {
