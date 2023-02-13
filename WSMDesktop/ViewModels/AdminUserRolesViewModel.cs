@@ -59,6 +59,43 @@ public class AdminUserRolesViewModel : Screen
         }
     }
 
+    private string _searchUserText;
+
+    public string SearchUserText
+    {
+        get { return _searchUserText; }
+        set 
+        {
+            _searchUserText = value; 
+            NotifyOfPropertyChange(() => SearchUserText);
+        }
+    }
+
+    public static string SearchUserButtonColor
+    {
+        get
+        {
+            return "#121212";
+        }
+    }
+
+    public async Task SearchUser()
+    {
+        if (string.IsNullOrWhiteSpace(SearchUserText))
+        {
+            await LoadUsers();
+        }
+        else
+        {
+            await LoadUsers();
+
+            var userList = Users.Where(x => x.FirstName.Contains(SearchUserText) ||
+                                        x.LastName.Contains(SearchUserText)).ToList();
+
+            Users = new BindingList<UserModel>(userList);
+        }
+    }
+
     private async Task LoadUsers()
     {
         var userList = await _userEndpoint.GetAllAsync();
