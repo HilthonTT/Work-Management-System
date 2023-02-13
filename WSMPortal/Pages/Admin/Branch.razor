@@ -1,0 +1,58 @@
+﻿@page "/Branch"
+@inject ICompanyEndpoint companyEndpoint
+@inject IDepartmentEndpoint departmentEndpoint
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>Branch</h1>
+
+@code {
+    private double totalMinutesCompany = 0;
+    private double totalMinutesDepartment = 0;
+
+    private List<CompanyModel> companies;
+    private const string CompanyListName = "companyList";
+    private const string CompanyCacheDate = "companyCacheDate";
+
+    private List<DepartmentModel> departments;
+    private const string DepartmentListName = "departmentList";
+    private const string DepartmentCacheDate = "departmentCacheDate";
+
+    private string errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        companies = await localStorage.GetItemAsync<List<CompanyModel>>(CompanyListName);
+        departments = await localStorage.GetItemAsync<List<DepartmentModel>>(DepartmentListName);
+
+        DateTime? cacheDateCompanies = await localStorage.GetItemAsync<DateTime?>(CompanyCacheDate);
+        DateTime? cacheDateDepartments = await localStorage.GetItemAsync<DateTime?>(DepartmentCacheDate);
+
+        if (cacheDateCompanies is not null)
+        {
+            totalMinutesCompany = DateTime.UtcNow.Subtract((DateTime)cacheDateCompanies).TotalMinutes;
+        }
+
+        if (cacheDateDepartments is not null)
+        {
+            totalMinutesDepartment = DateTime.UtcNow.Subtract((DateTime)cacheDateDepartments).TotalMinutes;
+        }
+
+        if (companies is null || departments is null || totalMinutesCompany > 10 || totalMinutesDepartment > 10)
+        {
+            try
+            {
+                companies = await companyEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(CompanyListName, companies);
+                await localStorage.SetItemAsync(CompanyCacheDate, DateTime.UtcNow);
+                departments = await departmentEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(DepartmentListName, departments);
+                await localStorage.SetItemAsync(DepartmentCacheDate, DateTime.UtcNow);            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+        }
+    }
+}
