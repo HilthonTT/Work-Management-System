@@ -48,7 +48,8 @@
                 await localStorage.SetItemAsync(CompanyCacheDate, DateTime.UtcNow);
                 departments = await departmentEndpoint.GetAllAsync();
                 await localStorage.SetItemAsync(DepartmentListName, departments);
-                await localStorage.SetItemAsync(DepartmentCacheDate, DateTime.UtcNow);            }
+                await localStorage.SetItemAsync(DepartmentCacheDate, DateTime.UtcNow);
+            }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
