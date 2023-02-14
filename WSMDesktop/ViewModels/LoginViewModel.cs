@@ -22,7 +22,21 @@ public class LoginViewModel : Screen
         _events = events;
     }
 
-	private string _email = "elevate4you9@gmail.com";
+	public string EmailAddressButtonColor
+	{
+		get
+		{
+			if (string.IsNullOrWhiteSpace(Email) == false)
+			{
+				return "Green";
+			}
+
+			return "Red";
+		}
+	}
+
+
+    private string _email = "elevate4you9@gmail.com";
 
 	public string Email
 	{
@@ -33,10 +47,25 @@ public class LoginViewModel : Screen
 			NotifyOfPropertyChange(() => Email);
             NotifyOfPropertyChange(() => CanLogIn);
             NotifyOfPropertyChange(() => LoginButtonColor);
+			NotifyOfPropertyChange(() => EmailAddressButtonColor);
         }
 	}
 
-	private string _password = "Pwd12345.";
+	public string PasswordButtonColor
+	{
+		get
+		{
+			if (string.IsNullOrWhiteSpace(Password) == false)
+			{
+				return "Green";
+			}
+
+			return "Red";
+		}
+	}
+
+
+    private string _password = "Pwd12345.";
 
 	public string Password
 	{
@@ -47,6 +76,7 @@ public class LoginViewModel : Screen
 			NotifyOfPropertyChange(() => Password);
 			NotifyOfPropertyChange(() => CanLogIn);
 			NotifyOfPropertyChange(() => LoginButtonColor);
+			NotifyOfPropertyChange(() => PasswordButtonColor);
 		}
 	}
 
