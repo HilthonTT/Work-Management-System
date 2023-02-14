@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using UI.Library.API;
@@ -135,6 +134,19 @@ public class AdminBranchViewModel : Screen
         }
     }
 
+    public string SelectedCompanyButtonColor
+    {
+        get
+        {
+            if (SelectedCompany is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     private CompanyDisplayModel _selectedCompany;
 
     public CompanyDisplayModel SelectedCompany
@@ -155,6 +167,7 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => SelectedCompanyText);
             NotifyOfPropertyChange(() => CanDeleteSelectedCompany);
             NotifyOfPropertyChange(() => DeleteCompanyButtonColor);
+            NotifyOfPropertyChange(() => SelectedCompanyButtonColor);
         }
     }
 
@@ -237,6 +250,19 @@ public class AdminBranchViewModel : Screen
         }
     }
 
+    public string SelectedDepartmentButtonColor
+    {
+        get
+        {
+            if (SelectedDepartment is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     private DepartmentDisplayModel _selectedDepartment;
 
     public DepartmentDisplayModel SelectedDepartment
@@ -256,6 +282,7 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => SelectedDepartmentText);
             NotifyOfPropertyChange(() => CanDeleteSelectedDepartment);
             NotifyOfPropertyChange(() => DeleteDepartmentButtonColor);
+            NotifyOfPropertyChange(() => SelectedDepartmentButtonColor);
         }
     }
 
@@ -293,18 +320,44 @@ public class AdminBranchViewModel : Screen
         await _departmentEndpoint.DeleteDepartmentAsync(mappedDepartment);
     }
 
+    public string CompanyNameButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(CompanyName) == false)
+            {
+                return "Green";
+            }
 
-    private string _CompanyName;
+            return "Red";
+        }
+    }
+
+    private string _companyName;
 
     public string CompanyName
     {
-        get { return _CompanyName; }
+        get { return _companyName; }
         set 
         { 
-            _CompanyName = value; 
+            _companyName = value; 
             NotifyOfPropertyChange(() => CompanyName);
             NotifyOfPropertyChange(() => CanCreateCompany);
             NotifyOfPropertyChange(() => CreateCompanyButtonColor);
+            NotifyOfPropertyChange(() => CompanyNameButtonColor);
+        }
+    }
+
+    public string AddressCompanyButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(AddressCompany) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -319,6 +372,20 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => AddressCompany);
             NotifyOfPropertyChange(() => CanCreateCompany);
             NotifyOfPropertyChange(() => CreateCompanyButtonColor);
+            NotifyOfPropertyChange(() => AddressCompanyButtonColor);
+        }
+    }
+
+    public string PhoneNumberCompanyButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PhoneNumberCompany) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -333,6 +400,7 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => PhoneNumberCompany);
             NotifyOfPropertyChange(() => CanCreateCompany);
             NotifyOfPropertyChange(() => CreateCompanyButtonColor);
+            NotifyOfPropertyChange(() => PhoneNumberCompanyButtonColor);
         }
     }
 
@@ -345,6 +413,19 @@ public class AdminBranchViewModel : Screen
         { 
             _users = value; 
             NotifyOfPropertyChange(() => Users);
+        }
+    }
+
+    public string SelectedUserButtonColor
+    {
+        get
+        {
+            if (SelectedUser is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -363,6 +444,7 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => SelectedUserButtonColor);
         }
     }
 
@@ -392,7 +474,18 @@ public class AdminBranchViewModel : Screen
         }
     }
 
+    public string DescriptionCompanyButtonButton
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(DescriptionCompany) == false)
+            {
+                return "Green";
+            }
 
+            return "Red";
+        }
+    }
 
     private string _descriptionCompany;
 
@@ -405,10 +498,24 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => DescriptionCompany);
             NotifyOfPropertyChange(() => CanCreateCompany);
             NotifyOfPropertyChange(() => CreateCompanyButtonColor);
+            NotifyOfPropertyChange(() => DescriptionCompanyButtonButton);
         }
     }
 
-    private DateTime? _dateFoundedCompany = SqlDateTime.MinValue.Value;
+    public string DateFoundedCompanyButtonColor
+    {
+        get
+        {
+            if (DateFoundedCompany >= SqlDateTime.MinValue.Value)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    private DateTime? _dateFoundedCompany = DateTime.UtcNow;
 
     public DateTime? DateFoundedCompany
     {
@@ -419,6 +526,20 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => DateFoundedCompany);
             NotifyOfPropertyChange(() => CanCreateCompany);
             NotifyOfPropertyChange(() => CreateCompanyButtonColor);
+            NotifyOfPropertyChange(() => DateFoundedCompanyButtonColor);
+        }
+    }
+
+    public string DepartmentNameButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(DepartmentName) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -435,6 +556,20 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => DepartmentNameButtonColor);
+        }
+    }
+
+    public string AddressDepartmentButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(AddressDepartment) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -451,7 +586,20 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => AddressDepartmentButtonColor);
+        }
+    }
 
+    public string PhoneNumberDepartmentButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PhoneNumberDepartment) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -468,6 +616,20 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => PhoneNumberDepartmentButtonColor);
+        }
+    }
+
+    public string DescriptionDepartmentButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(DescriptionDepartment) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -484,10 +646,24 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => DescriptionDepartmentButtonColor);
         }
     }
 
-    private DateTime? _dateFoundedDepartment = SqlDateTime.MinValue.Value;
+    public string DateFoundedDepartmentButtonColor
+    {
+        get
+        {
+            if (DateFoundedDepartment >= SqlDateTime.MinValue.Value)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    private DateTime? _dateFoundedDepartment = DateTime.UtcNow;
 
     public DateTime? DateFoundedDepartment
     {
@@ -500,6 +676,7 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CreateDepartmentButtonColor);
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
+            NotifyOfPropertyChange(() => DateFoundedDepartmentButtonColor);
         }
     }
 

@@ -93,17 +93,48 @@
                        FontSize="24"
                        HorizontalAlignment="Center"/>
 
-            <ListBox x:Name="Companies"
-                     Height="530"
-                     SelectedItem="{Binding SelectedCompany}">
+            <StackPanel Orientation="Horizontal">
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding DisplayText}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                
-            </ListBox>
+                <Button x:Name="SelectedCompanyButton"
+                        Width="30"
+                        Height="530"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding SelectedCompanyButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="530"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <ListBox x:Name="Companies"
+                        Height="530"
+                         Width="320"
+                        SelectedItem="{Binding SelectedCompany}">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayText}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+            </StackPanel>
             
             <!-- Delete Company From database -->
 
@@ -198,16 +229,46 @@
                        FontSize="24"
                        HorizontalAlignment="Center" />
 
-            <ListBox x:Name="Departments"
+            <StackPanel Orientation="Horizontal">
+                
+                <ListBox x:Name="Departments"
                      Height="530"
+                     Width="320"
                      SelectedItem="{Binding SelectedDepartment}">
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding DisplayText}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayText}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button x:Name="SelectedDepartmentButton"
+                        Width="30"
+                        Height="530"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding SelectedDepartmentButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="530"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
 
             <Button x:Name="DeleteSelectedDepartment"
                     Content="Delete Department"
@@ -252,31 +313,134 @@
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="CompanyName" 
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="CompanyNameButton"
+                        Width="30"
+                        Height="30"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding CompanyNameButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="CompanyName" 
                      Height="50"
+                     Width="300"
                      FontSize="18"
                      Margin="0 10 0 0"/>
+            </StackPanel>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Margin="10 85 10 0">
 
             <TextBlock Text="Address" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="AddressCompany" 
-                     Height="50"
-                     FontSize="18"
-                     Margin="0 10 0 0"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="AddressCompanyButton"
+                        Width="30"
+                        Height="30"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding AddressCompanyButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="AddressCompany" 
+                         Height="50"
+                         Width="300"
+                         FontSize="18"
+                         Margin="0 10 0 0" />
+
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Margin="10 30 10 0">
 
             <TextBlock Text="Phone Number" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="PhoneNumberCompany" 
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="PhoneNumberCompanyButton"
+                        Width="30"
+                        Height="30"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding PhoneNumberCompanyButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="PhoneNumberCompany" 
                      Height="50"
+                     Width="300"
                      FontSize="18"
                      Margin="0 10 0 0"/>
-
+            </StackPanel>
         </StackPanel>
-        
+
         <!-- Chair person shared field -->
 
         <StackPanel Grid.Row="2"
@@ -289,18 +453,48 @@
                        Foreground="LightGray"
                        HorizontalAlignment="Center" />
 
-            <ListBox x:Name="Users"
-                     Height="60" 
-                     SelectedItem="{Binding SelectedUser}"
-                     Margin="0 0 0 0">
+            <StackPanel Orientation="Horizontal">
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding FullName}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            
+                <Button x:Name="SelectedUserButton"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding SelectedUserButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <ListBox x:Name="Users"
+                         Height="60" 
+                         Width="700"
+                         SelectedItem="{Binding SelectedUser}"
+                         Margin="0 0 0 0">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FullName}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+
             <!-- Selected Company/Department Text -->
 
             <DockPanel>
@@ -319,27 +513,87 @@
                     Grid.Column="1"
                     Margin="10 100 10 0"
                     Grid.RowSpan="3">
-            
+
             <TextBlock Text="Description" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="DescriptionCompany" 
-                     Height="50"
-                     FontSize="18"
-                     Margin="0 10 0 0"/>
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="DescriptionCompanyButton"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DescriptionCompanyButtonButton}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="DescriptionCompany" 
+                         Height="50"
+                         Width="300"
+                         FontSize="18"
+                         Margin="0 10 0 0"/>
+
+            </StackPanel>
 
             <TextBlock Text="Date Founded" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <DatePicker x:Name="DateFoundedCompany" 
-                         Height="50"
-                         FontSize="18"
-                         Margin="0 10 0 0" />
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="DateFoundedCompanyButton"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DateFoundedCompanyButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <DatePicker x:Name="DateFoundedCompany" 
+                            Height="50"
+                            Width="300"
+                             FontSize="18"
+                             Margin="0 10 0 0" />
+            </StackPanel>
         </StackPanel>
-        
-        
+
         <!-- Department Form -->
 
         <StackPanel Grid.Row="1"
@@ -351,28 +605,119 @@
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="DepartmentName" 
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="DepartmentNameButton"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DepartmentNameButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="DepartmentName" 
                          Height="50"
+                         Width="310"
                          FontSize="18"
                          Margin="0 10 0 0" />
+            </StackPanel>
 
             <TextBlock Text="Address" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="AddressDepartment" 
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="AddressDepartmentButton"
+                        Margin="0 10 5 0"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding AddressDepartmentButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="AddressDepartment" 
                          Height="50"
+                         Width="310"
                          FontSize="18"
                          Margin="0 10 0 0" />
+            </StackPanel>
 
             <TextBlock Text="Phone Number" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="PhoneNumberDepartment" 
-                     Height="50"
-                     FontSize="18"
-                     Margin="0 10 0 0" />
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="PhoneNumberDepartmentButton"
+                            Margin="0 10 5 0"
+                            FontSize="24"
+                            Grid.RowSpan="2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding PhoneNumberDepartmentButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                    CornerRadius="8"
+                                    Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="PhoneNumberDepartment" 
+                        Height="50"
+                         Width="310"
+                        FontSize="18"
+                        Margin="0 10 0 0" />
+
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="3"
@@ -384,19 +729,80 @@
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <TextBox x:Name="DescriptionDepartment" 
-                     Height="50"
-                     FontSize="18"
-                     Margin="0 10 0 0"/>
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="DescriptionDepartmentButton"
+                            Margin="0 10 5 0"
+                            FontSize="24"
+                            Grid.RowSpan="2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DescriptionDepartmentButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                    CornerRadius="8"
+                                    Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="DescriptionDepartment" 
+                         Height="50"
+                         Width="310"
+                         FontSize="18"
+                         Margin="0 10 0 0" />
+
+            </StackPanel>
 
             <TextBlock Text="Date Founded" 
                        Foreground="LightGray"
                        HorizontalAlignment="Center"/>
 
-            <DatePicker x:Name="DateFoundedDepartment" 
-                         Height="50"
-                         FontSize="18"
-                         Margin="0 10 0 0" />
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="DateFoundedDepartmentButton"
+                            Margin="0 10 5 0"
+                            FontSize="24"
+                            Grid.RowSpan="2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DateFoundedDepartmentButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                    CornerRadius="8"
+                                    Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <DatePicker x:Name="DateFoundedDepartment" 
+                            Height="50"
+                            Width="310"
+                            FontSize="18"
+                            Margin="0 10 0 0" />
+            </StackPanel>
         </StackPanel>
 
         
