@@ -157,6 +157,19 @@ public class AdminMaintenanceViewModel : Screen
         }
     }
 
+    public string SelectedDepartmentButtonColor
+    {
+        get
+        {
+            if (SelectedDepartment is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     private DepartmentDisplayModel _selectedDepartment;
 
     public DepartmentDisplayModel SelectedDepartment
@@ -168,6 +181,7 @@ public class AdminMaintenanceViewModel : Screen
             NotifyOfPropertyChange(() => SelectedDepartment);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+            NotifyOfPropertyChange(() => SelectedDepartmentButtonColor);
         }
     }
 
@@ -184,6 +198,19 @@ public class AdminMaintenanceViewModel : Screen
         }
     }
 
+    public string SelectedUserButtonColor
+    {
+        get
+        {
+            if (SelectedUser is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     private UserModel _selectedUser;
 
     public UserModel SelectedUser
@@ -195,6 +222,20 @@ public class AdminMaintenanceViewModel : Screen
             NotifyOfPropertyChange(() => SelectedUser);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+            NotifyOfPropertyChange(() => SelectedUserButtonColor);
+        }
+    }
+
+    public string TitleButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Title) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -209,10 +250,24 @@ public class AdminMaintenanceViewModel : Screen
             NotifyOfPropertyChange(() => Title);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+            NotifyOfPropertyChange(() => TitleButtonColor);
         }
     }
 
-    private DateTime _dateDue = SqlDateTime.MinValue.Value;
+    public string DateDueButtonColor
+    {
+        get
+        {
+            if (DateDue >= SqlDateTime.MinValue.Value)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    private DateTime _dateDue = DateTime.UtcNow;
 
     public DateTime DateDue
     {
@@ -223,6 +278,20 @@ public class AdminMaintenanceViewModel : Screen
             NotifyOfPropertyChange(() => DateDue);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+            NotifyOfPropertyChange(() => DateDueButtonColor);
+        }
+    }
+
+    public string DescriptionButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(TaskDescription) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -237,6 +306,7 @@ public class AdminMaintenanceViewModel : Screen
             NotifyOfPropertyChange(() => TaskDescription);
             NotifyOfPropertyChange(() => AssignTaskButtonColor);
             NotifyOfPropertyChange(() => CanAssignTask);
+            NotifyOfPropertyChange(() => DescriptionButtonColor);
         }
     }
 
