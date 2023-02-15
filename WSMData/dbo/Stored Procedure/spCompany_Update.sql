@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spCompany_Update]
 	@Id int,
 	@CompanyName nvarchar(100),
-	@Address nvarchar(255),
+	@Address nvarchar(500),
 	@PhoneNumber nvarchar(50),
 	@ChairPersonId nvarchar(128),
 	@Description nvarchar(MAX),

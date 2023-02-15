@@ -3,7 +3,7 @@
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [CompanyId] INT NOT NULL, 
     [DepartmentName] NVARCHAR(100) NOT NULL,
-    [Address] nvarchar(255) NOT NULL,
+    [Address] nvarchar(500) NOT NULL,
     [ChairPersonId] NVARCHAR(128) NULL, 
     [PhoneNumber] NVARCHAR(50) NOT NULL, 
     [Description] NVARCHAR(255) NOT NULL, 

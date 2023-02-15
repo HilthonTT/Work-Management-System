@@ -2,7 +2,7 @@
 	@Id int output,
 	@CompanyId int,
 	@DepartmentName nvarchar(100),
-	@Address nvarchar(255),
+	@Address nvarchar(500),
 	@ChairPersonId nvarchar(128),
 	@PhoneNumber nvarchar(50),
 	@Description nvarchar(255),
