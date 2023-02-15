@@ -89,6 +89,19 @@ public class AdminStockViewModel : Screen
         }
     }
 
+    public string SelectedMachineButtonColor
+    {
+        get
+        {
+            if (SelectedMachine is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     private MachineDisplayModel _selectedMachine;
 
     public MachineDisplayModel SelectedMachine
@@ -112,6 +125,7 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => AddPartButtonColor);
             NotifyOfPropertyChange(() => CanUpdateMachine);
             NotifyOfPropertyChange(() => UpdateMachineButtonColor);
+            NotifyOfPropertyChange(() => SelectedMachineButtonColor);
         }
     }
 
@@ -124,6 +138,19 @@ public class AdminStockViewModel : Screen
         { 
             _parts = value; 
             NotifyOfPropertyChange(() => Parts) ;
+        }
+    }
+
+    public string SelectedPartButtonColor
+    {
+        get
+        {
+            if (SelectedPart is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -145,6 +172,20 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => DeletePartButtonColor);
             NotifyOfPropertyChange(() => CanUpdatePart);
             NotifyOfPropertyChange(() => UpdatePartButtonColor);
+            NotifyOfPropertyChange(() => SelectedPartButtonColor);
+        }
+    }
+
+    public string MachineNameButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(MachineName) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -159,6 +200,20 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => MachineName);
             NotifyOfPropertyChange(() => CanAddMachine);
             NotifyOfPropertyChange(() => AddMachineButtonColor);
+            NotifyOfPropertyChange(() => MachineNameButtonColor);
+        }
+    }
+
+    public string ModelNameMachineButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(ModelNameMachine) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -173,6 +228,20 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => ModelNameMachine);
             NotifyOfPropertyChange(() => CanAddMachine);
             NotifyOfPropertyChange(() => AddMachineButtonColor);
+            NotifyOfPropertyChange(() => ModelNameMachineButtonColor);
+        }
+    }
+
+    public string EuropeanArticleNumberButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(EuropeanArticleNumber) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -187,6 +256,20 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => EuropeanArticleNumber);
             NotifyOfPropertyChange(() => CanAddMachine);
             NotifyOfPropertyChange(() => AddMachineButtonColor);
+            NotifyOfPropertyChange(() => EuropeanArticleNumberButtonColor);
+        }
+    }
+
+    public string PurchasedPriceMachineButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PurchasedPriceMachine) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -201,11 +284,25 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => PurchasedPriceMachine);
             NotifyOfPropertyChange(() => CanAddMachine);
             NotifyOfPropertyChange(() => AddMachineButtonColor);
+            NotifyOfPropertyChange(() => PurchasedPriceMachineButtonColor);
+        }
+    }
+
+    public string DatePurchasedMachineButtonColor
+    {
+        get
+        {
+            if (DatePurchasedMachine >= SqlDateTime.MinValue.Value)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
 
-    private DateTime? _datePurchasedMachine = SqlDateTime.MinValue.Value;
+    private DateTime? _datePurchasedMachine = DateTime.UtcNow;
 
     public DateTime? DatePurchasedMachine
     {
@@ -216,6 +313,21 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => DatePurchasedMachine);
             NotifyOfPropertyChange(() => CanAddMachine);
             NotifyOfPropertyChange(() => AddMachineButtonColor);
+            NotifyOfPropertyChange(() => DatePurchasedMachine);
+            NotifyOfPropertyChange(() => DatePurchasedMachineButtonColor);
+        }
+    }
+
+    public string PartNameButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PartName) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -230,6 +342,20 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => PartName);
             NotifyOfPropertyChange(() => CanAddPart);
             NotifyOfPropertyChange(() => AddPartButtonColor);
+            NotifyOfPropertyChange(() => PartNameButtonColor);
+        }
+    }
+
+    public string ModelNamePartButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(ModelNamePart) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
         }
     }
 
@@ -244,6 +370,7 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => ModelNamePart);
             NotifyOfPropertyChange(() => CanAddPart);
             NotifyOfPropertyChange(() => AddPartButtonColor);
+            NotifyOfPropertyChange(() => ModelNamePartButtonColor);
         }
     }
 
@@ -259,6 +386,18 @@ public class AdminStockViewModel : Screen
         }
     }
 
+    public string PurchasedPricePartButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PurchasedPricePart) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
 
     private string _purchasedPricePart;
 
@@ -271,11 +410,24 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => PurchasedPricePart);
             NotifyOfPropertyChange(() => CanAddPart);
             NotifyOfPropertyChange(() => AddPartButtonColor);
+            NotifyOfPropertyChange(() => PurchasedPricePartButtonColor);
         }
     }
 
+    public string DatePurchasedPartButtonColor
+    {
+        get
+        {
+            if (DatePurchasedPart >= SqlDateTime.MinValue.Value)
+            {
+                return "Green";
+            }
 
-    private DateTime? _datePurchasedPart = SqlDateTime.MinValue.Value;
+            return "Red";
+        }
+    }
+
+    private DateTime? _datePurchasedPart = DateTime.UtcNow;
 
     public DateTime? DatePurchasedPart
     {
@@ -286,6 +438,7 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => DatePurchasedPart);
             NotifyOfPropertyChange(() => CanAddPart);
             NotifyOfPropertyChange(() => AddPartButtonColor);
+            NotifyOfPropertyChange(() => DatePurchasedPartButtonColor);
         }
     }
 
@@ -303,7 +456,6 @@ public class AdminStockViewModel : Screen
             }
 
             return false;
-
         }
     }
 

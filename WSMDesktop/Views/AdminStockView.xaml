@@ -34,14 +34,14 @@
                    FontSize="50"
                    Grid.Column="1"
                    Grid.ColumnSpan="2"/>
-        
-        <!-- Machine List-->
 
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal"
                     Grid.ColumnSpan="2">
+            
+            <!-- Search Machine -->
 
             <TextBox x:Name="SearchMachineText" 
                      Height="50"
@@ -54,7 +54,6 @@
                     Width="150"
                     Height="50"
                     Margin="5 0 0 20">
-
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="{Binding SearchMachineButtonColor}" />
@@ -81,6 +80,8 @@
                 </Button.Template>
             </Button>
         </StackPanel>
+        
+        <!-- Machine List-->
 
         <StackPanel Grid.Row="1"
                     Grid.Column="0"
@@ -90,19 +91,49 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="24"/>
-            
-            <ListBox x:Name="Machines"
-                     Height="530"
-                     SelectedItem="{Binding SelectedMachine}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding MachineName}" />
-                            <TextBlock Text="{Binding ModelName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="SelectedMachineButton"
+                        Width="30"
+                        Height="530"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding SelectedMachineButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="530"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <ListBox x:Name="Machines"
+                         Height="530"
+                         Width="320"
+                         SelectedItem="{Binding SelectedMachine}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding MachineName}" />
+                                <TextBlock Text="{Binding ModelName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
             
             <!-- Delete Selected Machine Button -->
             <Button x:Name="DeleteSelectedMachine"
@@ -135,10 +166,9 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
-            
         </StackPanel>
 
-        <!-- Part List-->
+        <!-- Search Part -->
         <StackPanel Grid.Row="0"
                     Grid.Column="2"
                     VerticalAlignment="Bottom"
@@ -183,11 +213,9 @@
                      Width="300"
                      VerticalAlignment="Bottom"
                      Margin="0 0 0 20"/>
-
-            
-
         </StackPanel>
         
+        <!-- Part List -->
 
         <StackPanel Grid.Row="1"
                     Grid.Column="3"
@@ -199,15 +227,45 @@
                        HorizontalAlignment="Center"
                        FontSize="24"/>
 
-            <ListBox x:Name="Parts"
-                     Height="530"
-                     SelectedItem="{Binding SelectedPart}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding DisplayText}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <StackPanel Orientation="Horizontal">
+                <ListBox x:Name="Parts"
+                         Height="530"
+                         Width="310"
+                        SelectedItem="{Binding SelectedPart}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayText}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button x:Name="SelectedPartButton"
+                        Width="30"
+                        Height="530"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding SelectedPartButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="530"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
             
             <!-- Delete Selected Part -->
             <Button x:Name="DeleteSelectedPart"
@@ -254,6 +312,8 @@
             <TextBlock Text="Machine Form"
                        HorizontalAlignment="Center"
                        FontSize="24" />
+            
+            <!-- Machine Name -->
 
             <TextBlock Text="Machine Name"
                        Foreground="LightGray"
@@ -261,21 +321,86 @@
                        FontSize="18"
                        Margin="0 10 0 0"/>
 
-            <TextBox x:Name="MachineName"
-                     Margin="0 10 0 0" 
-                     Height="50" 
-                     FontSize="18"/>
+            <StackPanel Orientation="Horizontal">
 
+                <Button x:Name="MachineNameButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding MachineNameButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <TextBox x:Name="MachineName"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         Width="295"
+                         FontSize="18"/>
+            </StackPanel>
+
+            <!-- Machine Model Name-->
+            
             <TextBlock Text="Model Name"
                        Foreground="LightGray"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        Margin="0 10 0 0" />
 
-            <TextBox x:Name="ModelNameMachine"
-                     Margin="0 10 0 0" 
-                     Height="50" 
-                     FontSize="18"/>
+            <StackPanel Orientation="Horizontal">
+
+                <Button x:Name="ModelNameMachineButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding ModelNameMachineButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="ModelNameMachine"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         FontSize="18"
+                         Width="295"/>
+            </StackPanel>
+
+            <!-- European Article Number Machine-->
 
             <TextBlock Text="European Article Number"
                     Foreground="LightGray"
@@ -283,32 +408,129 @@
                     FontSize="18"
                     Margin="0 10 0 0" />
 
-            <TextBox x:Name="EuropeanArticleNumber"
-                    Margin="0 10 0 0" 
-                    Height="50" 
-                    FontSize="18"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="EuropeanArticleNumberButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding EuropeanArticleNumberButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="EuropeanArticleNumber"
+                        Margin="0 10 0 0" 
+                        Height="50" 
+                        Width="295"
+                        FontSize="18"/>
+            </StackPanel>
 
             <TextBlock Text="Purchased Price"
                     Foreground="LightGray"
                     HorizontalAlignment="Center"
                     FontSize="18"
                     Margin="0 10 0 0" />
+            
+            <!-- Purchased Price Machine -->
 
-            <TextBox x:Name="PurchasedPriceMachine"
-                    Margin="0 10 0 0" 
-                    Height="50" 
-                    FontSize="18" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="PurchasedPriceMachineButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding PurchasedPriceMachineButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
 
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="PurchasedPriceMachine"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         Width="295"
+                         FontSize="18" />
+
+            </StackPanel>
+            
+            <!-- Date Purchased Machine -->
+            
             <TextBlock Text="Date Purchased"
                        Foreground="LightGray"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        Margin="0 10 0 0"/>
 
-            <DatePicker x:Name="DatePurchasedMachine"
-                        Margin="0 10 0 0" 
-                        Height="50" 
-                        FontSize="18" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="DatePurchasedMachineButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DatePurchasedMachineButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <DatePicker x:Name="DatePurchasedMachine"
+                            Margin="0 10 0 0" 
+                            Height="50" 
+                            Width="295"
+                            FontSize="18" />
+            </StackPanel>
+            
+            <!-- Add Machine Button -->
 
             <Button x:Name="AddMachine"
                     Content="Add Machine To DataBase"
@@ -340,6 +562,8 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
+            
+            <!-- Update Machine Button-->
 
             <Button x:Name="UpdateMachine"
                     Content="Update Machine From DataBase"
@@ -383,17 +607,51 @@
             <TextBlock Text="Part Form"
                        HorizontalAlignment="Center"
                        FontSize="24" />
-
+            
+            <!-- Part Name -->
+            
             <TextBlock Text="Part Name"
                        Foreground="LightGray"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        Margin="0 10 0 0"/>
+            
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="PartNameButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding PartNameButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
 
-            <TextBox x:Name="PartName"
-                     Margin="0 10 0 0" 
-                     Height="50" 
-                     FontSize="18"/>
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="PartName"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         Width="315"
+                         FontSize="18"/>
+            </StackPanel>
+            
+            <!-- Part Model Name-->
 
             <TextBlock Text="Model Name"
                        Foreground="LightGray"
@@ -401,16 +659,49 @@
                        FontSize="18"
                        Margin="0 10 0 0" />
 
-            <TextBox x:Name="ModelNamePart"
-                     Margin="0 10 0 0" 
-                     Height="50" 
-                     FontSize="18"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="ModelNamePartButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding ModelNamePartButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="ModelNamePart"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         Width="315"
+                         FontSize="18" />
+            </StackPanel>
+            
+            <!-- Matching Machine for selected Part -->  
 
             <TextBlock Text="Matching Machine"
                        Foreground="LightGray"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        Margin="0 10 0 0" />
+           
 
             <TextBlock x:Name="SelectedMachineName"
                          Text="No Machine Selected"
@@ -419,6 +710,8 @@
                          FontSize="18"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center"/>
+            
+            <!-- Part Purchased Price -->
 
             <TextBlock Text="Purchased Price"
                        Foreground="LightGray"
@@ -426,22 +719,84 @@
                        FontSize="18"
                        Margin="0 10 0 0" />
 
-            <TextBox x:Name="PurchasedPricePart"
-                     Margin="0 10 0 0" 
-                     Height="50" 
-                     FontSize="18" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="PurchasedPricePartButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding PurchasedPricePartButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
 
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <TextBox x:Name="PurchasedPricePart"
+                         Margin="0 10 0 0" 
+                         Height="50" 
+                         Width="315"
+                         FontSize="18" />
+            </StackPanel>
+
+            <!-- Part Date Purchased -->
 
             <TextBlock Text="Date Purchased"
                        Foreground="LightGray"
                        HorizontalAlignment="Center"
                        FontSize="18"
-                       Margin="0 10 0 0"/>
+                       Margin="0 10 0 0" />
 
-            <DatePicker x:Name="DatePurchasedPart"
-                        Margin="0 10 0 0" 
-                        Height="50" 
-                        FontSize="18" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="DatePurchasedPartButton"
+                        Width="30"
+                        Height="30"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        Margin="0 10 5 0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding DatePurchasedPartButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <DatePicker x:Name="DatePurchasedPart"
+                            Margin="0 10 0 0" 
+                            Height="50" 
+                            Width="315"
+                            FontSize="18" />
+            </StackPanel>
+            
+            <!-- Add Part Button -->
 
             <Button x:Name="AddPart"
                     Content="Add Part To DataBase"
