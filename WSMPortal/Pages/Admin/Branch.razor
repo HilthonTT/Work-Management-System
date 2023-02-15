@@ -1,39 +1,157 @@
-﻿@page "/Branch"
+﻿@page "/admin/Branch"
 @inject ICompanyEndpoint companyEndpoint
 @inject IDepartmentEndpoint departmentEndpoint
+@inject IUserEndpoint userEndpoint
+@inject IMapper mapper
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager navManager
 @attribute [Authorize(Roles = "Admin")]
 
 <h1>Branch</h1>
 
-<div>
-    <div>
-        
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+<div class="row">
+    <div class="col-sm">
+        <strong class="align-content-center">Company Form</strong>
+        <EditForm Model="formCompany" OnValidSubmit="CreateCompany">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div>
+                <label>Company Name: </label>
+                <InputText @bind-Value="formCompany.CompanyName" />
+            </div>
+            <div>
+                <label>Company Address</label>
+                <InputText @bind-Value="formCompany.Address" />
+            </div>
+            <div>
+                <label>Phone Number</label>
+                <InputText @bind-Value="formCompany.PhoneNumber" />
+            </div>
+            <div>
+                <label>Description</label>
+                <InputText @bind-Value="formCompany.Description" />
+            </div>
+            <div>
+                <label>Date Founded</label>
+                <InputDate @bind-Value="formCompany.DateFounded" />
+            </div>
+            <div>
+                <label>Chair Person</label>
+                <div>
+                    <MyInputRadioGroup @bind-Value="formCompany.ChairPersonId">
+                        @if (users is not null)
+                        {
+                            <Virtualize Items="users" Context="u" OverscanCount="10">
+                                <div>
+                                    <InputRadio Value="u.Id" id="@u.Id" />
+                                    <label for="@u.Id">@u.FullName</label>
+                                </div>
+                            </Virtualize>
+                        }
+                    </MyInputRadioGroup>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">
+                    Submit
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm">
+        <strong>Department Form</strong>
+        <EditForm Model="formDepartment" OnValidSubmit="CreateDepartment">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div>
+                <label>Department Name</label>
+                <InputText @bind-Value="formDepartment.DepartmentName" />
+            </div>
+            <div>
+                <label>Address</label>
+                <InputText @bind-Value="formDepartment.Address" />
+            </div>
+            <div>
+                <label>Phone Number</label>
+                <InputText @bind-Value="formDepartment.PhoneNumber" />
+            </div>
+            <div>
+                <label>Description</label>
+                <InputText @bind-Value="formDepartment.Description" />
+            </div>
+            <div>
+                <label>Date Founded</label>
+                <InputDate @bind-Value="formDepartment.CreatedDate" />
+            </div>
+            <div>
+                <label>Parent Company</label>
+                <div>
+                    <MyInputRadioGroup @bind-Value="formDepartment.CompanyId">
+                        @if (companies is not null)
+                        {
+                            <Virtualize Items="companies" Context="c" OverscanCount="10">
+                                <div>
+                                    <InputRadio Value="c.Id" id="@c.Id" />
+                                    <label for="@c.Id">@c.CompanyName</label>
+                                </div>
+                            </Virtualize>
+                        }
+                    </MyInputRadioGroup>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">
+                    Submit
+                </button>
+            </div>
+        </EditForm>
     </div>
 </div>
 
 @code {
     private double totalMinutesCompany = 0;
     private double totalMinutesDepartment = 0;
+    private double totalMinutesUser = 0;
 
     private List<CompanyModel> companies;
+    private FormCompanyModel formCompany = new();
     private const string CompanyListName = "companyList";
     private const string CompanyCacheDate = "companyCacheDate";
 
     private List<DepartmentModel> departments;
+    private FormDepartmentModel formDepartment = new();
     private const string DepartmentListName = "departmentList";
     private const string DepartmentCacheDate = "departmentCacheDate";
+
+    private List<UserModel> users;
+    private const string UserListName = "userList";
+    private const string UserCacheDate = "userCacheDate";
 
     private string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
+        formCompany.DateFounded = DateTime.UtcNow;
+        formDepartment.CreatedDate = DateTime.UtcNow;
+
         companies = await localStorage.GetItemAsync<List<CompanyModel>>(CompanyListName);
         departments = await localStorage.GetItemAsync<List<DepartmentModel>>(DepartmentListName);
+        users = await localStorage.GetItemAsync<List<UserModel>>(UserListName);
 
         DateTime? cacheDateCompanies = await localStorage.GetItemAsync<DateTime?>(CompanyCacheDate);
         DateTime? cacheDateDepartments = await localStorage.GetItemAsync<DateTime?>(DepartmentCacheDate);
+        DateTime? cacheDateUsers = await localStorage.GetItemAsync<DateTime?>(UserCacheDate);
 
         if (cacheDateCompanies is not null)
         {
@@ -45,7 +163,13 @@
             totalMinutesDepartment = DateTime.UtcNow.Subtract((DateTime)cacheDateDepartments).TotalMinutes;
         }
 
-        if (companies is null || departments is null || totalMinutesCompany > 10 || totalMinutesDepartment > 10)
+        if (cacheDateUsers is not null)
+        {
+            totalMinutesUser = DateTime.UtcNow.Subtract((DateTime)cacheDateUsers).TotalMinutes;
+        }
+
+        if (companies is null || departments is null || users is null ||
+            totalMinutesCompany > 10 || totalMinutesDepartment > 10 || totalMinutesUser > 10)
         {
             try
             {
@@ -55,11 +179,44 @@
                 departments = await departmentEndpoint.GetAllAsync();
                 await localStorage.SetItemAsync(DepartmentListName, departments);
                 await localStorage.SetItemAsync(DepartmentCacheDate, DateTime.UtcNow);
+                users = await userEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(UserListName, users);
+                await localStorage.SetItemAsync(UserCacheDate, DateTime.UtcNow);
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
             }
+        }
+    }
+
+    private async Task CreateCompany()
+    {
+        try
+        {
+            var mappedCompanyModel = mapper.Map<CompanyModel>(formCompany);
+
+            await companyEndpoint.PostCompanyAsync(mappedCompanyModel);
+            navManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private async Task CreateDepartment()
+    {
+        try
+        {
+            var mappedDepartmentModel = mapper.Map<DepartmentModel>(formDepartment);
+
+            await departmentEndpoint.PostDepartmentAsync(mappedDepartmentModel);
+            navManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
         }
     }
 }
