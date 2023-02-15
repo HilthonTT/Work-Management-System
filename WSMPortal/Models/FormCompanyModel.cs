@@ -24,5 +24,6 @@ public class FormCompanyModel
 
     [Required(ErrorMessage = "The Date Founded Is A Required Field.")]
     [DisplayName("Date Founded")]
+    [Range(typeof(DateTime), "01/01/1753", "31/12/9999", ErrorMessage = "DateTime Must Be Between 01/01/1753 And 31/12/9999")]
     public DateTime DateFounded { get; set; }
 }
