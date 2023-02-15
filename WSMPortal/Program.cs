@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using WSMPortal.Authentication;
 using UI.Library.API;
 using UI.Library.Models;
+using AutoMapper;
+using WSMPortal.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,16 @@ builder.Services.AddTransient<ITaskEndpoint, TaskEndpoint>();
 builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
 builder.Services.AddTransient<IStockEndpoint, StockEndpoint>();
 builder.Services.AddSingleton<ILogger, Logger<StockEndpoint>>();
+
+var mapperConfiguration = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<FormDepartmentModel, DepartmentModel>();
+    cfg.CreateMap<FormCompanyModel, CompanyModel>();
+});
+
+var mapper = mapperConfiguration.CreateMapper();
+
+builder.Services.AddSingleton(mapper);
 
 
 var app = builder.Build();
