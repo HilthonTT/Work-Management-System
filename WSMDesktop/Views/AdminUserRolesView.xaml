@@ -95,22 +95,53 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"/>
 
-            <ListBox x:Name="Users"
-                 Margin="10 0 0 0"
-                 Height="530"
-                 SelectedItem="{Binding SelectedUser}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding FullName}" />
-                            <TextBlock Text="{Binding JobList}" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="SelectedUserButton"
+                        Width="30"
+                        Height="530"
+                        FontSize="24"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{Binding SelectedUserButtonColor}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="530"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}">
+
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <ListBox x:Name="Users"
+                         Height="530"
+                         Width="270"
+                         SelectedItem="{Binding SelectedUser}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding RoleList}" />
+                                <TextBlock Text="{Binding FullName}" />
+                                <TextBlock Text="{Binding JobList}" />
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding RoleList}" />
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </StackPanel>
+            
+            
         </StackPanel>
 
         <!-- Selected User Name -->

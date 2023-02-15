@@ -144,6 +144,19 @@ public class AdminUserRolesViewModel : Screen
         }
     }
 
+    public string SelectedUserButtonColor
+    {
+        get
+        {
+            if (SelectedUser is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     private UserModel _selectedUser;
 
     public UserModel SelectedUser
@@ -152,18 +165,27 @@ public class AdminUserRolesViewModel : Screen
         set 
         { 
             _selectedUser = value;
-            SelectedUserName = $"{value.FirstName} {value.LastName}";
-            UserRoles = new BindingList<string>(value.Roles.Select(x => x.Value).ToList());
-            LoadRoles();
-            UserJobs = new BindingList<string>(value.JobTitles.Select(x => x.JobName).ToList());
-            LoadJobs();
+            SelectedUserName = $"{value?.FirstName} {value?.LastName}";
+            if (SelectedUser is not null)
+            {
+                UserRoles = new BindingList<string>(value.Roles.Select(x => x.Value).ToList());
+                LoadRoles();
+                UserJobs = new BindingList<string>(value.JobTitles.Select(x => x.JobName).ToList());
+                LoadJobs();
+            }
+            else if (SelectedUser is null)
+            {
+                LoadRoles();
+                LoadJobs();
+            }
             NotifyOfPropertyChange(() => SelectedUser);
+            NotifyOfPropertyChange(() => SelectedUserButtonColor);
         }
     }
 
-    private string _selectedUserName;
+    private string? _selectedUserName;
 
-    public string SelectedUserName
+    public string? SelectedUserName
     {
         get { return _selectedUserName; }
         set 
