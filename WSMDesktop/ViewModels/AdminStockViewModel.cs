@@ -491,7 +491,7 @@ public class AdminStockViewModel : Screen
             ModelNameMachine = "";
             EuropeanArticleNumber = "";
             PurchasedPriceMachine = "";
-            DatePurchasedMachine = SqlDateTime.MinValue.Value;
+            DatePurchasedMachine = DateTime.UtcNow;
 
             await _stockEndpoint.InsertMachineAsync(machine);
             await LoadAllMachines();
@@ -558,7 +558,7 @@ public class AdminStockViewModel : Screen
             PartName = "";
             ModelNamePart = "";
             PurchasedPricePart = "";
-            DatePurchasedMachine = SqlDateTime.MinValue.Value;
+            DatePurchasedMachine = DateTime.UtcNow;
             SelectedMachine = null;
 
             await _stockEndpoint.InsertPartAsync(part);
@@ -790,7 +790,7 @@ public class AdminStockViewModel : Screen
             MachineName = "";
             ModelNameMachine = "";
             EuropeanArticleNumber = "";
-            DatePurchasedMachine = DateTime.MinValue;
+            DatePurchasedMachine = DateTime.UtcNow;
             PurchasedPriceMachine = "";
 
             await _stockEndpoint.UpdateMachineAsync(machine);

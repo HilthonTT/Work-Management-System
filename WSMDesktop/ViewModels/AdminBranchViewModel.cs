@@ -731,7 +731,7 @@ public class AdminBranchViewModel : Screen
         PhoneNumberCompany = "";
         SelectedUser = null;
         DescriptionCompany = "";
-        DateFoundedCompany = DateTime.MinValue;
+        DateFoundedCompany = DateTime.UtcNow;
 
         Companies.Add(mappedCompany);
         await _companyEndpoint.PostCompanyAsync(company);
@@ -783,7 +783,7 @@ public class AdminBranchViewModel : Screen
         SelectedUser = null;
         SelectedCompany = null;
         DescriptionCompany = "";
-        DateFoundedCompany = DateTime.MinValue;
+        DateFoundedCompany = DateTime.UtcNow;
 
         await _companyEndpoint.UpdateCompanyAsync(company);
         await LoadAllCompanies();
@@ -839,7 +839,7 @@ public class AdminBranchViewModel : Screen
         SelectedUser = null;
         PhoneNumberDepartment = "";
         DescriptionDepartment = "";
-        DateFoundedDepartment = SqlDateTime.MinValue.Value;
+        DateFoundedDepartment = DateTime.UtcNow;
         
         var mappedDepartment = _mapper.Map<DepartmentDisplayModel>(department);
 
@@ -895,7 +895,7 @@ public class AdminBranchViewModel : Screen
         SelectedUser = null;
         PhoneNumberDepartment = "";
         DescriptionDepartment = "";
-        DateFoundedDepartment = DateTime.MinValue;
+        DateFoundedDepartment = DateTime.UtcNow;
 
         await _departmentEndpoint.UpdateDepartmentAsync(department);
         await LoadAllDepartments();
