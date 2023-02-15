@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using UI.Library.API;
@@ -14,7 +12,6 @@ using UI.Library.Models;
 using WSMDesktop.Helpers;
 using WSMDesktop.Models;
 using WSMDesktop.ViewModels;
-using WSMDesktop.Views;
 
 namespace WSMDesktop;
 
