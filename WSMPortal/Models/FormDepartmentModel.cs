@@ -28,5 +28,6 @@ public class FormDepartmentModel
 
     [Required(ErrorMessage = "Created Date Is A Required Field.")]
     [DisplayName("Created Date")]
+    [Range(typeof(DateTime), "01/01/1753", "31/12/9999", ErrorMessage = "DateTime Must Be Between 01/01/1753 And 31/12/9999")]
     public DateTime CreatedDate { get; set; }
 }
