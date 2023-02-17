@@ -4,7 +4,7 @@ using WSMPortal.Authentication;
 using UI.Library.API;
 using UI.Library.Models;
 using AutoMapper;
-using WSMPortal.Models;
+using WSMPortal.FormModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +38,10 @@ var mapperConfiguration = new MapperConfiguration(cfg =>
 {
     cfg.CreateMap<FormDepartmentModel, DepartmentModel>();
     cfg.CreateMap<FormCompanyModel, CompanyModel>();
+    cfg.CreateMap<FormMachineModel, MachineModel>();
     cfg.CreateMap<DepartmentModel, FormDepartmentModel>();
     cfg.CreateMap<CompanyModel, FormCompanyModel>();
+    cfg.CreateMap<MachineModel, FormMachineModel>();
 });
 
 var mapper = mapperConfiguration.CreateMapper();
