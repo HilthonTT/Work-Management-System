@@ -35,10 +35,11 @@ public class CreateUserModel
     public int? JobTitleId { get; set; } = null;
 
     [Required]
+    [MinLength(6, ErrorMessage = "Password Must Be At Least 6 Characters Long.")]
     public string Password { get; set; }
 
     [Required]
     [DisplayName("Confirm Password")]
-    [Compare(nameof(Password), ErrorMessage = "The passwords do not match.")]
+    [Compare(nameof(Password), ErrorMessage = "The Passwords Do Not Match.")]
     public string ConfirmPassword { get; set; }
 }
