@@ -15,33 +15,33 @@
     </div>
 }
 
-<EditForm Model="formCompany" OnValidSubmit="CreateCompany">
+<EditForm Model="formCompany" OnValidSubmit="SaveCompany">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="row">
         <div class="col-sm">
             <strong class="align-items-center">Company Form</strong>
-            <div>
+            <div class="mb-3">
                 <label class="col-form-label">Company Name: </label>
                 <InputText class="form-control" @bind-Value="formCompany.CompanyName" />
             </div>
-            <div>
+            <div class="mb-3">
                 <label class="col-form-label">Company Address</label>
                 <InputText class="form-control" @bind-Value="formCompany.Address" />
             </div>
-            <div>
+            <div class="mb-3">
                 <label class="col-form-label">Phone Number</label>
                 <InputText class="form-control" @bind-Value="formCompany.PhoneNumber" />
             </div>
-            <div>
+            <div class="mb-3">
                 <label class="col-form-label">Description</label>
                 <InputText class="form-control" @bind-Value="formCompany.Description" />
             </div>
-            <div>
+            <div class="mb-3">
                 <label class="col-form-label">Date Founded</label>
                 <InputDate class="form-control" @bind-Value="formCompany.DateFounded" />
             </div>
-            <div>
+            <div class="mb-3">
                 <div class="col-md-12 text-center mt-2">
                     <button type="submit" class="btn btn-success">
                         Submit
@@ -49,22 +49,46 @@
                 </div>
             </div>
         </div>
-        <strong>Chair Person</strong>
-        <MyInputRadioGroup @bind-Value="formCompany.ChairPersonId">
-            @if (users is not null)
-            {
-                <Virtualize Items="users" Context="u" OverscanCount="10">
-                    <div>
-                        <InputRadio Value="u.Id" id="@u.Id" />
-                        <label for="@u.Id">@u.FullName</label>
-                    </div>
-                </Virtualize>
-            }
-        </MyInputRadioGroup>
     </div>
+    <div class="row">
+        <div class="col-sm">
+            <strong>Companies</strong>
+            <div class="form-check">
+                <MyInputRadioGroup ValueChanged="((e) => OnRadioCompanyChange(e))" TValue="int" ValueExpression="(() => SelectedValue)">
+                    @if (companies is not null)
+                    {
+                        <Virtualize Items="companies" Context="c" OverscanCount="10">
+                            <div>
+                                <InputRadio Value="c.Id" id="@c.Id" />
+                                <label for="@c.Id">@c.CompanyName</label>
+                            </div>
+                        </Virtualize>
+                    }
+                </MyInputRadioGroup>
+            </div>
+        </div>
+        <div class="col-sm">
+            <strong>Chair Person</strong>
+            <div class="form-check">
+                <MyInputRadioGroup @bind-Value="formCompany.ChairPersonId">
+                    @if (users is not null)
+                    {
+                        <Virtualize Items="users" Context="u" OverscanCount="10">
+                            <div>
+                                <InputRadio Value="u.Id" id="@u.Id" />
+                                <label for="@u.Id">@u.FullName</label>
+                            </div>
+                        </Virtualize>
+                    }
+                 </MyInputRadioGroup>
+            </div>
+        </div>
+    </div> 
 </EditForm>
 
 @code {
+    public int SelectedValue { get; set; }
+
     private double totalMinutesCompany = 0;
     private double totalMinutesUser = 0;
 
@@ -118,18 +142,28 @@
         }
     }
 
-    private async Task CreateCompany()
+    private async Task SaveCompany()
     {
+        errorMessage = "";
+        var mappedCompany = mapper.Map<CompanyModel>(formCompany);
+
         try
         {
-            var mappedCompanyModel = mapper.Map<CompanyModel>(formCompany);
+            if (formCompany.Id == 0)
+                await companyEndpoint.PostCompanyAsync(mappedCompany);
+            else
+                await companyEndpoint.UpdateCompanyAsync(mappedCompany);
 
-            await companyEndpoint.PostCompanyAsync(mappedCompanyModel);
-            navManager.NavigateTo("/");
+            navManager.NavigateTo(navManager.Uri, forceLoad: true);
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
         }
+    }
+
+    private void OnRadioCompanyChange(object sender)
+    {
+        formCompany = mapper.Map<FormCompanyModel>(companies.Where(x => x.Id == (int)sender).FirstOrDefault());
     }
 }
