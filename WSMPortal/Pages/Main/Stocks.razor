@@ -5,56 +5,60 @@
 @inject NavigationManager navManager
 @attribute [Authorize]
 
-<h1>Stocks</h1>
-
-<h2>Parts</h2>
-
-@if (parts is not null)
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
 {
-    <div class="container">
-        <Virtualize Items="parts" Context="part" OverscanCount="10">
-            <p>Part Name: @part.PartName</p>
-            <p>Part Model: @part.ModelName</p>
-            <p>Machine Id: @part.MachineId</p>
-            <p>Date Purchased: @part.DatePurchased</p>
-        </Virtualize>
+    <div class="alert alert-danger">
+        @errorMessage
     </div>
 }
-else
-{
-    <div class="alert alert-danger">No Part Loaded.</div>
-}
 
-<h2>Machines</h2>
-
-@if (machines is not null)
-{
-    <div class="container">
-        <Virtualize Items="machines" Context="machine" OverscanCount="10">
-            <p>Machine Name: @machine.MachineName</p>
-            <p>Machine Model: @machine.ModelName</p>
-            <p>Purchased Price: @machine.PurchasedPrice</p>
-            <p>EAN: @machine.EuropeanArticleNumber</p>
-            <p>Date Purchased: @machine.DatePurchased</p>
-        </Virtualize>
+<div class="row">
+    <div class="col-sm">
+        <label>Machines</label>
+        <div class="mt-3">
+            @if (machines is not null)
+            {
+                <ul class="list-group">
+                    <Virtualize Items="machines" Context="m" OverscanCount="10">
+                        <li class="list-group-item">
+                            @m.MachineName - @m.ModelName
+                        </li>
+                    </Virtualize>
+                </ul>
+            }
+        </div>
     </div>
-}
-else
-{
-    <div class="alert alert-danger">No Machine Loaded</div>
-}
+    <div class="col-sm">
+        <label>Parts</label>
+        <div class="mt-3">
+            @if (parts is not null)
+            {
+                <ul class="list-group">
+                    <Virtualize Items="parts" Context="p" OverscanCount="10">
+                        <li class="list-group-item">
+                            @p.PartName - @p.ModelName
+                        </li>
+                    </Virtualize>
+                </ul>
+            }
+        </div>
+    </div>
+</div>
 
 
 @code {
+    private double totalMinutesMachine = 0;
+    private double totalMinutesPart = 0;
+
     private List<PartModel> parts;
     private const string PartListName = "partList";
     private const string PartCacheDate = "partCacheDate";
-    private double totalMinutesPart = 0;
 
     private List<MachineModel> machines;
     private const string MachineListName = "machineList";
     private const string MachineCacheDate = "machineCacheDate";
-    private double totalMinutesMachine = 0;
+
+    private string errorMessage = "";    
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,7 +93,7 @@ else
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                errorMessage = ex.Message;
             }
         }
     }
