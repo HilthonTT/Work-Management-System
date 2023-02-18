@@ -1,0 +1,90 @@
+﻿@page "/adminHub"
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>Admin Hub</h1>
+
+<div class="row mt-4 text-center">
+    <h2>Users</h2>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToTask">
+            Assign A Task
+        </button>
+    </div>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToUserJobs">
+            Modify Job Position
+        </button>
+    </div>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToUserRoles">
+            Modify User Website Permission
+        </button>
+    </div>
+</div>
+
+<div class="row mt-4 text-center">
+    <h2>Stocks</h2>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToMachines">
+            Machines
+        </button>
+    </div>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToParts">
+            Parts
+        </button>
+    </div>
+</div>
+
+<div class="row mt-4 text-center">
+    <h2>Branches</h2>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToCompanies">
+            Companies
+        </button>
+    </div>
+    <div class="col-sm">
+        <button class="btn btn-primary" @onclick="NavigateToDepartments">
+            Departments
+        </button>
+    </div>
+</div>
+
+
+@code {
+    private void NavigateToTask()
+    {
+        navManager.NavigateTo("/admin/task");
+    }
+
+    private void NavigateToUserJobs()
+    {
+        navManager.NavigateTo("/admin/userJobs");
+    }
+
+    private void NavigateToUserRoles()
+    {
+        navManager.NavigateTo("/admin/userRoles");
+    }
+
+    private void NavigateToMachines()
+    {
+        navManager.NavigateTo("/admin/machine");
+    }
+
+    private void NavigateToParts()
+    {
+        navManager.NavigateTo("/admin/part");
+    }
+
+    private void NavigateToCompanies()
+    {
+        navManager.NavigateTo("/admin/company");
+    }
+
+    private void NavigateToDepartments()
+    {
+        navManager.NavigateTo("/admin/department");
+    }
+}
