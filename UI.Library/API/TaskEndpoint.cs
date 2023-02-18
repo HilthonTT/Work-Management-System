@@ -31,6 +31,28 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
+    public async Task<TaskModel> GetTaskById(int Id)
+    {
+        var data = new
+        {
+            Id = Id,
+        };
+
+        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTaskById", data))
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsAsync<List<TaskModel>>();
+
+                return result.FirstOrDefault();
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+        }
+    }
+
     public async Task<List<TaskModel>> GetByUserIdAsync(string UserId)
     {
         var data = new

@@ -24,6 +24,13 @@ public class TaskData : ITaskData
         return output;
     }
 
+    public List<TaskModel> GetTaskById(int Id)
+    {
+        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetById", new { Id }, "WSMData");
+
+        return output;
+    }
+
     public List<TaskModel> GetTaskByUserId(string UserId)
     {
         var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetByUserId", new { UserId }, "WSMData");

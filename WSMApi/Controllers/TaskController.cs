@@ -39,6 +39,18 @@ public class TaskController : ControllerBase
         return _taskData.GetTaskByUserId(user.UserId);
     }
 
+    public record GettingId(
+        int Id
+        );
+
+    [HttpPost]
+    [Authorize]
+    [Route("GetTaskById")]
+    public List<TaskModel> GetTaskById(GettingId Id)
+    {
+        return _taskData.GetTaskById(Id.Id);
+    }
+
     [HttpGet]
     [Authorize]
     [Route("GetMyTasks")]
