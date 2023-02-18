@@ -39,9 +39,11 @@ var mapperConfiguration = new MapperConfiguration(cfg =>
     cfg.CreateMap<FormDepartmentModel, DepartmentModel>();
     cfg.CreateMap<FormCompanyModel, CompanyModel>();
     cfg.CreateMap<FormMachineModel, MachineModel>();
+    cfg.CreateMap<FormPartModel, PartModel>();
     cfg.CreateMap<DepartmentModel, FormDepartmentModel>();
     cfg.CreateMap<CompanyModel, FormCompanyModel>();
     cfg.CreateMap<MachineModel, FormMachineModel>();
+    cfg.CreateMap<PartModel, FormPartModel>();
 });
 
 var mapper = mapperConfiguration.CreateMapper();
