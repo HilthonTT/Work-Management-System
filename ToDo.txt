@@ -2,7 +2,14 @@
 ----WPF----
 
 * Add Red/Green buttons to say what parameter is missing to be able to click the submit buttons. - Done
+* Code Clean up and optimization.
 
+
+--- WSM API ---
+*Remove unnecessary commands when removing stored procedures
+*Add the JsonModels for each Post Request
+
+*Remove 
 
 --- WSM Portal ---
 
@@ -13,6 +20,10 @@ that lead you to their own update page.
 
 *Add a search bar for tasks/machine/parts/etc
 
+
+
 --- SQL ---
 
 *Add quantity field for machine and part tables.
+*Add the GetById Stored Procdures
+*Remove unnecessary Stored Procedures
