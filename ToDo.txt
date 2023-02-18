@@ -1,0 +1,18 @@
+
+----WPF----
+
+* Add Red/Green buttons to say what parameter is missing to be able to click the submit buttons. - Done
+
+
+--- WSM Portal ---
+
+*Change Admin Pages, instead of using a list of 'Models' to update, have a update button on each 'Model'
+that lead you to their own update page.
+
+*Remove Admin Hub as the previous will outdone it.
+
+*Add a search bar for tasks/machine/parts/etc
+
+--- SQL ---
+
+*Add quantity field for machine and part tables.

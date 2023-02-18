@@ -1,4 +1,0 @@
-
-----WPF----
-
-* Add Red/Green buttons to say what parameter is missing to be able to click the submit buttons.
