@@ -1,0 +1,35 @@
+﻿@page "/TaskDetails/{Id:int}"
+@inject ITaskEndpoint taskEndpoint
+@inject IDepartmentEndpoint departmentEndpoint
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>Task Details</h1>
+
+<div class="row">
+    <div class="col-sm">
+        @if (task is not null)
+        {
+            <strong>@task.Title</strong>
+            <div>
+                <div>Description: @task.Description</div>
+                <div>Department Id: @task.DepartmentId</div>
+                <div>Date Due: @task.DateDue.ToString("dd.MM.yyyy")</div>
+                <div>Percentage Done: @task.PercentageDone</div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private TaskModel task;
+
+    protected override async Task OnInitializedAsync()
+    {
+        task = await taskEndpoint.GetTaskById(Id);
+    }
+}
