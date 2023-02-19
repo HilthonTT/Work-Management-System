@@ -3,7 +3,7 @@ AS
 begin
 	set nocount on;
 
-	select [Id], [MachineName], [ModelName], [EuropeanArticleNumber], [PurchasedPrice], [DatePurchased] 
+	select [Id], [MachineName], [ModelName], [EuropeanArticleNumber], [PurchasedPrice], [DatePurchased], [Archived] 
 	from dbo.Machine
 
 	order by MachineName

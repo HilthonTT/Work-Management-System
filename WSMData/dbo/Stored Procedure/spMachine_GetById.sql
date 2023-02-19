@@ -4,7 +4,7 @@ AS
 begin
 	set nocount on;
 
-	select *
+	select [Id], [MachineName], [ModelName], [EuropeanArticleNumber], [PurchasedPrice], [DatePurchased], [Archived]
 	from dbo.Machine
 
 	where Id = @Id

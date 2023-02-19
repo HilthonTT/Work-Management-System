@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[spJobTitle_GetAll]
+﻿CREATE PROCEDURE [dbo].[spJobTitle_GetById]
+	@Id int
 AS
 begin
 	set nocount on;
@@ -6,5 +7,5 @@ begin
 	select [Id], [JobName], [Description], [DepartmentId], [Archived]
 	from dbo.JobTitle
 
-	order by JobName
+	where Id = @Id
 end

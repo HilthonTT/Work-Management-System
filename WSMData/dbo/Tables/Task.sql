@@ -9,6 +9,7 @@
     [PercentageDone] INT NOT NULL DEFAULT 0, 
     [IsDone] BIT NOT NULL DEFAULT 0, 
     [DateCreated] DATETIME2 NOT NULL DEFAULT getutcdate(), 
+    [Archived] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Task_ToUser] FOREIGN KEY (UserId) REFERENCES [User](Id) ON DELETE NO ACTION, 
     CONSTRAINT [FK_Task_ToDepartment] FOREIGN KEY (DepartmentId) REFERENCES Department(Id) ON DELETE CASCADE
 )

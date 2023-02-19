@@ -5,5 +5,6 @@
     [ModelName] NVARCHAR(255) NOT NULL, 
     [EuropeanArticleNumber] NVARCHAR(50) NOT NULL,
     [PurchasedPrice] MONEY NOT NULL, 
-    [DatePurchased] DATETIME2 NOT NULL
+    [DatePurchased] DATETIME2 NOT NULL, 
+    [Archived] BIT NOT NULL DEFAULT 0
 )

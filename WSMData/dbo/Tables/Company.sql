@@ -7,5 +7,6 @@
     [ChairPersonId] NVARCHAR(128) NULL, 
     [Description] NVARCHAR(255) NOT NULL,
     [DateFounded] DATETIME2 NOT NULL DEFAULT getutcdate(), 
+    [Archived] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Company_ToUser] FOREIGN KEY (ChairPersonId) REFERENCES [User](Id) ON DELETE CASCADE
 )

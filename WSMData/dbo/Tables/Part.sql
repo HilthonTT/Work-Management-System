@@ -6,5 +6,6 @@
     [MachineId] INT NULL,
     [PurchasedPrice] MONEY NOT NULL, 
     [DatePurchased] DATETIME2 NOT NULL, 
+    [Archived] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Part_ToMachine] FOREIGN KEY (MachineId) REFERENCES Machine(Id) ON DELETE CASCADE
 )
