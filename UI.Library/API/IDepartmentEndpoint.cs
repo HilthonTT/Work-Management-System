@@ -6,7 +6,7 @@ namespace UI.Library.API
     {
         Task ArchiveDepartmentAsync(DepartmentModel department);
         Task<List<DepartmentModel>> GetAllAsync();
-        Task<DepartmentModel> GetByIdAsync(DepartmentModel department);
+        Task<DepartmentModel> GetByIdAsync(int Id);
         Task PostDepartmentAsync(DepartmentModel department);
         Task UpdateDepartmentAsync(DepartmentModel department);
     }

@@ -29,9 +29,11 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task<CompanyModel> GetByIdAsync(CompanyModel company)
+    public async Task<CompanyModel> GetByIdAsync(int Id)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyById", company);
+        var data = new { Id };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyById", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<CompanyModel>();

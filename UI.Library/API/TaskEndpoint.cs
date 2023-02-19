@@ -31,26 +31,28 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<TaskModel> GetTaskById(TaskModel task)
+    public async Task<TaskModel> GetTaskById(int Id)
     {
-        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTaskById", task))
-        {
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsAsync<TaskModel>();
+        var data = new { Id };
 
-                return result;
-            }
-            else
-            {
-                throw new Exception(response.ReasonPhrase);
-            }
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTaskById", data);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadAsAsync<TaskModel>();
+
+            return result;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
         }
     }
 
-    public async Task<List<TaskModel>> GetByUserIdAsync(TaskModel task)
+    public async Task<List<TaskModel>> GetByUserIdAsync(int Id)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByUserId", task);
+        var data = new { Id };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByUserId", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<TaskModel>>();
@@ -63,9 +65,11 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByDepartmentIdAsync(TaskModel task)
+    public async Task<List<TaskModel>> GetByDepartmentIdAsync(int departmentId)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByDepartmentId", task);
+        var data = new { departmentId };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByDepartmentId", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<TaskModel>>();

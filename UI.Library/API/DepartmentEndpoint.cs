@@ -29,9 +29,11 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task<DepartmentModel> GetByIdAsync(DepartmentModel department)
+    public async Task<DepartmentModel> GetByIdAsync(int Id)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/GetDepartmentById", department);
+        var data = new { Id };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/GetDepartmentById", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<DepartmentModel>();

@@ -6,9 +6,9 @@ namespace UI.Library.API
     {
         Task ArchiveTask(TaskModel task);
         Task<List<TaskModel>> GetAllAsync();
-        Task<List<TaskModel>> GetByDepartmentIdAsync(TaskModel task);
-        Task<List<TaskModel>> GetByUserIdAsync(TaskModel task);
-        Task<TaskModel> GetTaskById(TaskModel task);
+        Task<List<TaskModel>> GetByDepartmentIdAsync(int departmentId);
+        Task<List<TaskModel>> GetByUserIdAsync(int Id);
+        Task<TaskModel> GetTaskById(int Id);
         Task PostTaskAsync(TaskModel task);
         Task UpdateAsync(TaskModel task);
         Task UpdatePercentageAsync(TaskModel task);

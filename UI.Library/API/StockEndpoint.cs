@@ -50,9 +50,11 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<MachineModel> GetMachineByIdAsync(MachineModel machine)
+    public async Task<MachineModel> GetMachineByIdAsync(int Id)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetMachineById", machine);
+        var data = new { Id };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetMachineById", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<MachineModel>();
@@ -135,9 +137,11 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<PartModel> GetPartByIdAsync(PartModel part)
+    public async Task<PartModel> GetPartByIdAsync(int Id)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetPartByModelName", part);
+        var data = new { Id };
+
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetPartByModelName", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<PartModel>();

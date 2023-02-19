@@ -6,7 +6,7 @@ namespace UI.Library.API
     {
         Task ArchiveCompanyAsync(CompanyModel company);
         Task<List<CompanyModel>> GetAllAsync();
-        Task<CompanyModel> GetByIdAsync(CompanyModel company);
+        Task<CompanyModel> GetByIdAsync(int Id);
         Task PostCompanyAsync(CompanyModel company);
         Task UpdateCompanyAsync(CompanyModel company);
     }

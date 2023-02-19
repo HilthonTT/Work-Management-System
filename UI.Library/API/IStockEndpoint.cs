@@ -10,8 +10,8 @@ namespace UI.Library.API
         Task<List<MachineModel>> GetAllMachinesAsync();
         Task<List<PartModel>> GetAllPartsAdminAsync();
         Task<List<PartModel>> GetAllPartsAsync();
-        Task<MachineModel> GetMachineByIdAsync(MachineModel machine);
-        Task<PartModel> GetPartByIdAsync(PartModel part);
+        Task<MachineModel> GetMachineByIdAsync(int Id);
+        Task<PartModel> GetPartByIdAsync(int Id);
         Task InsertMachineAsync(MachineModel machine);
         Task InsertPartAsync(PartModel part);
         Task UpdateMachineAsync(MachineModel machine);

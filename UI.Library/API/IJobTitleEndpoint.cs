@@ -6,7 +6,7 @@ namespace UI.Library.API
     {
         Task ArchiveJobTitleAsync(JobTitleModel jobTitle);
         Task<List<JobTitleModel>> GetAllAsync();
-        Task<JobTitleModel> GetByIdAsync(JobTitleModel jobTitle);
+        Task<JobTitleModel> GetByIdAsync(int Id);
         Task PostJobTitleAsync(JobTitleModel JobTitle);
         Task UpdateJobTitleAsync(JobTitleModel JobTitle);
     }
