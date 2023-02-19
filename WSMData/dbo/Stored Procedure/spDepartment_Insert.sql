@@ -6,13 +6,14 @@
 	@ChairPersonId nvarchar(128),
 	@PhoneNumber nvarchar(50),
 	@Description nvarchar(255),
-	@CreatedDate datetime2
+	@CreatedDate datetime2,
+	@Archived bit
 AS
 begin
 	set nocount on;
 
-	insert into dbo.Department(CompanyId, DepartmentName, [Address], ChairPersonId, PhoneNumber ,[Description], CreatedDate)
-	values (@CompanyId, @DepartmentName, @Address, @ChairPersonId, @PhoneNumber, @Description, @CreatedDate)
+	insert into dbo.Department(CompanyId, DepartmentName, [Address], ChairPersonId, PhoneNumber ,[Description], CreatedDate, Archived)
+	values (@CompanyId, @DepartmentName, @Address, @ChairPersonId, @PhoneNumber, @Description, @CreatedDate, @Archived)
 
 	select @Id = SCOPE_IDENTITY()
 end

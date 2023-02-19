@@ -4,13 +4,14 @@
 	@ModelName nvarchar(255),
 	@EuropeanArticleNumber nvarchar(50),
 	@PurchasedPrice money,
-	@DatePurchased datetime2
+	@DatePurchased datetime2,
+	@Archived bit
 AS
 begin
 	set nocount on;
 
-	insert dbo.Machine (MachineName, ModelName, EuropeanArticleNumber, PurchasedPrice, DatePurchased)
-	values (@MachineName, @ModelName, @EuropeanArticleNumber, @PurchasedPrice, @DatePurchased)
+	insert dbo.Machine (MachineName, ModelName, EuropeanArticleNumber, PurchasedPrice, DatePurchased, Archived)
+	values (@MachineName, @ModelName, @EuropeanArticleNumber, @PurchasedPrice, @DatePurchased, @Archived)
 
 	select @Id = SCOPE_IDENTITY();
 end

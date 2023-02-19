@@ -2,13 +2,14 @@
 	@Id int output,
 	@JobName nvarchar(100),
 	@Description nvarchar(255),
-	@DepartmentId int
+	@DepartmentId int,
+	@Archived bit
 AS
 begin
 	set nocount on;
 
-	insert into dbo.JobTitle(JobName, [Description], DepartmentId)
-	values (@JobName, @Description, @DepartmentId)
+	insert into dbo.JobTitle(JobName, [Description], DepartmentId, Archived)
+	values (@JobName, @Description, @DepartmentId, @Archived)
 
 	select @Id = SCOPE_IDENTITY()
 end
