@@ -29,17 +29,12 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task<List<DepartmentModel>> GetByNameAsync(string DepartmentName)
+    public async Task<DepartmentModel> GetByIdAsync(DepartmentModel department)
     {
-        var data = new
-        {
-            DepartmentName
-        };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/GetDepartmentByName", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/GetDepartmentById", department);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsAsync<List<DepartmentModel>>();
+            var result = await response.Content.ReadAsAsync<DepartmentModel>();
             return result;
         }
         else
@@ -50,7 +45,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
 
     public async Task PostDepartmentAsync(DepartmentModel department)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/InsertDepartment", department);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/Admin/InsertDepartment", department);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The department of name ({DepartmentName}) has successfully been added to the database.",
@@ -64,7 +59,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
 
     public async Task UpdateDepartmentAsync(DepartmentModel department)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/UpdateDepartment", department);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/Admin/UpdateDepartment", department);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The department of Id ({Id}) has successfully been updated.", department.Id);
@@ -75,12 +70,12 @@ public class DepartmentEndpoint : IDepartmentEndpoint
         }
     }
 
-    public async Task DeleteDepartmentAsync(DepartmentModel department)
+    public async Task ArchiveDepartmentAsync(DepartmentModel department)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/DeleteDepartment", department);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/Admin/ArchiveDepartment", department);
         if (response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("The department of Id {Id} has successfully been updated.", department.Id);
+            _logger.LogInformation("The department of Id {Id} has successfully been archived.", department.Id);
         }
         else
         {

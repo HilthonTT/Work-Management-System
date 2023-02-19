@@ -50,31 +50,12 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<List<MachineModel>> GetMachineByModelNameAsync(string ModelName)
+    public async Task<MachineModel> GetMachineByIdAsync(MachineModel machine)
     {
-        var data = new { ModelName };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetMachineByModelName", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetMachineById", machine);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsAsync<List<MachineModel>>();
-
-            return result;
-        }
-        else
-        {
-            throw new Exception(response.ReasonPhrase);
-        }
-    }
-
-    public async Task<List<MachineModel>> GetMachineByIdAsync(int Id)
-    {
-        var data = new { Id };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetMachineById", data);
-        if (response.IsSuccessStatusCode)
-        {
-            var result = await response.Content.ReadAsAsync<List<MachineModel>>();
+            var result = await response.Content.ReadAsAsync<MachineModel>();
 
             return result;
         }
@@ -110,14 +91,12 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task DeleteMachineAsync(int Id)
+    public async Task ArchiveMachineAsync(MachineModel machine)
     {
-        var data = new { Id };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/DeleteMachine", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/ArchiveMachine", machine);
         if (response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("The machine of Id {Id} has been deleted from the database.", data.Id);
+            _logger.LogInformation("The machine of Id {Id} has been archived in the database", machine.Id);
         }
         else
         {
@@ -156,31 +135,12 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task<List<PartModel>> GetPartByModelNameAsync(string ModelName)
+    public async Task<PartModel> GetPartByIdAsync(PartModel part)
     {
-        var data = new { ModelName };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetPartByModelName", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetPartByModelName", part);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsAsync<List<PartModel>>();
-
-            return result;
-        }
-        else
-        {
-            throw new Exception(response.ReasonPhrase);
-        }
-    }
-
-    public async Task<List<PartModel>> GetPartByIdAsync(int Id)
-    {
-        var data = new { Id };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/GetPartById", data);
-        if (response.IsSuccessStatusCode)
-        {
-            var result = await response.Content.ReadAsAsync<List<PartModel>>();
+            var result = await response.Content.ReadAsAsync<PartModel>();
 
             return result;
         }
@@ -216,14 +176,12 @@ public class StockEndpoint : IStockEndpoint
         }
     }
 
-    public async Task DeletePartAsync(int Id)
+    public async Task ArchivePartAsync(PartModel part)
     {
-        var data = new { Id };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/DeletePart", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Stock/Admin/ArchivePart", part);
         if (response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("The part of Id {Id} has been deleted database", data.Id);
+            _logger.LogInformation("The part of Id {Id} has been archived database", part.Id);
         }
         else
         {

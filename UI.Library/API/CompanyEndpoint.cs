@@ -15,7 +15,6 @@ public class CompanyEndpoint : ICompanyEndpoint
         _logger = logger;
     }
 
-
     public async Task<List<CompanyModel>> GetAllAsync()
     {
         using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Company/GetCompanies");
@@ -30,17 +29,12 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task<List<CompanyModel>> GetByNameAsync(string CompanyName)
+    public async Task<CompanyModel> GetByIdAsync(CompanyModel company)
     {
-        var data = new
-        {
-            CompanyName 
-        };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyByName", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/GetCompanyById", company);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsAsync<List<CompanyModel>>();
+            var result = await response.Content.ReadAsAsync<CompanyModel>();
             return result;
         }
         else
@@ -51,7 +45,7 @@ public class CompanyEndpoint : ICompanyEndpoint
 
     public async Task PostCompanyAsync(CompanyModel company)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/InsertCompany", company);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/Admin/InsertCompany", company);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The company of name ({CompanyName}) has successfully been added to the database.", company.CompanyName);
@@ -64,7 +58,7 @@ public class CompanyEndpoint : ICompanyEndpoint
 
     public async Task UpdateCompanyAsync(CompanyModel company)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/UpdateCompany", company);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/Admin/UpdateCompany", company);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The company of Id ({Id}) has sucessfully been updated.", company.Id);
@@ -75,12 +69,12 @@ public class CompanyEndpoint : ICompanyEndpoint
         }
     }
 
-    public async Task DeleteCompanyAsync(CompanyModel company)
+    public async Task ArchiveCompanyAsync(CompanyModel company)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/DeleteCompany", company);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/Admin/ArchiveCompany", company);
         if (response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("The company of Id ({Id}) has sucessfully been deleted.", company.Id);
+            _logger.LogInformation("The company of Id ({Id}) has sucessfully been archived.", company.Id);
         }
         else
         {

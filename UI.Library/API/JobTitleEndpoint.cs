@@ -28,17 +28,12 @@ public class JobTitleEndpoint : IJobTitleEndpoint
         }
     }
 
-    public async Task<List<JobTitleModel>> GetByNameAsync(string JobName)
+    public async Task<JobTitleModel> GetByIdAsync(JobTitleModel jobTitle)
     {
-        var data = new
-        {
-            JobName
-        };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/GetJobTitlesByName", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/GetJobTitlesByName", jobTitle);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsAsync<List<JobTitleModel>>();
+            var result = await response.Content.ReadAsAsync<JobTitleModel>();
             return result;
         }
         else
@@ -49,7 +44,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
 
     public async Task PostJobTitleAsync(JobTitleModel JobTitle)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/InsertJobTitle", JobTitle);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/Admin/InsertJobTitle", JobTitle);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The Job Title of name ({JobName}) has successfully been added to the database", JobTitle.JobName);
@@ -62,10 +57,23 @@ public class JobTitleEndpoint : IJobTitleEndpoint
 
     public async Task UpdateJobTitleAsync(JobTitleModel JobTitle)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/UpdateJobTitle", JobTitle);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/Admin/UpdateJobTitle", JobTitle);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The Job Title of Id ({Id}) has successfully been updated.", JobTitle.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
+    public async Task ArchiveJobTitleAsync(JobTitleModel jobTitle)
+    {
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/Admin/ArchiveJobTitle", jobTitle);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The Job Title of Id ({Id}) has successfully been archived.", jobTitle.Id);
         }
         else
         {

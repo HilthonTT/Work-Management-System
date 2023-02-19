@@ -31,20 +31,15 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<TaskModel> GetTaskById(int Id)
+    public async Task<TaskModel> GetTaskById(TaskModel task)
     {
-        var data = new
-        {
-            Id = Id,
-        };
-
-        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTaskById", data))
+        using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTaskById", task))
         {
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsAsync<List<TaskModel>>();
+                var result = await response.Content.ReadAsAsync<TaskModel>();
 
-                return result.FirstOrDefault();
+                return result;
             }
             else
             {
@@ -53,14 +48,9 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByUserIdAsync(string UserId)
+    public async Task<List<TaskModel>> GetByUserIdAsync(TaskModel task)
     {
-        var data = new
-        {
-            UserId = UserId
-        };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByUserId", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByUserId", task);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<TaskModel>>();
@@ -73,9 +63,9 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<List<TaskModel>> GetByDepartmentIdAsync(string departmentId)
+    public async Task<List<TaskModel>> GetByDepartmentIdAsync(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByDepartmentId", departmentId);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/GetTasksByDepartmentId", task);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<List<TaskModel>>();
@@ -90,7 +80,7 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task PostTaskAsync(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/InsertTask", task);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/Admin/InsertTask", task);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of title ({Title}) has successfully been added to the database", task.Title);
@@ -103,14 +93,7 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task UpdatePercentageAsync(TaskModel task)
     {
-        var data = new
-        {
-            Id = task.Id,
-            PercentageDone = task.PercentageDone,
-            IsDone = task.IsDone
-        };
-
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTaskPercentage", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTaskPercentage", task);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of Id ({Id}) has successfully been updated to the database", task.Id);
@@ -123,10 +106,23 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task UpdateAsync(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTask", task);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/Admin/UpdateTask", task);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of Id ({Id}) has successfully been updated to the database", task.Id);
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
+    public async Task ArchiveTask(TaskModel task)
+    {
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/Admin/ArchiveTask", task);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation("The task of Id ({Id}) has successfully been archived to the database", task.Id);
         }
         else
         {

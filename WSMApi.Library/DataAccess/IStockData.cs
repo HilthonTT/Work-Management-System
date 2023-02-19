@@ -4,13 +4,11 @@ namespace WSMApi.Library.DataAccess
 {
     public interface IStockData
     {
-        void DeleteMachine(int Id);
-        void DeletePart(int Id);
-        List<MachineModel> GetMachineById(int Id);
-        List<MachineModel> GetMachineByName(string MachineName);
+        void ArchiveMachine(MachineModel machine);
+        void ArchivePart(PartModel part);
+        MachineModel GetMachineById(MachineModel machine);
         List<MachineModel> GetMachines();
-        List<PartModel> GetPartById(int Id);
-        List<PartModel> GetPartByModelName(string ModelName);
+        PartModel GetPartById(PartModel part);
         List<PartModel> GetParts();
         void InsertMachine(MachineModel machine);
         void InsertPart(PartModel part);

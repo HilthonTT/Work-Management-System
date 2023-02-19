@@ -4,9 +4,9 @@ namespace WSMApi.Library.DataAccess
 {
     public interface ICompanyData
     {
-        void DeleteCompany(CompanyModel company);
+        void ArchiveCompany(CompanyModel company);
         List<CompanyModel> GetCompanies();
-        List<CompanyModel> GetCompanyByName(string CompanyName);
+        CompanyModel GetCompanyById(CompanyModel company);
         void InsertCompany(CompanyModel company);
         void UpdateCompany(CompanyModel company);
     }

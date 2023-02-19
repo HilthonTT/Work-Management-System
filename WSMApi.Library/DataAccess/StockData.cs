@@ -25,18 +25,11 @@ public class StockData : IStockData
         return output;
     }
 
-    public List<MachineModel> GetMachineByName(string ModelName)
+    public MachineModel GetMachineById(MachineModel machine)
     {
-        var output = _sql.LoadData<MachineModel, dynamic>("dbo.spMachine_GetByModelName", new { ModelName }, "WSMData");
+        var output = _sql.LoadData<MachineModel, dynamic>("dbo.spMachine_GetById", new { machine.Id }, "WSMData");
 
-        return output;
-    }
-
-    public List<MachineModel> GetMachineById(int Id)
-    {
-        var output = _sql.LoadData<MachineModel, dynamic>("dbo.spMachine_GetById", new { Id }, "WSMData");
-
-        return output;
+        return output.FirstOrDefault();
     }
 
     public void InsertMachine(MachineModel machine)
@@ -49,9 +42,9 @@ public class StockData : IStockData
         _sql.SaveData("dbo.spMachine_Update", machine, "WSMData");
     }
 
-    public void DeleteMachine(int Id)
+    public void ArchiveMachine(MachineModel machine)
     {
-        _sql.SaveData("dbo.spMachine_Delete", new { Id }, "WSMData");
+        _sql.SaveData("dbo.spMachine_Archive", new { machine.Id, machine.Archived }, "WSMData");
     }
 
     // All the stored procedures for the Part Table
@@ -63,18 +56,11 @@ public class StockData : IStockData
         return output;
     }
 
-    public List<PartModel> GetPartByModelName(string ModelName)
+    public PartModel GetPartById(PartModel part)
     {
-        var output = _sql.LoadData<PartModel, dynamic>("dbo.spPart_GetByModelName", new { ModelName }, "WSMData");
+        var output = _sql.LoadData<PartModel, dynamic>("dbo.spPart_GetById", new { part.Id }, "WSMData");
 
-        return output;
-    }
-
-    public List<PartModel> GetPartById(int Id)
-    {
-        var output = _sql.LoadData<PartModel, dynamic>("dbo.spPart_GetById", new { Id }, "WSMData");
-
-        return output;
+        return output.FirstOrDefault();
     }
 
     public void InsertPart(PartModel part)
@@ -87,8 +73,8 @@ public class StockData : IStockData
         _sql.SaveData("dbo.spPart_Update", part, "WSMData");
     }
 
-    public void DeletePart(int Id)
+    public void ArchivePart(PartModel part)
     {
-        _sql.SaveData("dbo.spPart_Delete", new { Id }, "WSMData");
+        _sql.SaveData("dbo.spPart_Archive", new { part.Id, part.Archived }, "WSMData");
     }
 }

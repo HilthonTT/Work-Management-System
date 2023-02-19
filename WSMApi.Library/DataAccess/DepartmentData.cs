@@ -24,13 +24,12 @@ public class DepartmentData : IDepartmentData
         return output;
     }
 
-    public List<DepartmentModel> GetDepartmentByName(string DepartmentName)
+    public DepartmentModel GetDepartmentById(DepartmentModel department)
     {
-        var output = _sql.LoadData<DepartmentModel, dynamic>("dbo.spDepartment_GetByName", new { DepartmentName }, "WSMData");
+        var output = _sql.LoadData<DepartmentModel, dynamic>("dbo.spDepartment_GetById", new { department.Id }, "WSMData");
 
-        return output;
+        return output.FirstOrDefault();
     }
-
 
     public void InsertDepartment(DepartmentModel department)
     {
@@ -42,8 +41,8 @@ public class DepartmentData : IDepartmentData
         _sql.SaveData("dbo.spDepartment_Update", department, "WSMData");
     }
 
-    public void DeleteDepartment(DepartmentModel department)
+    public void ArchiveDepartment(DepartmentModel department)
     {
-        _sql.SaveData("dbo.spDepartment_Delete", new { department.Id }, "WSMData");
+        _sql.SaveData("dbo.spDepartment_Archive", new { department.Id, department.Archived }, "WSMData");
     }
 }

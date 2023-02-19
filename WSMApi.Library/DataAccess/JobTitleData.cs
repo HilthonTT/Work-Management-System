@@ -24,11 +24,11 @@ public class JobTitleData : IJobTitleData
         return output;
     }
 
-    public List<JobTitleModel> GetJobTitleByName(string JobName)
+    public JobTitleModel GetJobTitleById(JobTitleModel jobTitle)
     {
-        var output = _sql.LoadData<JobTitleModel, dynamic>("dbo.spJobTitle_GetByName", new { JobName }, "WSMData");
+        var output = _sql.LoadData<JobTitleModel, dynamic>("dbo.spJobTitle_GetById", new { jobTitle.Id }, "WSMData");
 
-        return output;
+        return output.FirstOrDefault();
     }
 
     public void InsertJobTitle(JobTitleModel jobTitle)
@@ -39,5 +39,10 @@ public class JobTitleData : IJobTitleData
     public void UpdateJobTitle(JobTitleModel jobTitle)
     {
         _sql.SaveData("dbo.spJobTitle_Update", jobTitle, "WSMData");
+    }
+
+    public void ArchiveJobTitle(JobTitleModel jobTitle)
+    {
+        _sql.SaveData("dbo.spJobTitle_Archive", new { jobTitle.Id, jobTitle.Archived }, "WSMData");
     }
 }

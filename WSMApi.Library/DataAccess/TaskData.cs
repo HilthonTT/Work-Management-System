@@ -24,23 +24,23 @@ public class TaskData : ITaskData
         return output;
     }
 
-    public List<TaskModel> GetTaskById(int Id)
+    public TaskModel GetTaskById(TaskModel task)
     {
-        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetById", new { Id }, "WSMData");
+        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetById", new { task.Id }, "WSMData");
+
+        return output.FirstOrDefault();
+    }
+
+    public List<TaskModel> GetTaskByUserId(TaskModel task)
+    {
+        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetByUserId", new { task.UserId }, "WSMData");
 
         return output;
     }
 
-    public List<TaskModel> GetTaskByUserId(string UserId)
+    public List<TaskModel> GetTaskByDepartmentId(TaskModel task)
     {
-        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetByUserId", new { UserId }, "WSMData");
-
-        return output;
-    }
-
-    public List<TaskModel> GetTaskByDepartmentId(int DepartmentId)
-    {
-        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetByDepartmentId", new { DepartmentId }, "WSMData");
+        var output = _sql.LoadData<TaskModel, dynamic>("dbo.spTask_GetByDepartmentId", new { task.DepartmentId }, "WSMData");
 
         return output;
     }
@@ -58,5 +58,10 @@ public class TaskData : ITaskData
     public void UpdateTask(TaskModel task)
     {
         _sql.SaveData("dbo.spTask_Update", task, "WSMData");
+    }
+
+    public void ArchiveTask(TaskModel task)
+    {
+        _sql.SaveData("dbo.spTask_Archive", new { task.Id, task.Archived }, "WSMData");
     }
 }

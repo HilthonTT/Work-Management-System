@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WSMApi.Library.Internal.DataAccess;
+﻿using WSMApi.Library.Internal.DataAccess;
 using WSMApi.Library.Models;
 
 namespace WSMApi.Library.DataAccess;
@@ -24,11 +19,11 @@ public class CompanyData : ICompanyData
         return output;
     }
 
-    public List<CompanyModel> GetCompanyByName(string CompanyName)
+    public CompanyModel GetCompanyById(CompanyModel company)
     {
-        var output = _sql.LoadData<CompanyModel, dynamic>("dbo.spCompany_GetByName", new { CompanyName }, "WSMData");
+        var output = _sql.LoadData<CompanyModel, dynamic>("dbo.spCompany_GetById", new { company.Id }, "WSMData");
 
-        return output;
+        return output.FirstOrDefault();
     }
 
     public void InsertCompany(CompanyModel company)
@@ -41,8 +36,8 @@ public class CompanyData : ICompanyData
         _sql.SaveData("dbo.spCompany_Update", company, "WSMData");
     }
 
-    public void DeleteCompany(CompanyModel company)
+    public void ArchiveCompany(CompanyModel company)
     {
-        _sql.SaveData("dbo.spCompany_Delete", new { company.Id }, "WSMData");
+        _sql.SaveData("dbo.spCompany_Archive", new { company.Id, company.Archived }, "WSMData");
     }
 }
