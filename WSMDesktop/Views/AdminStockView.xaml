@@ -136,14 +136,14 @@
             </StackPanel>
             
             <!-- Delete Selected Machine Button -->
-            <Button x:Name="DeleteSelectedMachine"
+            <Button x:Name="ArchiveSelectedMachine"
                     Content="Delete Machine"
                     Foreground="White"
                     FontWeight="Medium"
                     Margin="0 15 0 0">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{Binding DeleteMachineButtonColor}" />
+                        <Setter Property="Background" Value="{Binding ArchiveMachineButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 
@@ -268,14 +268,14 @@
             </StackPanel>
             
             <!-- Delete Selected Part -->
-            <Button x:Name="DeleteSelectedPart"
-                    Content="Delete Part"
+            <Button x:Name="ArchiveSelectedPart"
+                    Content="Archive Part"
                     Foreground="White"
                     FontWeight="Medium"
                     Margin="0 15 0 0">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{Binding DeletePartButtonColor}" />
+                        <Setter Property="Background" Value="{Binding ArchivePartButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 

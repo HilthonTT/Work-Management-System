@@ -138,14 +138,14 @@
             
             <!-- Delete Company From database -->
 
-            <Button x:Name="DeleteSelectedCompany"
-                    Content="Delete Company"
+            <Button x:Name="ArchiveSelectedCompany"
+                    Content="Archive Company"
                     Foreground="White"
                     FontWeight="Medium"
                     Margin="0 15 0 0">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{Binding DeleteCompanyButtonColor}" />
+                        <Setter Property="Background" Value="{Binding ArchiveCompanyButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 
@@ -270,14 +270,14 @@
                 </Button>
             </StackPanel>
 
-            <Button x:Name="DeleteSelectedDepartment"
-                    Content="Delete Department"
+            <Button x:Name="ArchiveSelectedDepartment"
+                    Content="Archive Department"
                     Foreground="White"
                     FontWeight="Medium"
                     Margin="0 15 0 0">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{Binding DeleteDepartmentButtonColor}" />
+                        <Setter Property="Background" Value="{Binding ArchiveDepartmentButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 
