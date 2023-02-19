@@ -345,6 +345,8 @@ public class AdminUserRolesViewModel : Screen
         AvailableRoles.Remove(SelectedAvailableRole);
 
         NotifyOfPropertyChange(() => Users);
+        NotifyOfPropertyChange(() => AvailableRoles);
+        NotifyOfPropertyChange(() => UserRoles);
     }
 
     public bool CanRemoveSelectedRole
@@ -377,6 +379,8 @@ public class AdminUserRolesViewModel : Screen
         UserRoles.Remove(SelectedAvailableRole);
 
         NotifyOfPropertyChange(() => Users);
+        NotifyOfPropertyChange(() => AvailableRoles);
+        NotifyOfPropertyChange(() => UserRoles);
     }
 
     public bool CanAddSelectedJob
@@ -405,8 +409,8 @@ public class AdminUserRolesViewModel : Screen
     public async Task AddSelectedJob()
     {
         var updatedUser = SelectedUser;
-        var mappedJobTitle = _mapper.Map<JobTitleModel>(SelectedAvailableJob);
-        var chosenJob = await _jobEndpoint.GetByIdAsync(mappedJobTitle);
+        var jobs = await _jobEndpoint.GetAllAsync();
+        var chosenJob = jobs.Where(x => x.JobName == SelectedAvailableJob).FirstOrDefault();
         updatedUser.JobTitleId = chosenJob.Id;
 
         await _userEndpoint.UpdateUserJobTitleIdAsync(updatedUser);
@@ -415,6 +419,8 @@ public class AdminUserRolesViewModel : Screen
         AvailableJobs.Remove(SelectedAvailableJob);
 
         NotifyOfPropertyChange(() => Users);
+        NotifyOfPropertyChange(() => AvailableJobs);
+        NotifyOfPropertyChange(() => UserJobs);
     }
 
     public bool CanRemoveSelectedJob
@@ -450,6 +456,7 @@ public class AdminUserRolesViewModel : Screen
         AvailableJobs.Add(SelectedAvailableJob);
 
         NotifyOfPropertyChange(() => Users);
+        NotifyOfPropertyChange(() => AvailableJobs);
+        NotifyOfPropertyChange(() => UserJobs);
     }
-
 }
