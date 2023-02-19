@@ -1,45 +1,85 @@
 ﻿@page "/"
 @inject ITaskEndpoint taskEndpoint
+@inject IDepartmentEndpoint departmentEndpoint
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject ILoggedInUserModel loggedInUser
 @inject NavigationManager navManager
 @attribute [Authorize]
 
-<h1>My Tasks</h1>
+<h1 class="text-center fw-bold">My Tasks</h1>
+
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
 
 <div class="row">
     <div class="col-sm">
-        @if (tasks is not null)
+        @if (tasks is not null && departments is not null)
         {
-            <ul class="list-group">
-                <Virtualize Items="tasks" OverscanCount="10" Context="t">
-                    <li class="list-group-item mt-2" @onclick="(() => OpenDetails(t))">
-                        @t.Title
-                    </li>
-                </Virtualize>
-            </ul>
+            <Virtualize Items="tasks" OverscanCount="10" Context="t">
+                <div class="card text-center mt-4">
+                  <div class="card-header">
+                    @if (showTaskDepartment(t.DepartmentId) is not null)
+                    {
+                        <p>Task Assigned To The @showTaskDepartment(t.DepartmentId).DepartmentName Department</p>
+                    }
+                    else
+                    {
+                        <p>Task Assigned To No Departments.</p>
+                    }
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">@t.Title</h5>
+                    <p class="card-text">@t.Description</p>
+                    <a @onclick="(() => OpenDetails(t))" class="btn btn-primary">Open Details</a>
+                  </div>
+                  <div class="card-footer text-muted">
+                    Date Dued: @t.DateDue
+                  </div>
+                </div>
+            </Virtualize>
         }
     </div>
 </div>
 
 @code {
-    private List<TaskModel> tasks;
+    private double totalMinutesTask = 0;
+    private double totalMinutesDepartment = 0;
 
+    private List<TaskModel> tasks;
     private const string TaskListName = "taskList";
     private const string TaskCacheDate = "taskCacheDate";
-    private double totalMinutes = 0;
+
+    private List<DepartmentModel> departments;
+    private const string DepartmentListName = "departmentList";
+    private const string DepartmentCacheDate = "departmentCacheDate";
+
+    private string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
         tasks = await localStorage.GetItemAsync<List<TaskModel>>(TaskListName);
-        DateTime? cacheDate = await localStorage.GetItemAsync<DateTime?>(TaskCacheDate);
+        departments = await localStorage.GetItemAsync<List<DepartmentModel>>(DepartmentListName);
 
-        if (cacheDate is not null)
+        DateTime? cacheDateTasks = await localStorage.GetItemAsync<DateTime?>(TaskCacheDate);
+        DateTime? cacheDateDepartments = await localStorage.GetItemAsync<DateTime?>(DepartmentCacheDate);
+
+        if (cacheDateTasks is not null)
         {
-            totalMinutes = DateTime.UtcNow.Subtract((DateTime)cacheDate).TotalMinutes;
+            totalMinutesTask = DateTime.UtcNow.Subtract((DateTime)cacheDateTasks).TotalMinutes;
         }
 
-        if (tasks is null || cacheDate is null || totalMinutes > 10)
+        if (cacheDateDepartments is not null)
+        {
+            totalMinutesDepartment = DateTime.UtcNow.Subtract((DateTime)cacheDateDepartments).TotalMinutes;
+        }
+
+        if (tasks is null || departments is null ||
+            cacheDateTasks is null || cacheDateDepartments is null ||
+            totalMinutesTask > 10 || totalMinutesDepartment > 10)
         {
             try
             {
@@ -47,10 +87,13 @@
                 tasks = tasks.Where(x => x.UserId == loggedInUser.Id || x.DepartmentId == loggedInUser.DepartmentId).ToList();
                 await localStorage.SetItemAsync(TaskListName, tasks);
                 await localStorage.SetItemAsync(TaskCacheDate, DateTime.UtcNow);
+                departments = await departmentEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(DepartmentListName, departments);
+                await localStorage.SetItemAsync(DepartmentCacheDate, DateTime.UtcNow);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorMessage = ex.Message;
             }
         }
     }
@@ -60,5 +103,10 @@
         navManager.NavigateTo($"/TaskDetails/{task.Id}");
     }
 
+    private DepartmentModel showTaskDepartment(int? taskDepartmentId)
+    {
+        var selectedDepartment = departments.Where(x => x.Id == taskDepartmentId).FirstOrDefault();
 
+        return selectedDepartment;
+    }
 }
