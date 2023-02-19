@@ -54,7 +54,7 @@ public class TaskData : ITaskData
     {
         _sql.SaveData("dbo.spTask_Update",  
             new { task.Id, task.UserId, task.DepartmentId, task.Title, task.Description, task.DateDue, 
-                task.PercentageDone, task.IsDone, task.Archived },
+                task.PercentageDone, task.IsDone },
             "WSMData");
     }
 
