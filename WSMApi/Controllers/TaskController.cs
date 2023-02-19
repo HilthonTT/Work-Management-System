@@ -21,61 +21,33 @@ public class TaskController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("GetTasks")]
-    public List<TaskModel> Get()
+    public List<TaskModel> GetTasks()
     {
         return _taskData.GetTasks();
     }
 
-    public record GettingUserId 
-    (
-        string UserId
-    );
-
     [HttpPost]
     [Authorize]
     [Route("GetTasksByUserId")]
-    public List<TaskModel> GetTasksByUserId(GettingUserId user)
+    public List<TaskModel> GetTasksByUserId(TaskModel task)
     {
-        return _taskData.GetTaskByUserId(user.UserId);
+        return _taskData.GetTaskByUserId(task);
     }
-
-    public record GettingId(
-        int Id
-        );
 
     [HttpPost]
     [Authorize]
     [Route("GetTaskById")]
-    public List<TaskModel> GetTaskById(GettingId Id)
+    public TaskModel GetTaskById(TaskModel task)
     {
-        return _taskData.GetTaskById(Id.Id);
+        return _taskData.GetTaskById(task);
     }
-
-    [HttpGet]
-    [Authorize]
-    [Route("GetMyTasks")]
-    public List<TaskModel> GetMyTasks()
-    {
-        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        return _taskData.GetTaskByUserId(userId);
-    }
-
 
     [HttpGet]
     [Authorize]
     [Route("GetTasksByDepartmentId")]
-    public List<TaskModel> GetTasksByDepartmentId(int DepartmentId)
+    public List<TaskModel> GetTasksByDepartmentId(TaskModel task)
     {
-        return _taskData.GetTaskByDepartmentId(DepartmentId);
-    }
-
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [Route("InsertTask")]
-    public void InsertTask(TaskModel task)
-    {
-        _taskData.InsertTask(task);
+        return _taskData.GetTaskByDepartmentId(task);
     }
 
     [HttpPost]
@@ -88,9 +60,25 @@ public class TaskController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("UpdateTask")]
+    [Route("Admin/InsertTask")]
+    public void InsertTask(TaskModel task)
+    {
+        _taskData.InsertTask(task);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [Route("Admin/UpdateTask")]
     public void UpdateTask(TaskModel task) 
     {
         _taskData.UpdateTask(task);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [Route("Admin/ArchiveTask")]
+    public void ArchiveTask(TaskModel task)
+    {
+        _taskData.ArchiveTask(task);
     }
 }

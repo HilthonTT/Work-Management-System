@@ -26,21 +26,17 @@ public class JobTitleController : ControllerBase
         return _jobTitleData.GetJobTitles();
     }
 
-    public record GetJobName(
-        string JobName
-    );
-
     [HttpPost]
     [Authorize]
-    [Route("GetJobTitlesByName")]
-    public List<JobTitleModel> GetJobTitleByName(GetJobName jobName)
+    [Route("GetJobTitlesById")]
+    public JobTitleModel GetJobTitleById(JobTitleModel jobTitle)
     {
-        return _jobTitleData.GetJobTitleByName(jobName.JobName);
+        return _jobTitleData.GetJobTitleById(jobTitle);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("InsertJobTitle")]
+    [Route("Admin/InsertJobTitle")]
     public void InsertJobTitle(JobTitleModel jobTitle)
     {
         _jobTitleData.InsertJobTitle(jobTitle);
@@ -48,9 +44,17 @@ public class JobTitleController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("UpdateJobTitle")]
+    [Route("Admin/UpdateJobTitle")]
     public void UpdateJobTitle(JobTitleModel jobTitle)
     {
         _jobTitleData.UpdateJobTitle(jobTitle);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [Route("Admin/ArchiveJobTitle")]
+    public void ArchiveJobTitle(JobTitleModel jobTitle)
+    {
+        _jobTitleData.ArchiveJobTitle(jobTitle);
     }
 }

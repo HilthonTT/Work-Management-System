@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WSMApi.Library.DataAccess;
 using WSMApi.Library.Models;
@@ -38,24 +37,12 @@ public class StockController : ControllerBase
         return _stockData.GetMachines();
     }
 
-    public record GetModelName(
-        string ModelName
-        );
-
-    [HttpPost]
-    [Authorize]
-    [Route("GetMachineByModelName")]
-    public List<MachineModel> GetMachineByModelName(GetModelName model)
-    {
-        return _stockData.GetMachineByName(model.ModelName);
-    }
-
     [HttpPost]
     [Authorize]
     [Route("GetMachineById")]
-    public List<MachineModel> GetMachineById(int Id)
+    public MachineModel GetMachineById(MachineModel machine)
     {
-        return _stockData.GetMachineById(Id);
+        return _stockData.GetMachineById(machine);
     }
 
     [HttpPost]
@@ -74,18 +61,12 @@ public class StockController : ControllerBase
         _stockData.UpdateMachine(machine);
     }
 
-
-    public record GettingId
-    (
-        int Id
-    );
-
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("Admin/DeleteMachine")]
-    public void DeleteMachine(GettingId model)
+    [Route("Admin/ArchiveMachine")]
+    public void DeleteMachine(MachineModel machine)
     {
-        _stockData.DeleteMachine(model.Id);
+        _stockData.ArchiveMachine(machine);
     }
 
     // Part Table section
@@ -109,26 +90,12 @@ public class StockController : ControllerBase
         return _stockData.GetParts();
     }
 
-
-    public record GettingModelName 
-    (
-        string ModelName
-    );
-
-    [HttpPost]
-    [Authorize]
-    [Route("GetPartByModelName")]
-    public List<PartModel> GetPartByModelName(GettingModelName model)
-    {
-        return _stockData.GetPartByModelName(model.ModelName);
-    }
-
     [HttpPost]
     [Authorize]
     [Route("GetPartById")]
-    public List<PartModel> GetPartById(GettingId model)
+    public PartModel GetPartById(PartModel part)
     {
-        return _stockData.GetPartById(model.Id);
+        return _stockData.GetPartById(part);
     }
 
     [HttpPost]
@@ -149,9 +116,9 @@ public class StockController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("Admin/DeletePart")]
-    public void DeletePart(GettingId model)
+    [Route("Admin/ArchivePart")]
+    public void DeletePart(PartModel part)
     {
-        _stockData.DeletePart(model.Id);
+        _stockData.ArchivePart(part);
     }
 }

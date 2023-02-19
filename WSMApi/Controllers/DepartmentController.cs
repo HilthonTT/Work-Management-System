@@ -20,26 +20,22 @@ public class DepartmentController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("GetDepartments")]
-    public List<DepartmentModel> Get()
+    public List<DepartmentModel> GetDepartments()
     {
         return _departmentData.GetDepartments();
     }
 
-    public record GetDepartmentName(
-        string DepartmentName
-    );
-
     [HttpPost]
     [Authorize]
-    [Route("GetDepartmentByName")] 
-    public List<DepartmentModel> GetDepartmentsByName(GetDepartmentName departmentName)
+    [Route("GetDepartmentById")] 
+    public DepartmentModel GetDepartmentById(DepartmentModel department)
     {
-        return _departmentData.GetDepartmentByName(departmentName.DepartmentName);
+        return _departmentData.GetDepartmentById(department);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("InsertDepartment")]
+    [Route("Admin/InsertDepartment")]
     public void InsertDepartment(DepartmentModel department)
     {
         _departmentData.InsertDepartment(department);
@@ -47,7 +43,7 @@ public class DepartmentController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("UpdateDepartment")]
+    [Route("Admin/UpdateDepartment")]
     public void UpdateDepartment(DepartmentModel department) 
     { 
         _departmentData.UpdateDepartment(department);
@@ -55,10 +51,10 @@ public class DepartmentController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("DeleteDepartment")]
-    public void DeleteDepartment(DepartmentModel department)
+    [Route("Admin/ArchiveDepartment")]
+    public void ArchiveDepartment(DepartmentModel department)
     {
-        _departmentData.DeleteDepartment(department);
+        _departmentData.ArchiveDepartment(department);
     }
 
 }

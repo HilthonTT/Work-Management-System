@@ -20,26 +20,22 @@ public class CompanyController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("GetCompanies")]
-    public List<CompanyModel> Get()
+    public List<CompanyModel> GetCompanies()
     {
         return _companyData.GetCompanies();
     }
 
-    public record GetCompanyName(
-        string CompanyName
-    );
-
     [HttpPost]
     [Authorize]
-    [Route("GetCompanyByName")]
-    public List<CompanyModel> GetCompanyByName(GetCompanyName companyName)
+    [Route("GetCompanyById")]
+    public CompanyModel GetCompanyById(CompanyModel company)
     {
-        return _companyData.GetCompanyByName(companyName.CompanyName);
+        return _companyData.GetCompanyById(company);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("InsertCompany")]
+    [Route("Admin/InsertCompany")]
     public void InsertCompany(CompanyModel company)
     {
         _companyData.InsertCompany(company);
@@ -47,7 +43,7 @@ public class CompanyController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("UpdateCompany")]
+    [Route("Admin/UpdateCompany")]
     public void UpdateCompany(CompanyModel company)
     {
         _companyData.UpdateCompany(company);
@@ -55,9 +51,9 @@ public class CompanyController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("DeleteCompany")]
-    public void DeleteCompany(CompanyModel company)
+    [Route("Admin/ArchiveCompany")]
+    public void ArchiveCompany(CompanyModel company)
     {
-        _companyData.DeleteCompany(company);
+        _companyData.ArchiveCompany(company);
     }
 }
