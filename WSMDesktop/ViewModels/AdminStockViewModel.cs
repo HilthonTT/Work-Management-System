@@ -65,14 +65,14 @@ public class AdminStockViewModel : Screen
     public async Task LoadAllPart()
     {
         var partList = await _stockEndpoint.GetAllPartsAdminAsync();
-        var parts = _mapper.Map<List<PartDisplayModel>>(partList);
+        var parts = _mapper.Map<List<PartDisplayModel>>(partList).Where(x => x.Archived == false).ToList();
         Parts = new BindingList<PartDisplayModel>(parts);
     }
 
     public async Task LoadAllMachines()
     {
         var machineList = await _stockEndpoint.GetAllMachinesAdminAsync();
-        var machines = _mapper.Map<List<MachineDisplayModel>>(machineList);
+        var machines = _mapper.Map<List<MachineDisplayModel>>(machineList).Where(x => x.Archived == false).ToList();
         Machines = new BindingList<MachineDisplayModel>(machines);
     }
 
@@ -119,8 +119,8 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => SelectedMachine);
             NotifyOfPropertyChange(() => SelectedMachineName);
             NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => CanDeleteSelectedMachine);
-            NotifyOfPropertyChange(() => DeleteMachineButtonColor);
+            NotifyOfPropertyChange(() => CanArchiveSelectedMachine);
+            NotifyOfPropertyChange(() => ArchiveMachineButtonColor);
             NotifyOfPropertyChange(() => CanAddPart);
             NotifyOfPropertyChange(() => AddPartButtonColor);
             NotifyOfPropertyChange(() => CanUpdateMachine);
@@ -168,8 +168,8 @@ public class AdminStockViewModel : Screen
             SelectedMachineName = Machines.Where(x => x.Id == value?.MachineId).FirstOrDefault()?.MachineName;
             DatePurchasedPart = value?.DatePurchased;
             NotifyOfPropertyChange(() => SelectedPart);
-            NotifyOfPropertyChange(() => CanDeleteSelectedPart);
-            NotifyOfPropertyChange(() => DeletePartButtonColor);
+            NotifyOfPropertyChange(() => CanArchiveSelectedPart);
+            NotifyOfPropertyChange(() => ArchivePartButtonColor);
             NotifyOfPropertyChange(() => CanUpdatePart);
             NotifyOfPropertyChange(() => UpdatePartButtonColor);
             NotifyOfPropertyChange(() => SelectedPartButtonColor);
@@ -576,7 +576,7 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public bool CanDeleteSelectedMachine
+    public bool CanArchiveSelectedMachine
     {
         get
         {
@@ -587,11 +587,11 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public string DeleteMachineButtonColor
+    public string ArchiveMachineButtonColor
     {
         get
         {
-            if (CanDeleteSelectedMachine)
+            if (CanArchiveSelectedMachine)
             {
                 return "#121212";
             }
@@ -601,14 +601,17 @@ public class AdminStockViewModel : Screen
     }
 
 
-    public async Task DeleteSelectedMachine()
+    public async Task ArchiveSelectedMachine()
     {
-        await _stockEndpoint.DeleteMachineAsync(SelectedMachine.Id);
+        var mappedMachine = _mapper.Map<MachineModel>(SelectedMachine);
+        mappedMachine.Archived = true;
+
+        await _stockEndpoint.ArchiveMachineAsync(mappedMachine);
         Machines.Remove(SelectedMachine);
     }
 
 
-    public bool CanDeleteSelectedPart
+    public bool CanArchiveSelectedPart
     {
         get
         {
@@ -621,11 +624,11 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public string DeletePartButtonColor
+    public string ArchivePartButtonColor
     {
         get
         {
-            if (CanDeleteSelectedPart)
+            if (CanArchiveSelectedPart)
             {
                 return "#121212";
             }
@@ -634,9 +637,12 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public async Task DeleteSelectedPart()
+    public async Task ArchiveSelectedPart()
     {
-        await _stockEndpoint.DeletePartAsync(SelectedPart.Id);
+        var mappedPart = _mapper.Map<PartModel>(SelectedPart);
+        mappedPart.Archived = true;
+
+        await _stockEndpoint.ArchivePartAsync(mappedPart);
         Parts.Remove(SelectedPart);
     }
 
@@ -877,8 +883,5 @@ public class AdminStockViewModel : Screen
             _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
             await _window.ShowDialogAsync(_status, null, settings);
         }
-
     }
-
-
 }

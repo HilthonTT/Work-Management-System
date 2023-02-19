@@ -135,7 +135,7 @@ public class AdminMaintenanceViewModel : Screen
     public async Task LoadDepartments()
     {
         var departmentList = await _departmentEndpoint.GetAllAsync();
-        var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList);
+        var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList).Where(x => x.Archived == false).ToList();
         Departments = new BindingList<DepartmentDisplayModel>(departments);
     }
 
@@ -362,7 +362,7 @@ public class AdminMaintenanceViewModel : Screen
             TaskModel newTask = new()
             {
                 UserId = SelectedUser.Id,
-                DepartmentId = SelectedDepartment.Id,
+                DepartmentId = SelectedDepartment?.Id,
                 Title = Title,
                 Description = TaskDescription,
                 DateDue = DateDue,

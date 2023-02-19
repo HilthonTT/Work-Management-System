@@ -72,14 +72,14 @@ public class AdminBranchViewModel : Screen
     private async Task LoadAllCompanies()
     {
         var companyList = await _companyEndpoint.GetAllAsync();
-        var companies = _mapper.Map<List<CompanyDisplayModel>>(companyList);
+        var companies = _mapper.Map<List<CompanyDisplayModel>>(companyList).Where(x => x.Archived == false).ToList();
         Companies = new BindingList<CompanyDisplayModel>(companies);
     }
 
     private async Task LoadAllDepartments()
     {
         var departmentList = await _departmentEndpoint.GetAllAsync();
-        var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList);
+        var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList).Where(x => x.Archived == false).ToList();
         Departments = new BindingList<DepartmentDisplayModel>(departments);
     }
 
@@ -165,13 +165,13 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CanUpdateCompany);
             NotifyOfPropertyChange(() => UpdateCompanyButtonColor);
             NotifyOfPropertyChange(() => SelectedCompanyText);
-            NotifyOfPropertyChange(() => CanDeleteSelectedCompany);
-            NotifyOfPropertyChange(() => DeleteCompanyButtonColor);
+            NotifyOfPropertyChange(() => CanArchiveSelectedCompany);
+            NotifyOfPropertyChange(() => ArchiveCompanyButtonColor);
             NotifyOfPropertyChange(() => SelectedCompanyButtonColor);
         }
     }
 
-    public bool CanDeleteSelectedCompany
+    public bool CanArchiveSelectedCompany
     {
         get
         {
@@ -184,11 +184,11 @@ public class AdminBranchViewModel : Screen
         }
     }
 
-    public string DeleteCompanyButtonColor
+    public string ArchiveCompanyButtonColor
     {
         get
         {
-            if (CanDeleteSelectedCompany is true)
+            if (CanArchiveSelectedCompany is true)
             {
                 return "#121212";
             }
@@ -197,12 +197,13 @@ public class AdminBranchViewModel : Screen
         }
     }
 
-    public async Task DeleteSelectedCompany()
+    public async Task ArchiveSelectedCompany()
     {
         var mappedCompany = _mapper.Map<CompanyModel>(SelectedCompany);
+        mappedCompany.Archived = true;
 
         Companies.Remove(SelectedCompany);
-        await _companyEndpoint.DeleteCompanyAsync(mappedCompany);
+        await _companyEndpoint.ArchiveCompanyAsync(mappedCompany);
     }
 
     private string _searchDepartmentText;
@@ -280,13 +281,13 @@ public class AdminBranchViewModel : Screen
             DateFoundedDepartment = value?.CreatedDate;
             NotifyOfPropertyChange(() => SelectedDepartment);
             NotifyOfPropertyChange(() => SelectedDepartmentText);
-            NotifyOfPropertyChange(() => CanDeleteSelectedDepartment);
-            NotifyOfPropertyChange(() => DeleteDepartmentButtonColor);
+            NotifyOfPropertyChange(() => CanArchiveSelectedDepartment);
+            NotifyOfPropertyChange(() => ArchiveDepartmentButtonColor);
             NotifyOfPropertyChange(() => SelectedDepartmentButtonColor);
         }
     }
 
-    public bool CanDeleteSelectedDepartment
+    public bool CanArchiveSelectedDepartment
     {
         get
         {
@@ -299,11 +300,11 @@ public class AdminBranchViewModel : Screen
         }
     }
 
-    public string DeleteDepartmentButtonColor
+    public string ArchiveDepartmentButtonColor
     {
         get
         {
-            if (CanDeleteSelectedDepartment is true)
+            if (CanArchiveSelectedDepartment is true)
             {
                 return "#121212";
             }
@@ -312,12 +313,13 @@ public class AdminBranchViewModel : Screen
         }
     }
 
-    public async Task DeleteSelectedDepartment()
+    public async Task ArchiveSelectedDepartment()
     {
         var mappedDepartment = _mapper.Map<DepartmentModel>(SelectedDepartment);
+        mappedDepartment.Archived = true;
 
         Departments.Remove(SelectedDepartment);
-        await _departmentEndpoint.DeleteDepartmentAsync(mappedDepartment);
+        await _departmentEndpoint.ArchiveDepartmentAsync(mappedDepartment);
     }
 
     public string CompanyNameButtonColor

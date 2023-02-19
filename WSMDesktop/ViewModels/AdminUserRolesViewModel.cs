@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,16 +17,19 @@ public class AdminUserRolesViewModel : Screen
 {
     private readonly IUserEndpoint _userEndpoint;
     private readonly IJobTitleEndpoint _jobEndpoint;
+    private readonly IMapper _mapper;
     private readonly IWindowManager _window;
     private readonly StatusViewModel _status;
 
     public AdminUserRolesViewModel(IUserEndpoint userEndpoint,
 						   IJobTitleEndpoint jobEndpoint,
+                           IMapper mapper,
 						   IWindowManager window,
 						   StatusViewModel status)
 	{
         _userEndpoint = userEndpoint;
         _jobEndpoint = jobEndpoint;
+        _mapper = mapper;
         _window = window;
         _status = status;
     }
@@ -401,8 +405,9 @@ public class AdminUserRolesViewModel : Screen
     public async Task AddSelectedJob()
     {
         var updatedUser = SelectedUser;
-        var chosenJob = await _jobEndpoint.GetByNameAsync(SelectedAvailableJob);
-        updatedUser.JobTitleId = chosenJob.FirstOrDefault().Id;
+        var mappedJobTitle = _mapper.Map<JobTitleModel>(SelectedAvailableJob);
+        var chosenJob = await _jobEndpoint.GetByIdAsync(mappedJobTitle);
+        updatedUser.JobTitleId = chosenJob.Id;
 
         await _userEndpoint.UpdateUserJobTitleIdAsync(updatedUser);
 
