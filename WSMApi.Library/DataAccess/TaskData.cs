@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WSMApi.Library.Internal.DataAccess;
+﻿using WSMApi.Library.Internal.DataAccess;
 using WSMApi.Library.Models;
 
 namespace WSMApi.Library.DataAccess;
@@ -57,7 +52,10 @@ public class TaskData : ITaskData
 
     public void UpdateTask(TaskModel task)
     {
-        _sql.SaveData("dbo.spTask_Update", task, "WSMData");
+        _sql.SaveData("dbo.spTask_Update",  
+            new { task.Id, task.UserId, task.DepartmentId, task.Title, task.Description, task.DateDue, 
+                task.PercentageDone, task.IsDone, task.Archived },
+            "WSMData");
     }
 
     public void ArchiveTask(TaskModel task)
