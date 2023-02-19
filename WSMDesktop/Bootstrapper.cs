@@ -38,6 +38,8 @@ public class Bootstrapper : BootstrapperBase
             cfg.CreateMap<PartModel, PartDisplayModel>();
             cfg.CreateMap<DepartmentDisplayModel, DepartmentModel>();
             cfg.CreateMap<CompanyDisplayModel, CompanyModel>();
+            cfg.CreateMap<PartDisplayModel, PartModel>();
+            cfg.CreateMap<MachineDisplayModel, MachineModel>();
         });
 
         var output = config.CreateMapper();
