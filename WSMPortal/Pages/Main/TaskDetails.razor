@@ -1,35 +1,172 @@
 ﻿@page "/TaskDetails/{Id:int}"
 @inject ITaskEndpoint taskEndpoint
 @inject IDepartmentEndpoint departmentEndpoint
+@inject IUserEndpoint userEndpoint
+@inject IMapper mapper
 @inject NavigationManager navManager
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize]
 
-<h1>Task Details</h1>
+<h1 class="text-center">Task Details</h1>
 
-<div class="row">
-    <div class="col-sm">
-        @if (task is not null)
-        {
-            <strong>@task.Title</strong>
-            <div>
-                <div>Description: @task.Description</div>
-                <div>Department Id: @task.DepartmentId</div>
-                <div>Date Due: @task.DateDue.ToString("dd.MM.yyyy")</div>
-                <div>Percentage Done: @task.PercentageDone</div>
-            </div>
-        }
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger">
+        @errorMessage
     </div>
-</div>
+}
 
+@if (task is not null)
+{
+    <div class="row">
+        <div class="col-sm">
+            @if (selectedTask is null)
+            {
+            <div class="card text-center mt-4">
+                <div class="card-header">
+                @if (department is not null)
+                {
+                    <p>Task Assigned To The @department.DepartmentName Department</p>
+                }
+                else
+                {
+                    <p>Task Assigned To No Departments.</p>
+                }
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@task.Title</h5>
+                    <p class="card-text">@task.Description</p>
+                    <AuthorizeView Roles="Admin">
+                        <button @onclick="(() => selectedTask = mapper.Map<FormTaskModel>(task))" class="btn btn-primary">Modify</button>
+                    </AuthorizeView>
+                </div>
+                <div class="card-footer text-muted">
+                Date Dued: @task.DateDue
+                </div>
+            </div>
+            }
+            else
+            {
+                <EditForm Model="selectedTask" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    @if (users is not null || departments is not null)
+                    {
+                        <label for="task-userId" class="col-md-2 col-form-label">User: </label>
+                        <div class="col-md-10">
+                            <MyInputRadioGroup id="users" @bind-Value="selectedTask.UserId">
+                                @foreach (var user in users)
+                                {
+                                    <div>
+                                        <InputRadio Value="@user.Id" id="@user.Id" />
+                                        <label for="@user.Id">@user.FullName</label>
+                                    </div>
+                                }
+                            </MyInputRadioGroup>
+                        </div>
+                        <label for="task-departmentId" class="col-md-2 col-form-label">Department: </label>
+                        <div class="col-md-10">
+                            <MyInputRadioGroup id="departments" @bind-Value="selectedTask.DepartmentId">
+                                @foreach (var department in departments)
+                                {
+                                    <div>
+                                        <InputRadio Value="@department.Id" id="@department.Id" />
+                                        <label for="@department.Id">@department.DepartmentName</label>
+                                    </div>
+                                }
+                            </MyInputRadioGroup>
+                        </div>
+                    }
+                    </div>
+                    <div class="row">
+                        <label for="task-title" class="col-md-2 col-form-label">Title: </label>
+                        <div class="col-md-10">
+                            <InputText @bind-Value="selectedTask.Title" placeholder="Title" class="form-control"/>
+                            <ValidationMessage For="@(() => selectedTask.Title)" />
+                        </div>
+                        <label for="task-description" class="col-md-2 col-form-label">Description: </label>
+                        <div class="col-md-10">
+                            <InputText @bind-Value="selectedTask.Description" placeholder="Description" class="form-control"/>
+                            <ValidationMessage For="@(() => selectedTask.Description)" />
+                        </div>
+                            <label for="task-DateDue" class="col-md-2 col-form-label">Date Due: </label>
+                        <div class="col-md-10">
+                            <InputDate @bind-Value="selectedTask.DateDue" class="form-control" />
+                            <ValidationMessage For="@(() => selectedTask.DateDue)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" class="btn btn-success">
+                            Submit
+                        </button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+</div>
+}
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
     private TaskModel task;
+    private FormTaskModel selectedTask = null;
+
+    private List<UserModel> users;
+
+    private DepartmentModel department;
+    private List<DepartmentModel> departments;
+
+    private string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
         task = await taskEndpoint.GetTaskById(Id);
+        department = await departmentEndpoint.GetByIdAsync(task.Id);
+        departments = await departmentEndpoint.GetAllAsync();
+        users = await userEndpoint.GetAllAsync();
+    }
+
+    private async Task OnValidSubmit()
+    {
+        errorMessage = "";
+
+        if (selectedTask.UserId is null && selectedTask.DepartmentId is null || selectedTask.DateDue < DateTime.UtcNow.Date)
+        {
+            errorMessage = "Oops Something Went Wrong...Maybe a user/department wasn't selected or the chosen date was lower than today.";
+            return;
+        }
+        try
+        {
+            TaskModel task = new()
+            {
+                Id = selectedTask.Id,
+                UserId = selectedTask.UserId,
+                DepartmentId = selectedTask.DepartmentId,
+                Title = selectedTask.Title,
+                Description = selectedTask.Description,
+                DateDue = selectedTask.DateDue,
+                PercentageDone = selectedTask.PercentageDone
+            };
+
+            if (task.PercentageDone == 100)
+            {
+                task.IsDone = true;
+            }
+
+            await taskEndpoint.UpdateAsync(task);
+            selectedTask = null;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private void CancelModification()
+    {
+        selectedTask = null;
+        StateHasChanged();
     }
 }
