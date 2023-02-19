@@ -15,4 +15,5 @@ public class CompanyModel
     public string ChairPersonId { get; set; }
     public string Description { get; set; }
     public DateTime DateFounded { get; set; }
+    public bool Archived { get; set; }
 }

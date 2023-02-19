@@ -17,6 +17,7 @@ public class TaskDisplayModel
     public int PercentageDone { get; set; }
     public bool IsDone { get; set; }
     public DateTime DateCreated { get; set; }
+    public bool Archived { get; set; }
 
     public string FormattedDateDue()
     {

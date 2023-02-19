@@ -15,6 +15,7 @@ public class CompanyDisplayModel
     public string? ChairPersonId { get; set; }
     public string Description { get; set; }
     public DateTime DateFounded { get; set; }
+    public bool Archived { get; set; }
 
     public string DisplayText
     {

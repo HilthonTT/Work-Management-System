@@ -14,6 +14,7 @@ public class PartDisplayModel
     public int? MachineId { get; set; }
     public decimal PurchasedPrice { get; set; }
     public DateTime DatePurchased { get; set; }
+    public bool Archived { get; set; }
 
     public string DisplayText
     {

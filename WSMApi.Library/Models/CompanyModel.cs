@@ -15,4 +15,5 @@ public class CompanyModel
     public string? ChairPersonId { get; set; }
     public string Description { get; set; }
     public DateTime DateFounded { get; set; } = DateTime.UtcNow;
+    public bool Archived { get; set; } = false;
 }

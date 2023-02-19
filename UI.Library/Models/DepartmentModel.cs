@@ -16,4 +16,5 @@ public class DepartmentModel
     public string PhoneNumber { get; set; }
     public string Description { get; set; }
     public DateTime CreatedDate { get; set; }
+    public bool Archived { get; set; }
 }

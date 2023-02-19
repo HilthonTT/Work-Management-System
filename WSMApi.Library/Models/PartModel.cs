@@ -14,4 +14,5 @@ public class PartModel
     public decimal PurchasedPrice { get; set; }
     public int? MachineId { get; set; }
     public DateTime DatePurchased { get; set; }
+    public bool Archived { get; set; } = false;
 }

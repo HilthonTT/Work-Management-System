@@ -18,4 +18,5 @@ public class TaskModel
     public int PercentageDone { get; set; }
     public bool IsDone { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+    public bool Archived { get; set; }
 }

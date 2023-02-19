@@ -14,4 +14,5 @@ public class MachineModel
     public decimal PurchasedPrice { get; set; }
     public string EuropeanArticleNumber { get; set; }
     public DateTime DatePurchased { get; set; }
+    public bool Archived { get; set; }
 }
