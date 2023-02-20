@@ -129,30 +129,28 @@
         if (model.UserId is null && model.DepartmentId is null || model.DateDue < DateTime.UtcNow.Date)
         {
             errorMessage = "Oops Something Went Wrong...Maybe a user/department wasn't selected or the chosen date was lower than today.";
+            return;
         }
-        else
+        try
         {
-            try
+            TaskModel task = new()
             {
-                TaskModel task = new()
-                {
-                    UserId = model.UserId,
-                    DepartmentId = model.DepartmentId,
-                    Title = model.Title,
-                    Description = model.Description,
-                    DateDue = model.DateDue,
-                    PercentageDone = 0,
-                    IsDone = false,
-                    DateCreated = DateTime.UtcNow
-                };
+                UserId = model.UserId,
+                DepartmentId = model.DepartmentId,
+                Title = model.Title,
+                Description = model.Description,
+                DateDue = model.DateDue,
+                PercentageDone = 0,
+                IsDone = false,
+                DateCreated = DateTime.UtcNow
+            };
 
-                await taskEndpoint.PostTaskAsync(task);
-                navManager.NavigateTo("");
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-            }
+            await taskEndpoint.PostTaskAsync(task);
+            navManager.NavigateTo("");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
         }
     }
 }
