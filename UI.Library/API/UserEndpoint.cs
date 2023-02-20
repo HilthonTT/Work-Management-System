@@ -31,14 +31,14 @@ public class UserEndpoint : IUserEndpoint
     }
 
 
-    public async Task<List<UserModel>> GetByIdAsync(string Id)
+    public async Task<UserModel> GetByIdAsync(string Id)
     {
         var data = new { Id };
 
         using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/GetAllUsers", data);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsAsync<List<UserModel>>();
+            var result = await response.Content.ReadAsAsync<UserModel>();
             return result;
         }
         else

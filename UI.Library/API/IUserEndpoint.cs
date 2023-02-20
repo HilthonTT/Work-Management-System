@@ -9,7 +9,7 @@ namespace UI.Library.API
         Task CreateUserAsync(CreateUserModel model);
         Task<List<UserModel>> GetAllAsync();
         Task<Dictionary<string, string>> GetAllRolesAsync();
-        Task<List<UserModel>> GetByIdAsync(string Id);
+        Task<UserModel> GetByIdAsync(string Id);
         Task RemoveUserFromRoleAsync(string userId, string roleName);
         Task UpdateUserAsync(UserModel model);
         Task UpdateUserJobTitleIdAsync(UserModel model);
