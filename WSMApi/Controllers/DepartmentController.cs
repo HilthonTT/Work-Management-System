@@ -41,7 +41,7 @@ public class DepartmentController : ControllerBase
         _departmentData.InsertDepartment(department);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/UpdateDepartment")]
     public void UpdateDepartment(DepartmentModel department) 
@@ -49,7 +49,7 @@ public class DepartmentController : ControllerBase
         _departmentData.UpdateDepartment(department);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/ArchiveDepartment")]
     public void ArchiveDepartment(DepartmentModel department)

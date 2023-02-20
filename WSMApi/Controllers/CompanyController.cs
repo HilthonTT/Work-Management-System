@@ -41,7 +41,7 @@ public class CompanyController : ControllerBase
         _companyData.InsertCompany(company);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/UpdateCompany")]
     public void UpdateCompany(CompanyModel company)
@@ -49,7 +49,7 @@ public class CompanyController : ControllerBase
         _companyData.UpdateCompany(company);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/ArchiveCompany")]
     public void ArchiveCompany(CompanyModel company)

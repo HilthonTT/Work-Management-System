@@ -42,7 +42,7 @@ public class JobTitleController : ControllerBase
         _jobTitleData.InsertJobTitle(jobTitle);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/UpdateJobTitle")]
     public void UpdateJobTitle(JobTitleModel jobTitle)
@@ -50,7 +50,7 @@ public class JobTitleController : ControllerBase
         _jobTitleData.UpdateJobTitle(jobTitle);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/ArchiveJobTitle")]
     public void ArchiveJobTitle(JobTitleModel jobTitle)

@@ -78,7 +78,7 @@ public class ItemEndpoint : IItemEndpoint
 
     public async Task UpdateItemAsync(ItemModel item)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Item/Admin/UpdateItem", item);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Item/Admin/UpdateItem", item);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The Item Of Id {Id} Has Been Updated To The Database", item.Id);
@@ -91,7 +91,7 @@ public class ItemEndpoint : IItemEndpoint
 
     public async Task ArchiveItemAsync(ItemModel item)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Item/Admin/ArchiveItem", item);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Item/Admin/ArchiveItem", item);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The Item Of Id {Id} Has Been Archived To The Database", item.Id);

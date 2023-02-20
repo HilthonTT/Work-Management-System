@@ -61,7 +61,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
 
     public async Task UpdateDepartmentAsync(DepartmentModel department)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/Admin/UpdateDepartment", department);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Department/Admin/UpdateDepartment", department);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The department of Id ({Id}) has successfully been updated.", department.Id);
@@ -74,7 +74,7 @@ public class DepartmentEndpoint : IDepartmentEndpoint
 
     public async Task ArchiveDepartmentAsync(DepartmentModel department)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Department/Admin/ArchiveDepartment", department);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Department/Admin/ArchiveDepartment", department);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The department of Id {Id} has successfully been archived.", department.Id);

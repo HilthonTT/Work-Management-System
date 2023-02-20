@@ -97,7 +97,7 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task UpdatePercentageAsync(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/UpdateTaskPercentage", task);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Task/UpdateTaskPercentage", task);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of Id ({Id}) has successfully been updated to the database", task.Id);
@@ -110,7 +110,7 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task UpdateAsync(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/Admin/UpdateTask", task);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Task/Admin/UpdateTask", task);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of Id ({Id}) has successfully been updated to the database", task.Id);
@@ -123,7 +123,7 @@ public class TaskEndpoint : ITaskEndpoint
 
     public async Task ArchiveTask(TaskModel task)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Task/Admin/ArchiveTask", task);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Task/Admin/ArchiveTask", task);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The task of Id ({Id}) has successfully been archived to the database", task.Id);

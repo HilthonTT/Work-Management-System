@@ -50,7 +50,7 @@ public class TaskController : ControllerBase
         return _taskData.GetTaskByDepartmentId(task);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize]
     [Route("UpdateTaskPercentage")]
     public void UpdateTaskPercentage(TaskModel task) 
@@ -66,7 +66,7 @@ public class TaskController : ControllerBase
         _taskData.InsertTask(task);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/UpdateTask")]
     public void UpdateTask(TaskModel task) 
@@ -74,7 +74,7 @@ public class TaskController : ControllerBase
         _taskData.UpdateTask(task);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/ArchiveTask")]
     public void ArchiveTask(TaskModel task)

@@ -59,7 +59,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
 
     public async Task UpdateJobTitleAsync(JobTitleModel JobTitle)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/Admin/UpdateJobTitle", JobTitle);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/JobTitle/Admin/UpdateJobTitle", JobTitle);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The Job Title of Id ({Id}) has successfully been updated.", JobTitle.Id);
@@ -72,7 +72,7 @@ public class JobTitleEndpoint : IJobTitleEndpoint
 
     public async Task ArchiveJobTitleAsync(JobTitleModel jobTitle)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/JobTitle/Admin/ArchiveJobTitle", jobTitle);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/JobTitle/Admin/ArchiveJobTitle", jobTitle);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The Job Title of Id ({Id}) has successfully been archived.", jobTitle.Id);

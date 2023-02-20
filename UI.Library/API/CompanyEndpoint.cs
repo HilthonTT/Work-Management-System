@@ -60,7 +60,7 @@ public class CompanyEndpoint : ICompanyEndpoint
 
     public async Task UpdateCompanyAsync(CompanyModel company)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/Admin/UpdateCompany", company);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Company/Admin/UpdateCompany", company);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The company of Id ({Id}) has sucessfully been updated.", company.Id);
@@ -73,7 +73,7 @@ public class CompanyEndpoint : ICompanyEndpoint
 
     public async Task ArchiveCompanyAsync(CompanyModel company)
     {
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/Company/Admin/ArchiveCompany", company);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/Company/Admin/ArchiveCompany", company);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The company of Id ({Id}) has sucessfully been archived.", company.Id);

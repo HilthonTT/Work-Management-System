@@ -48,7 +48,7 @@ public class ItemController : ControllerBase
         _itemData.InsertItem(item);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/UpdateItem")]
     public void UpdateItem(ItemModel item)
@@ -56,7 +56,7 @@ public class ItemController : ControllerBase
         _itemData.UpdateItem(item);
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize(Roles = "Admin")]
     [Route("Admin/ArchiveItem")]
     public void ArchiveItem(ItemModel item)

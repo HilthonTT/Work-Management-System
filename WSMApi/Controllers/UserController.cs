@@ -95,7 +95,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPut]
     [Route("Admin/UpdateUserJobId")]
     [Authorize(Roles = "Admin")]
     public void UpdateUserJobTitleId(UserModel user)
