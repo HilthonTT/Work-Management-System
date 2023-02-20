@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UI.Library.Models;
+namespace WSMApi.Library.Models;
 
-public class PartModel
+public class ItemModel
 {
     public int Id { get; set; }
-    public string PartName { get; set; }
     public string ModelName { get; set; }
-    public decimal PurchasedPrice { get; set; }
-    public int? MachineId { get; set; }
-    public DateTime DatePurchased { get; set; }
+    public string Description { get; set; }
+    public int Quantity { get; set; }
+    public decimal Price { get; set; }
+    public decimal? EAN { get; set; }
     public bool Archived { get; set; }
 }

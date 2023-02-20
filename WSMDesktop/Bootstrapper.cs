@@ -17,7 +17,7 @@ namespace WSMDesktop;
 
 public class Bootstrapper : BootstrapperBase
 {
-    private SimpleContainer _container = new();
+    private readonly SimpleContainer _container = new();
 	public Bootstrapper()
 	{
 		Initialize();
@@ -34,12 +34,10 @@ public class Bootstrapper : BootstrapperBase
             cfg.CreateMap<CompanyModel, CompanyDisplayModel>();
             cfg.CreateMap<DepartmentModel, DepartmentDisplayModel>();
             cfg.CreateMap<TaskModel, TaskDisplayModel>();
-            cfg.CreateMap<MachineModel, MachineDisplayModel>();
-            cfg.CreateMap<PartModel, PartDisplayModel>();
+            cfg.CreateMap<ItemModel, ItemDisplayModel>();
             cfg.CreateMap<DepartmentDisplayModel, DepartmentModel>();
             cfg.CreateMap<CompanyDisplayModel, CompanyModel>();
-            cfg.CreateMap<PartDisplayModel, PartModel>();
-            cfg.CreateMap<MachineDisplayModel, MachineModel>();
+            cfg.CreateMap<ItemDisplayModel, ItemModel>();
         });
 
         var output = config.CreateMapper();
@@ -67,7 +65,7 @@ public class Bootstrapper : BootstrapperBase
             .PerRequest<IDepartmentEndpoint, DepartmentEndpoint>()
             .PerRequest<IJobTitleEndpoint, JobTitleEndpoint>()
             .PerRequest<IUserEndpoint, UserEndpoint>()
-            .PerRequest<IStockEndpoint, StockEndpoint>()
+            .PerRequest<IItemEndpoint, ItemEndpoint>()
             .PerRequest<ITaskEndpoint, TaskEndpoint>();
 
         _container

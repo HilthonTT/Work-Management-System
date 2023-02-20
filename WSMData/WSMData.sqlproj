@@ -87,16 +87,6 @@
     <Build Include="dbo\Stored Procedure\spTask_Insert.sql" />
     <Build Include="dbo\Stored Procedure\spTask_UpdatePercentage.sql" />
     <Build Include="dbo\Stored Procedure\spTask_Update.sql" />
-    <Build Include="dbo\Tables\Machine.sql" />
-    <Build Include="dbo\Tables\Part.sql" />
-    <Build Include="dbo\Stored Procedure\spMachine_GetAll.sql" />
-    <Build Include="dbo\Stored Procedure\spMachine_GetById.sql" />
-    <Build Include="dbo\Stored Procedure\spMachine_Update.sql" />
-    <Build Include="dbo\Stored Procedure\spMachine_Insert.sql" />
-    <Build Include="dbo\Stored Procedure\spPart_GetAll.sql" />
-    <Build Include="dbo\Stored Procedure\spPart_Insert.sql" />
-    <Build Include="dbo\Stored Procedure\spPart_Update.sql" />
-    <Build Include="dbo\Stored Procedure\spPart_GetById.sql" />
     <Build Include="dbo\Stored Procedure\spUser_UpdateJobId.sql" />
     <Build Include="dbo\Stored Procedure\spTask_GetById.sql" />
     <Build Include="dbo\Stored Procedure\spCompany_GetById.sql" />
@@ -105,9 +95,13 @@
     <Build Include="dbo\Stored Procedure\spCompany_Archive.sql" />
     <Build Include="dbo\Stored Procedure\spDepartment_Archive.sql" />
     <Build Include="dbo\Stored Procedure\spJobTitle_Archive.sql" />
-    <Build Include="dbo\Stored Procedure\spMachine_Archive.sql" />
-    <Build Include="dbo\Stored Procedure\spPart_Archive.sql" />
     <Build Include="dbo\Stored Procedure\spTask_Archive.sql" />
+    <Build Include="dbo\Tables\Item.sql" />
+    <Build Include="dbo\Stored Procedure\spItem_GetAll.sql" />
+    <Build Include="dbo\Stored Procedure\spItem_GetById.sql" />
+    <Build Include="dbo\Stored Procedure\spItem_Insert.sql" />
+    <Build Include="dbo\Stored Procedure\spItem_Archive.sql" />
+    <Build Include="dbo\Stored Procedure\spItem_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="WSMData.refactorlog" />

@@ -16,17 +16,17 @@ namespace WSMDesktop.ViewModels;
 
 public class StockViewModel : Screen
 {
-    private readonly IStockEndpoint _stockEndpoint;
+    private readonly IItemEndpoint _itemEndpoint;
     private readonly IWindowManager _window;
     private readonly IMapper _mapper;
     private readonly StatusViewModel _status;
 
-    public StockViewModel(IStockEndpoint stockEndpoint,
+    public StockViewModel(IItemEndpoint itemEndpoint,
                           IWindowManager window,
                           IMapper mapper,
                           StatusViewModel status)
 	{
-        _stockEndpoint = stockEndpoint;
+        _itemEndpoint = itemEndpoint;
         _window = window;
         _mapper = mapper;
         _status = status;
@@ -37,8 +37,7 @@ public class StockViewModel : Screen
         base.OnViewLoaded(view);
         try
         {
-            await LoadMachines();
-            await LoadParts();
+            await LoadAllItems();
         }
         catch (Exception ex)
         {
@@ -60,255 +59,211 @@ public class StockViewModel : Screen
         }
     }
 
-    public async Task LoadMachines()
+    public async Task LoadAllItems()
     {
-        var machineList = await _stockEndpoint.GetAllMachinesAsync();
-        var machines = _mapper.Map<List<MachineDisplayModel>>(machineList).Where(x => x.Archived == false).ToList();
-        Machines = new BindingList<MachineDisplayModel>(machines);
+        var itemList = await _itemEndpoint.GetAllAsync();
+        var items = _mapper.Map<List<ItemDisplayModel>>(itemList)
+            .Where(x => x.Archived == false)
+            .ToList();
+
+        Items = new BindingList<ItemDisplayModel>(items);
     }
 
-    public async Task LoadParts()
+    private BindingList<ItemDisplayModel> _items;
+
+    public BindingList<ItemDisplayModel> Items
     {
-        var partList = await _stockEndpoint.GetAllPartsAsync();
-        var parts = _mapper.Map<List<PartDisplayModel>>(partList).Where(x => x.Archived == false).ToList();
-        Parts = new BindingList<PartDisplayModel>(parts);
-    }
-
-
-    private string _machineSearchText;
-
-    public string MachineSearchText
-    {
-        get { return _machineSearchText; }
-        set 
-        { 
-            _machineSearchText = value;
-            NotifyOfPropertyChange(() => MachineSearchText);
+        get { return _items; }
+        set
+        {
+            _items = value;
+            NotifyOfPropertyChange(() => Items);
         }
     }
 
-    public static string SearchMachineButtonColor
+    private ItemDisplayModel _selectedItem;
+
+    public ItemDisplayModel SelectedItem
     {
-        get
+        get { return _selectedItem; }
+        set
         {
-            return "#121212";
+            _selectedItem = value;
+            ModelName = value?.ModelName;
+            Description = value?.Description;
+            Quantity = value?.Quantity;
+            Price = value?.Price;
+            EAN = value?.EAN;
+            NotifyOfPropertyChange(() => SelectedItem);
+            NotifyOfPropertyChange(() => SelectedItemButtonColor);
         }
     }
 
+    private string _searchItemText;
 
-    public async Task SearchMachine()
+    public string SearchItemText
     {
-        if (string.IsNullOrWhiteSpace(MachineSearchText))
+        get { return _searchItemText; }
+        set
         {
-            await LoadMachines();
+            _searchItemText = value;
+            NotifyOfPropertyChange(() => SearchItemText);
+        }
+    }
+
+    public async Task SearchItem()
+    {
+        if (string.IsNullOrWhiteSpace(SearchItemText))
+        {
+            await LoadAllItems();
         }
         else
         {
-            await LoadMachines();
-
-            var machineList = Machines.Where(x => x.ModelName.Contains(MachineSearchText) ||
-                                             x.MachineName.Contains(MachineSearchText)).ToList();
-
-            Machines = new BindingList<MachineDisplayModel>(machineList);
+            var itemList = Items.Where(x => x.ModelName.Contains(SearchItemText)).ToList();
+            Items = new BindingList<ItemDisplayModel>(itemList);
         }
     }
 
-    private string _partSearchText;
+    private string _modelName;
 
-    public string PartSearchText
+    public string ModelName
     {
-        get { return _partSearchText; }
-        set 
+        get { return _modelName; }
+        set
         {
-            _partSearchText = value; 
-            NotifyOfPropertyChange(() => PartSearchText);
+            _modelName = value;
+            NotifyOfPropertyChange(() => ModelName);
+            NotifyOfPropertyChange(() => ModelNameButtonColor);
         }
     }
 
-    public static string SearchPartButtonColor
+    private string _description;
+
+    public string Description
+    {
+        get { return _description; }
+        set
+        {
+            _description = value;
+            NotifyOfPropertyChange(() => Description);
+            NotifyOfPropertyChange(() => DescriptionButtonColor);
+        }
+    }
+
+    private int? _quantity;
+
+    public int? Quantity
+    {
+        get { return _quantity; }
+        set
+        {
+            _quantity = value;
+            NotifyOfPropertyChange(() => Quantity);
+            NotifyOfPropertyChange(() => QuantityButtonColor);
+        }
+    }
+
+    private decimal? _price;
+
+    public decimal? Price
+    {
+        get { return _price; }
+        set
+        {
+            _price = value;
+            NotifyOfPropertyChange(() => Price);
+            NotifyOfPropertyChange(() => PriceButtonColor);
+        }
+    }
+
+    private decimal? _ean;
+
+    public decimal? EAN
+    {
+        get { return _ean; }
+        set
+        {
+            _ean = value;
+            NotifyOfPropertyChange(() => EAN);
+            NotifyOfPropertyChange(() => EANButtonColor);
+        }
+    }
+
+    public string SelectedItemButtonColor
     {
         get
         {
-            return "#121212";
-        }
-    }
-
-    public async Task SearchPart()
-    {
-        if (string.IsNullOrWhiteSpace(PartSearchText))
-        {
-            await LoadParts();
-        }
-        else
-        {
-            await LoadParts();
-
-            var part = Parts.Where(x => x.ModelName.Contains(PartSearchText) ||
-                                             x.PartName.Contains(PartSearchText)).ToList();
-
-            Parts = new BindingList<PartDisplayModel>(part);
-        }
-    }
-
-    private BindingList<MachineDisplayModel> _machines;
-
-    public BindingList<MachineDisplayModel> Machines
-    {
-        get { return _machines; }
-        set 
-        {
-            _machines = value; 
-            NotifyOfPropertyChange(() => Machines);
-        }
-    }
-
-    private MachineDisplayModel _selectedMachine;
-
-    public MachineDisplayModel SelectedMachine
-    {
-        get { return _selectedMachine; }
-        set 
-        { 
-            _selectedMachine = value; 
-            NotifyOfPropertyChange(() => SelectedMachine);
-            NotifyOfPropertyChange(() => SelectedMachineName);
-            NotifyOfPropertyChange(() => SelectedMachineModelName);
-            NotifyOfPropertyChange(() => SelectedMachineEAN);
-            NotifyOfPropertyChange(() => SelectedMachineDatePurchased);
-        }
-    }
-
-
-    private BindingList<PartDisplayModel> _parts;
-
-    public BindingList<PartDisplayModel> Parts
-    {
-        get { return _parts; }
-        set 
-        { 
-            _parts = value; 
-            NotifyOfPropertyChange(() => Parts);
-        }
-    }
-
-    private PartDisplayModel _selectedPart;
-
-    public PartDisplayModel SelectedPart
-    {
-        get { return _selectedPart; }
-        set 
-        { 
-            _selectedPart = value; 
-            NotifyOfPropertyChange(() => SelectedPart);
-            NotifyOfPropertyChange(() => SelectedPartName);
-            NotifyOfPropertyChange(() => SelectedPartModelName);
-            NotifyOfPropertyChange(() => SelectedPartMachineModelName);
-            NotifyOfPropertyChange(() => SelectedPartDatePurchased);
-        }
-    }
-
-    public string SelectedMachineName
-    {
-        get
-        {
-            if (SelectedMachine is not null)
+            if (SelectedItem is not null)
             {
-                return $"{SelectedMachine.MachineName}";
+                return "Green";
             }
 
-            return "No Machine Selected";
+            return "Red";
         }
     }
 
-    public string SelectedMachineModelName
+    public string ModelNameButtonColor
     {
         get
         {
-            if (SelectedMachine is not null)
+            if (string.IsNullOrWhiteSpace(ModelName) == false)
             {
-                return $"{SelectedMachine.ModelName}";
+                return "Green";
             }
 
-            return "No Machine Selected";
+            return "Red";
         }
     }
 
-    public string SelectedMachineEAN
+    public string DescriptionButtonColor
     {
         get
         {
-            if (SelectedMachine is not null)
+            if (string.IsNullOrWhiteSpace(Description) == false)
             {
-                return $"{SelectedMachine.EuropeanArticleNumber}";
+                return "Green";
             }
 
-            return "No Machine Selected";
+            return "Red";
         }
     }
 
-    public string SelectedMachineDatePurchased
+    public string QuantityButtonColor
     {
         get
         {
-            if (SelectedMachine is not null)
+            if (Quantity >= 0)
             {
-                return $"{SelectedMachine.DatePurchased:dd/MM/yyyy}";
+                return "Green";
             }
 
-            return "No Machine Selected";
+            return "Red";
         }
     }
 
-    public string SelectedPartName
+    public string PriceButtonColor
     {
         get
         {
-            if (SelectedPart is not null)
+            if (Price >= 0)
             {
-                return $"{SelectedPart.PartName}";
+                return "Green";
             }
 
-            return "No Part Selected";
+            return "Red";
         }
     }
 
-    public string SelectedPartModelName
+    public string EANButtonColor
     {
         get
         {
-            if (SelectedPart is not null)
+            if (EAN >= 100_000_000_000)
             {
-                return $"{SelectedPart.ModelName}";
+                return "Green";
             }
 
-            return "No Part Selected";
-        }
-    }
-
-    public string SelectedPartMachineModelName
-    {
-        get
-        {
-            if (SelectedPart is not null)
-            {
-                var selectedMachine = Machines.Where(x => x.Id == SelectedPart.MachineId).FirstOrDefault();
-                return $"{selectedMachine.MachineName} - {selectedMachine.ModelName}";
-            }
-
-            return "No Part Selected";
-        }
-    }
-
-    public string SelectedPartDatePurchased
-    {
-        get
-        {
-            if (SelectedPart is not null)
-            {
-                return $"{SelectedPart.DatePurchased:dd/MM/yyyy}";
-            }
-
-            return "No Part Selected";
+            return "Red";
         }
     }
 }

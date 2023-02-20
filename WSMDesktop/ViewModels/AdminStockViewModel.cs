@@ -16,17 +16,17 @@ namespace WSMDesktop.ViewModels;
 
 public class AdminStockViewModel : Screen
 {
-    private readonly IStockEndpoint _stockEndpoint;
+    private readonly IItemEndpoint _itemEndpoint;
     private readonly IMapper _mapper;
     private readonly IWindowManager _window;
     private readonly StatusViewModel _status;
     
-    public AdminStockViewModel(IStockEndpoint stockEndpoint,
+    public AdminStockViewModel(IItemEndpoint itemEndpoint,
                                IMapper mapper,
                                IWindowManager window,
                                StatusViewModel status)
 	{
-        _stockEndpoint = stockEndpoint;
+        _itemEndpoint = itemEndpoint;
         _mapper = mapper;
         _window = window;
         _status = status;
@@ -37,8 +37,7 @@ public class AdminStockViewModel : Screen
         base.OnViewLoaded(view);
         try
         {
-            await LoadAllPart();
-            await LoadAllMachines();
+            await LoadAllItems();
         }
         catch (Exception ex)
         {
@@ -62,295 +61,153 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public async Task LoadAllPart()
+    public async Task LoadAllItems()
     {
-        var partList = await _stockEndpoint.GetAllPartsAdminAsync();
-        var parts = _mapper.Map<List<PartDisplayModel>>(partList).Where(x => x.Archived == false).ToList();
-        Parts = new BindingList<PartDisplayModel>(parts);
+        var itemList = await _itemEndpoint.GetAllAdminAsync();
+        var items = _mapper.Map<List<ItemDisplayModel>>(itemList)
+            .Where(x => x.Archived == false)
+            .ToList();
+
+        Items = new BindingList<ItemDisplayModel>(items);
     }
 
-    public async Task LoadAllMachines()
+    private BindingList<ItemDisplayModel> _items;
+
+    public BindingList<ItemDisplayModel> Items
     {
-        var machineList = await _stockEndpoint.GetAllMachinesAdminAsync();
-        var machines = _mapper.Map<List<MachineDisplayModel>>(machineList).Where(x => x.Archived == false).ToList();
-        Machines = new BindingList<MachineDisplayModel>(machines);
-    }
-
-
-    private BindingList<MachineDisplayModel> _machines;
-
-    public BindingList<MachineDisplayModel> Machines
-    {
-        get { return _machines; }
+        get { return _items; }
         set 
         { 
-            _machines = value; 
-            NotifyOfPropertyChange(() => Machines);
+            _items = value; 
+            NotifyOfPropertyChange(() => Items);
         }
     }
 
-    public string SelectedMachineButtonColor
+    private ItemDisplayModel _selectedItem;
+
+    public ItemDisplayModel SelectedItem
     {
-        get
+        get { return _selectedItem; }
+        set 
+        { 
+            _selectedItem = value;
+            ModelName = value.ModelName;
+            Description = value.Description;
+            Quantity = value.Quantity;
+            Price = value.Price;
+            EAN = value.EAN;
+            NotifyOfPropertyChange(() => SelectedItem);
+            NotifyOfPropertyChange(() => SelectedItemButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+        }
+    }
+
+    private string _searchItemText;
+
+    public string SearchItemText
+    {
+        get { return _searchItemText; }
+        set 
+        { 
+            _searchItemText = value;
+            NotifyOfPropertyChange(() => SearchItemText);
+        }
+    }
+
+    public async Task SearchItem()
+    {
+        if (string.IsNullOrWhiteSpace(SearchItemText))
         {
-            if (SelectedMachine is not null)
-            {
-                return "Green";
-            }
-
-            return "Red";
+            await LoadAllItems();
         }
-    }
-
-    private MachineDisplayModel _selectedMachine;
-
-    public MachineDisplayModel SelectedMachine
-    {
-        get { return _selectedMachine; }
-        set 
-        { 
-            _selectedMachine = value;
-            MachineName = value?.MachineName;
-            ModelNameMachine = value?.ModelName;
-            SelectedMachineName = value?.MachineName ?? "No Machine Selected";
-            EuropeanArticleNumber = value?. EuropeanArticleNumber;
-            PurchasedPriceMachine = value?.PurchasedPrice.ToString();
-            DatePurchasedMachine = value?.DatePurchased;
-            NotifyOfPropertyChange(() => SelectedMachine);
-            NotifyOfPropertyChange(() => SelectedMachineName);
-            NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => CanArchiveSelectedMachine);
-            NotifyOfPropertyChange(() => ArchiveMachineButtonColor);
-            NotifyOfPropertyChange(() => CanAddPart);
-            NotifyOfPropertyChange(() => AddPartButtonColor);
-            NotifyOfPropertyChange(() => CanUpdateMachine);
-            NotifyOfPropertyChange(() => UpdateMachineButtonColor);
-            NotifyOfPropertyChange(() => SelectedMachineButtonColor);
-        }
-    }
-
-    private BindingList<PartDisplayModel> _parts;
-
-    public BindingList<PartDisplayModel> Parts
-    {
-        get { return _parts; }
-        set 
-        { 
-            _parts = value; 
-            NotifyOfPropertyChange(() => Parts) ;
-        }
-    }
-
-    public string SelectedPartButtonColor
-    {
-        get
+        else
         {
-            if (SelectedPart is not null)
-            {
-                return "Green";
-            }
-
-            return "Red";
+            var itemList = Items.Where(x => x.ModelName.Contains(SearchItemText)).ToList();
+            Items = new BindingList<ItemDisplayModel>(itemList);
         }
     }
 
-    private PartDisplayModel _selectedPart;
+    private string _modelName;
 
-    public PartDisplayModel SelectedPart
+    public string ModelName
     {
-        get { return _selectedPart; }
-        set 
-        { 
-            _selectedPart = value; 
-            PartName = value?.PartName;
-            ModelNamePart = value?.ModelName;
-            PurchasedPricePart = value?.PurchasedPrice.ToString();
-            SelectedMachineName = Machines.Where(x => x.Id == value?.MachineId).FirstOrDefault()?.MachineName;
-            DatePurchasedPart = value?.DatePurchased;
-            NotifyOfPropertyChange(() => SelectedPart);
-            NotifyOfPropertyChange(() => CanArchiveSelectedPart);
-            NotifyOfPropertyChange(() => ArchivePartButtonColor);
-            NotifyOfPropertyChange(() => CanUpdatePart);
-            NotifyOfPropertyChange(() => UpdatePartButtonColor);
-            NotifyOfPropertyChange(() => SelectedPartButtonColor);
-        }
-    }
-
-    public string MachineNameButtonColor
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(MachineName) == false)
-            {
-                return "Green";
-            }
-
-            return "Red";
-        }
-    }
-
-    private string _machineName;
-
-    public string MachineName
-    {
-        get { return _machineName; }
-        set 
-        { 
-            _machineName = value; 
-            NotifyOfPropertyChange(() => MachineName);
-            NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => AddMachineButtonColor);
-            NotifyOfPropertyChange(() => MachineNameButtonColor);
-        }
-    }
-
-    public string ModelNameMachineButtonColor
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(ModelNameMachine) == false)
-            {
-                return "Green";
-            }
-
-            return "Red";
-        }
-    }
-
-    private string _modelNameMachine;
-
-    public string ModelNameMachine
-    {
-        get { return _modelNameMachine; }
-        set 
-        { 
-            _modelNameMachine = value; 
-            NotifyOfPropertyChange(() => ModelNameMachine);
-            NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => AddMachineButtonColor);
-            NotifyOfPropertyChange(() => ModelNameMachineButtonColor);
-        }
-    }
-
-    public string EuropeanArticleNumberButtonColor
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(EuropeanArticleNumber) == false)
-            {
-                return "Green";
-            }
-
-            return "Red";
-        }
-    }
-
-    private string _europeanArticleNumber;
-
-    public string EuropeanArticleNumber
-    {
-        get { return _europeanArticleNumber; }
-        set 
-        { 
-            _europeanArticleNumber = value; 
-            NotifyOfPropertyChange(() => EuropeanArticleNumber);
-            NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => AddMachineButtonColor);
-            NotifyOfPropertyChange(() => EuropeanArticleNumberButtonColor);
-        }
-    }
-
-    public string PurchasedPriceMachineButtonColor
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(PurchasedPriceMachine) == false)
-            {
-                return "Green";
-            }
-
-            return "Red";
-        }
-    }
-
-    private string _purchasedPriceMachine;
-
-    public string PurchasedPriceMachine
-    {
-        get { return _purchasedPriceMachine; }
-        set 
-        { 
-            _purchasedPriceMachine = value; 
-            NotifyOfPropertyChange(() => PurchasedPriceMachine);
-            NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => AddMachineButtonColor);
-            NotifyOfPropertyChange(() => PurchasedPriceMachineButtonColor);
-        }
-    }
-
-    public string DatePurchasedMachineButtonColor
-    {
-        get
-        {
-            if (DatePurchasedMachine >= SqlDateTime.MinValue.Value)
-            {
-                return "Green";
-            }
-
-            return "Red";
-        }
-    }
-
-
-    private DateTime? _datePurchasedMachine = DateTime.UtcNow;
-
-    public DateTime? DatePurchasedMachine
-    {
-        get { return _datePurchasedMachine; }
-        set 
-        { 
-            _datePurchasedMachine = value; 
-            NotifyOfPropertyChange(() => DatePurchasedMachine);
-            NotifyOfPropertyChange(() => CanAddMachine);
-            NotifyOfPropertyChange(() => AddMachineButtonColor);
-            NotifyOfPropertyChange(() => DatePurchasedMachine);
-            NotifyOfPropertyChange(() => DatePurchasedMachineButtonColor);
-        }
-    }
-
-    public string PartNameButtonColor
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(PartName) == false)
-            {
-                return "Green";
-            }
-
-            return "Red";
-        }
-    }
-
-    private string _partName;
-
-    public string PartName
-    {
-        get { return _partName; }
+        get { return _modelName; }
         set
         {
-            _partName = value;
-            NotifyOfPropertyChange(() => PartName);
-            NotifyOfPropertyChange(() => CanAddPart);
-            NotifyOfPropertyChange(() => AddPartButtonColor);
-            NotifyOfPropertyChange(() => PartNameButtonColor);
+            _modelName = value;
+            NotifyOfPropertyChange(() => ModelName);
+            NotifyOfPropertyChange(() => ModelNameButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
         }
     }
 
-    public string ModelNamePartButtonColor
+    private string _description;
+
+    public string Description
+    {
+        get { return _description; }
+        set 
+        { 
+            _description = value; 
+            NotifyOfPropertyChange(() => Description);
+            NotifyOfPropertyChange(() => DescriptionButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+        }
+    }
+
+    private int _quantity;
+
+    public int Quantity
+    {
+        get { return _quantity; }
+        set 
+        { 
+            _quantity = value; 
+            NotifyOfPropertyChange(() => Quantity);
+            NotifyOfPropertyChange(() => QuantityButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+        }
+    }
+
+    private decimal _price;
+
+    public decimal Price
+    {
+        get { return _price; }
+        set 
+        { 
+            _price = value; 
+            NotifyOfPropertyChange(() => Price);
+            NotifyOfPropertyChange(() => PriceButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+        }
+    }
+
+    private decimal? _ean;
+
+    public decimal? EAN
+    {
+        get { return _ean; }
+        set 
+        { 
+            _ean = value; 
+            NotifyOfPropertyChange(() => EAN);
+            NotifyOfPropertyChange(() => EANButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+        }
+    }
+
+    public string SelectedItemButtonColor
     {
         get
         {
-            if (string.IsNullOrWhiteSpace(ModelNamePart) == false)
+            if (SelectedItem is not null)
             {
                 return "Green";
             }
@@ -359,38 +216,11 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    private string _modelNamePart;
-
-    public string ModelNamePart
-    {
-        get { return _modelNamePart; }
-        set 
-        { 
-            _modelNamePart = value; 
-            NotifyOfPropertyChange(() => ModelNamePart);
-            NotifyOfPropertyChange(() => CanAddPart);
-            NotifyOfPropertyChange(() => AddPartButtonColor);
-            NotifyOfPropertyChange(() => ModelNamePartButtonColor);
-        }
-    }
-
-    private string _selectedMachineName;
-
-    public string SelectedMachineName
-    {
-        get { return _selectedMachineName; }
-        set 
-        { 
-            _selectedMachineName = value; 
-            NotifyOfPropertyChange(() => SelectedMachineName);
-        }
-    }
-
-    public string PurchasedPricePartButtonColor
+    public string ModelNameButtonColor
     {
         get
         {
-            if (string.IsNullOrWhiteSpace(PurchasedPricePart) == false)
+            if (string.IsNullOrWhiteSpace(ModelName) == false)
             {
                 return "Green";
             }
@@ -399,26 +229,11 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    private string _purchasedPricePart;
-
-    public string PurchasedPricePart
-    {
-        get { return _purchasedPricePart; }
-        set 
-        { 
-            _purchasedPricePart = value; 
-            NotifyOfPropertyChange(() => PurchasedPricePart);
-            NotifyOfPropertyChange(() => CanAddPart);
-            NotifyOfPropertyChange(() => AddPartButtonColor);
-            NotifyOfPropertyChange(() => PurchasedPricePartButtonColor);
-        }
-    }
-
-    public string DatePurchasedPartButtonColor
+    public string DescriptionButtonColor
     {
         get
         {
-            if (DatePurchasedPart >= SqlDateTime.MinValue.Value)
+            if (string.IsNullOrWhiteSpace(Description) == false)
             {
                 return "Green";
             }
@@ -427,30 +242,52 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    private DateTime? _datePurchasedPart = DateTime.UtcNow;
-
-    public DateTime? DatePurchasedPart
-    {
-        get { return _datePurchasedPart; }
-        set 
-        { 
-            _datePurchasedPart = value;
-            NotifyOfPropertyChange(() => DatePurchasedPart);
-            NotifyOfPropertyChange(() => CanAddPart);
-            NotifyOfPropertyChange(() => AddPartButtonColor);
-            NotifyOfPropertyChange(() => DatePurchasedPartButtonColor);
-        }
-    }
-
-    public bool CanAddMachine
+    public string QuantityButtonColor
     {
         get
         {
-            if (string.IsNullOrWhiteSpace(MachineName) == false &&
-                string.IsNullOrWhiteSpace(ModelNameMachine) == false &&
-                string.IsNullOrWhiteSpace(EuropeanArticleNumber) == false &&
-                string.IsNullOrWhiteSpace(PurchasedPriceMachine) == false &&
-                DatePurchasedMachine >= SqlDateTime.MinValue.Value)
+            if (Quantity >= 0)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    public string PriceButtonColor
+    {
+        get
+        {
+            if (Price >= 0)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    public string EANButtonColor
+    {
+        get
+        {
+            if (EAN >= 100_000_000_000 && EAN <= 999_999_999_999)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    public bool CanSubmit
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(ModelName) == false &&
+                string.IsNullOrWhiteSpace(Description) == false &&
+                Quantity >= 0 && EAN >= 0)
             {
                 return true;
             }
@@ -459,11 +296,11 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public string AddMachineButtonColor
+    public string SubmitButtonColor
     {
         get
         {
-            if (CanAddMachine is true)
+            if (CanSubmit)
             {
                 return "#121212";
             }
@@ -472,416 +309,48 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public async Task AddMachine()
+    public async Task Submit()
     {
-        bool isConvertedToDecimal = decimal.TryParse(PurchasedPriceMachine, out var PurchasedPrice);
-
-        if (isConvertedToDecimal)
+        if (SelectedItem is null)
         {
-            MachineModel machine = new()
+            ItemModel i = new()
             {
-                MachineName = MachineName,
-                ModelName = ModelNameMachine,
-                EuropeanArticleNumber = EuropeanArticleNumber,
-                PurchasedPrice = PurchasedPrice,
-                DatePurchased = DatePurchasedMachine.Value
+                ModelName = ModelName,
+                Description = Description,
+                Quantity = Quantity,
+                Price = Price,
+                EAN = EAN,
+                Archived = false
             };
 
-            MachineName = "";
-            ModelNameMachine = "";
-            EuropeanArticleNumber = "";
-            PurchasedPriceMachine = "";
-            DatePurchasedMachine = DateTime.UtcNow;
+            var mappedItem = _mapper.Map<ItemDisplayModel>(i);
 
-            await _stockEndpoint.InsertMachineAsync(machine);
-            await LoadAllMachines();
+            await _itemEndpoint.InsertItemAsync(i);
+            Items.Add(mappedItem);
+            ModelName = "";
+            Description = "";
+            Quantity = 0;
+            Price = 0;
+            EAN = 0;
         }
         else
         {
-            dynamic settings = new ExpandoObject();
-            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            settings.ResizeMode = ResizeMode.NoResize;
-            settings.Title = "System Error";
-
-            _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
-            await _window.ShowDialogAsync(_status, null, settings);
-        }
-    }
-
-    public bool CanAddPart
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(PartName) == false &&
-                string.IsNullOrWhiteSpace(ModelNamePart) == false &&
-                string.IsNullOrWhiteSpace(SelectedMachineName) == false &&
-                SelectedMachine is not null &&
-                string.IsNullOrWhiteSpace(PurchasedPricePart) == false &&
-                DatePurchasedPart >= SqlDateTime.MinValue.Value)
+            ItemModel i = new()
             {
-                return true;
-            }
-
-            return false;
-
-        }
-    }
-
-    public string AddPartButtonColor
-    {
-        get
-        {
-            if (CanAddPart is true)
-            {
-                return "#121212";
-            }
-
-            return "Red";
-        }
-    }
-
-    public async Task AddPart()
-    {
-        bool isConvertedToDecimal = decimal.TryParse(PurchasedPricePart, out decimal purchasedPrice);
-
-        if (isConvertedToDecimal)
-        {
-            PartModel part = new()
-            {
-                PartName = PartName,
-                ModelName = ModelNamePart,
-                MachineId = SelectedMachine.Id,
-                PurchasedPrice = purchasedPrice,
-                DatePurchased = DatePurchasedPart.Value
+                Id = SelectedItem.Id,
+                ModelName = ModelName,
+                Description = Description,
+                Quantity = Quantity,
+                Price = Price,
+                EAN = EAN
             };
 
-            PartName = "";
-            ModelNamePart = "";
-            PurchasedPricePart = "";
-            DatePurchasedMachine = DateTime.UtcNow;
-            SelectedMachine = null;
-
-            await _stockEndpoint.InsertPartAsync(part);
-            await LoadAllPart();
-        }
-        else
-        {
-            dynamic settings = new ExpandoObject();
-            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            settings.ResizeMode = ResizeMode.NoResize;
-            settings.Title = "System Error";
-
-            _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
-            await _window.ShowDialogAsync(_status, null, settings);
-        }
-    }
-
-    public bool CanArchiveSelectedMachine
-    {
-        get
-        {
-            if (SelectedMachine is not null)
-                return true;
-
-            return false;
-        }
-    }
-
-    public string ArchiveMachineButtonColor
-    {
-        get
-        {
-            if (CanArchiveSelectedMachine)
-            {
-                return "#121212";
-            }
-
-            return "Red";
-        }
-    }
-
-
-    public async Task ArchiveSelectedMachine()
-    {
-        var mappedMachine = _mapper.Map<MachineModel>(SelectedMachine);
-        mappedMachine.Archived = true;
-
-        await _stockEndpoint.ArchiveMachineAsync(mappedMachine);
-        Machines.Remove(SelectedMachine);
-    }
-
-
-    public bool CanArchiveSelectedPart
-    {
-        get
-        {
-            if (SelectedPart is not null)
-            {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    public string ArchivePartButtonColor
-    {
-        get
-        {
-            if (CanArchiveSelectedPart)
-            {
-                return "#121212";
-            }
-
-            return "Red";
-        }
-    }
-
-    public async Task ArchiveSelectedPart()
-    {
-        var mappedPart = _mapper.Map<PartModel>(SelectedPart);
-        mappedPart.Archived = true;
-
-        await _stockEndpoint.ArchivePartAsync(mappedPart);
-        Parts.Remove(SelectedPart);
-    }
-
-
-    private string _searchMachineText;
-
-    public string SearchMachineText
-    {
-        get { return _searchMachineText; }
-        set 
-        {
-            _searchMachineText = value;
-            NotifyOfPropertyChange(() => SearchMachineText);
-            NotifyOfPropertyChange(() => CanSearchMachine);
-            NotifyOfPropertyChange(() => SearchMachineButtonColor);
-        }
-    }
-
-    public static bool CanSearchMachine
-    {
-        get
-        {
-            return true;
-        }
-    }
-
-    public static string SearchMachineButtonColor
-    {
-        get
-        {
-            if (CanSearchMachine is true)
-            {
-                return "#121212";
-            }
-
-            return "Red";
-        }
-    }
-
-
-    public async Task SearchMachine()
-    {
-        if (string.IsNullOrWhiteSpace(SearchMachineText))
-        {
-            await LoadAllMachines();
-        }
-        else
-        {
-            await LoadAllMachines();
-
-            var machineList = Machines.Where(x => x.ModelName.Contains(SearchMachineText) ||
-                                             x.MachineName.Contains(SearchMachineText)).ToList();
-
-            Machines = new BindingList<MachineDisplayModel>(machineList);
-        }
-    }
-
-    private string _searchPartText;
-
-    public string SearchPartText
-    {
-        get { return _searchPartText; }
-        set 
-        { 
-            _searchPartText = value; 
-            NotifyOfPropertyChange(() => SearchPartText);
-        }
-    }
-
-    public static bool CanSearchPart
-    {
-        get
-        {
-            return true;
-        }
-    }
-
-
-    public static string SearchPartButtonColor
-    {
-        get
-        {
-            if (CanSearchPart is true)
-            {
-                return "#121212";
-            }
-
-            return "Red";
-        } 
-    }
-
-    public async Task SearchPart()
-    {
-        if (string.IsNullOrWhiteSpace(SearchPartText))
-        {
-            await LoadAllPart();
-        }
-        else
-        {
-            await LoadAllPart();
-
-            var partList = Parts.Where(x => x.ModelName.Contains(SearchPartText) || 
-                                       x.PartName.Contains(SearchPartText)).ToList();
-
-            Parts = new BindingList<PartDisplayModel>(partList);
-        }
-    }
-
-    public bool CanUpdateMachine
-    {
-        get
-        {
-            if (SelectedMachine is not null && CanAddMachine is true)
-            {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    public string UpdateMachineButtonColor
-    {
-        get
-        {
-            if (CanUpdateMachine is true)
-            {
-                return "#121212";
-            }
-
-            return "Red";
-        }
-    }
-
-    public async Task UpdateMachine()
-    {
-        bool isConvertedToDecimal = decimal.TryParse(PurchasedPriceMachine, out var PurchasedPrice);
-
-        if (isConvertedToDecimal is true)
-        {
-            MachineModel machine = new()
-            {
-                Id = SelectedMachine.Id,
-                MachineName = MachineName,
-                ModelName = ModelNameMachine,
-                EuropeanArticleNumber = EuropeanArticleNumber,
-                DatePurchased = DatePurchasedMachine.Value,
-                PurchasedPrice = PurchasedPrice
-            };
-
-            MachineName = "";
-            ModelNameMachine = "";
-            EuropeanArticleNumber = "";
-            DatePurchasedMachine = DateTime.UtcNow;
-            PurchasedPriceMachine = "";
-
-            await _stockEndpoint.UpdateMachineAsync(machine);
-            await LoadAllMachines();
-        }
-        else
-        {
-            dynamic settings = new ExpandoObject();
-            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            settings.ResizeMode = ResizeMode.NoResize;
-            settings.Title = "System Error";
-
-            _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
-            await _window.ShowDialogAsync(_status, null, settings);
-        }
-    }
-
-    public bool CanUpdatePart
-    {
-        get
-        {
-            if (SelectedPart is not null &&
-                string.IsNullOrWhiteSpace(SelectedMachineName) == false && 
-                string.IsNullOrWhiteSpace(PartName) == false &&
-                string.IsNullOrWhiteSpace(ModelNamePart) == false &&
-                string.IsNullOrWhiteSpace(PurchasedPricePart) == false &&
-                DatePurchasedPart >= SqlDateTime.MinValue.Value)
-            {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    public string UpdatePartButtonColor
-    {
-        get
-        {
-            if (CanUpdatePart is true)
-            {
-                return "#121212";
-            }
-
-            else
-            {
-                return "Red";
-            }
-        }
-    }
-
-    public async Task UpdatePart()
-    {
-        bool isConvertedToDecimal = decimal.TryParse(PurchasedPricePart, out var PurchasedPrice);
-
-        if(isConvertedToDecimal is true)
-        {
-            PartModel part = new()
-            {
-                Id = SelectedPart.Id,
-                PartName = PartName,
-                ModelName = ModelNamePart,
-                PurchasedPrice = PurchasedPrice,
-                MachineId = Machines.Where(x => x.MachineName == SelectedMachineName).FirstOrDefault().Id,
-                DatePurchased = DatePurchasedPart.Value
-            };
-
-            MachineName = "";
-            ModelNameMachine = "";
-            EuropeanArticleNumber = "";
-            DatePurchasedMachine = DateTime.MinValue;
-            PurchasedPriceMachine = "";
-
-            await _stockEndpoint.UpdatePartAsync(part);
-            await LoadAllPart();
-        }
-        else
-        {
-            dynamic settings = new ExpandoObject();
-            settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            settings.ResizeMode = ResizeMode.NoResize;
-            settings.Title = "System Error";
-
-            _status.UpdateMessage("Fatal Exception", "The Purchased Price wasn't a convertable number.");
-            await _window.ShowDialogAsync(_status, null, settings);
+            await _itemEndpoint.UpdateItemAsync(i);
+            ModelName = "";
+            Description = "";
+            Quantity = 0;
+            Price = 0;
+            EAN = 0;
         }
     }
 }
