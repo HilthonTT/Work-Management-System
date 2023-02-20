@@ -6,7 +6,8 @@
 	@ChairPersonId nvarchar(128),
 	@PhoneNumber nvarchar(50),
 	@Description nvarchar(MAX),
-	@CreatedDate datetime2
+	@CreatedDate datetime2,
+	@Archived bit
 
 AS
 begin
@@ -19,7 +20,8 @@ begin
 	ChairPersonId = @ChairPersonId,
 	PhoneNumber = @PhoneNumber,
 	[Description] = @Description,
-	CreatedDate = @CreatedDate
+	CreatedDate = @CreatedDate,
+	Archived = @Archived
 
 	WHERE Id = @Id
 end

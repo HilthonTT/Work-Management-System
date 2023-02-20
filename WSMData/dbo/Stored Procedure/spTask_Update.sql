@@ -6,7 +6,8 @@
 	@Description nvarchar(MAX), 
 	@DateDue datetime2, 
 	@PercentageDone int, 
-	@IsDone bit
+	@IsDone bit,
+	@Archived bit
 AS
 begin
 	set nocount on;
@@ -18,7 +19,8 @@ begin
 	[Description] = @Description,
 	DateDue = @DateDue,
 	PercentageDone = @PercentageDone,
-	IsDone = @IsDone
+	IsDone = @IsDone,
+	Archived = @Archived
 
 	where Id = @Id;
 end
