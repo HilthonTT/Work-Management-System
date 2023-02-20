@@ -35,6 +35,9 @@
                     <h5 class="card-title">@t.Title</h5>
                     <p class="card-text">@t.Description</p>
                     <a @onclick="(() => OpenDetails(t))" class="btn btn-primary">Open Details</a>
+                    <AuthorizeView Roles="Admin">
+                        <a @onclick="(() => OpenTaskUpdate(t))" class="btn btn-primary">Update Task</a>
+                    </AuthorizeView>
                   </div>
                   <div class="card-footer text-muted">
                     Date Dued: @t.DateDue
@@ -101,6 +104,11 @@
     private void OpenDetails(TaskModel task)
     {
         navManager.NavigateTo($"/TaskDetails/{task.Id}");
+    }
+
+    private void OpenTaskUpdate(TaskModel task)
+    {
+        navManager.NavigateTo($"/UpdateTask/{task.Id}");
     }
 
     private DepartmentModel showTaskDepartment(int? taskDepartmentId)

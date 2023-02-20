@@ -44,63 +44,6 @@
                 </div>
             </div>
             }
-            else
-            {
-                <EditForm Model="selectedTask" OnValidSubmit="OnValidSubmit">
-                <DataAnnotationsValidator />
-                <div class="row">
-                    @if (users is not null || departments is not null)
-                    {
-                        <label for="task-userId" class="col-md-2 col-form-label">User: </label>
-                        <div class="col-md-10">
-                            <MyInputRadioGroup id="users" @bind-Value="selectedTask.UserId">
-                                @foreach (var user in users)
-                                {
-                                    <div>
-                                        <InputRadio Value="@user.Id" id="@user.Id" />
-                                        <label for="@user.Id">@user.FullName</label>
-                                    </div>
-                                }
-                            </MyInputRadioGroup>
-                        </div>
-                        <label for="task-departmentId" class="col-md-2 col-form-label">Department: </label>
-                        <div class="col-md-10">
-                            <MyInputRadioGroup id="departments" @bind-Value="selectedTask.DepartmentId">
-                                @foreach (var department in departments)
-                                {
-                                    <div>
-                                        <InputRadio Value="@department.Id" id="@department.Id" />
-                                        <label for="@department.Id">@department.DepartmentName</label>
-                                    </div>
-                                }
-                            </MyInputRadioGroup>
-                        </div>
-                    }
-                    </div>
-                    <div class="row">
-                        <label for="task-title" class="col-md-2 col-form-label">Title: </label>
-                        <div class="col-md-10">
-                            <InputText @bind-Value="selectedTask.Title" placeholder="Title" class="form-control"/>
-                            <ValidationMessage For="@(() => selectedTask.Title)" />
-                        </div>
-                        <label for="task-description" class="col-md-2 col-form-label">Description: </label>
-                        <div class="col-md-10">
-                            <InputText @bind-Value="selectedTask.Description" placeholder="Description" class="form-control"/>
-                            <ValidationMessage For="@(() => selectedTask.Description)" />
-                        </div>
-                            <label for="task-DateDue" class="col-md-2 col-form-label">Date Due: </label>
-                        <div class="col-md-10">
-                            <InputDate @bind-Value="selectedTask.DateDue" class="form-control" />
-                            <ValidationMessage For="@(() => selectedTask.DateDue)" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <button type="submit" class="btn btn-success">
-                            Submit
-                        </button>
-                    </div>
-                </EditForm>
-            }
         </div>
 </div>
 }
@@ -121,52 +64,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        task = await taskEndpoint.GetTaskById(Id);
+        task = await taskEndpoint.GetTaskByIdAsync(Id);
         department = await departmentEndpoint.GetByIdAsync(task.Id);
-        departments = await departmentEndpoint.GetAllAsync();
-        users = await userEndpoint.GetAllAsync();
-    }
-
-    private async Task OnValidSubmit()
-    {
-        errorMessage = "";
-
-        if (selectedTask.UserId is null && selectedTask.DepartmentId is null || selectedTask.DateDue < DateTime.UtcNow.Date)
-        {
-            errorMessage = "Oops Something Went Wrong...Maybe a user/department wasn't selected or the chosen date was lower than today.";
-            return;
-        }
-        try
-        {
-            TaskModel task = new()
-            {
-                Id = selectedTask.Id,
-                UserId = selectedTask.UserId,
-                DepartmentId = selectedTask.DepartmentId,
-                Title = selectedTask.Title,
-                Description = selectedTask.Description,
-                DateDue = selectedTask.DateDue,
-                PercentageDone = selectedTask.PercentageDone
-            };
-
-            if (task.PercentageDone == 100)
-            {
-                task.IsDone = true;
-            }
-
-            await taskEndpoint.UpdateAsync(task);
-            selectedTask = null;
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            errorMessage = ex.Message;
-        }
-    }
-
-    private void CancelModification()
-    {
-        selectedTask = null;
-        StateHasChanged();
     }
 }
