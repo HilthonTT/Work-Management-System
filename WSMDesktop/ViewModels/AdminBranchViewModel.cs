@@ -447,6 +447,8 @@ public class AdminBranchViewModel : Screen
             NotifyOfPropertyChange(() => CanUpdateDepartment);
             NotifyOfPropertyChange(() => UpdateDepartmentButtonColor);
             NotifyOfPropertyChange(() => SelectedUserButtonColor);
+            NotifyOfPropertyChange(() => CanUpdateCompany);
+            NotifyOfPropertyChange(() => UpdateCompanyButtonColor);
         }
     }
 
@@ -779,6 +781,10 @@ public class AdminBranchViewModel : Screen
             DateFounded = DateFoundedCompany.Value,
         };
 
+        SelectedCompany.CompanyName = company.CompanyName;
+        SelectedCompany.Address = company.PhoneNumber;
+        SelectedCompany.ChairPersonId = company.ChairPersonId;
+
         CompanyName = "";
         AddressCompany = "";
         PhoneNumberCompany = "";
@@ -788,7 +794,7 @@ public class AdminBranchViewModel : Screen
         DateFoundedCompany = DateTime.UtcNow;
 
         await _companyEndpoint.UpdateCompanyAsync(company);
-        await LoadAllCompanies();
+        NotifyOfPropertyChange(() => Companies);
     }
 
     public bool CanCreateDepartment
@@ -891,6 +897,14 @@ public class AdminBranchViewModel : Screen
             CreatedDate = DateFoundedDepartment.Value
         };
 
+        SelectedDepartment.CompanyId = department.CompanyId;
+        SelectedDepartment.DepartmentName = department.DepartmentName;
+        SelectedDepartment.Address = AddressDepartment;
+        SelectedDepartment.ChairPersonId = SelectedUser.Id;
+        SelectedDepartment.PhoneNumber = PhoneNumberDepartment;
+        SelectedDepartment.Description = DescriptionDepartment;
+        SelectedDepartment.CreatedDate = DateFoundedDepartment.Value;
+
         SelectedCompany = null;
         DepartmentName = "";
         AddressDepartment = "";
@@ -900,6 +914,6 @@ public class AdminBranchViewModel : Screen
         DateFoundedDepartment = DateTime.UtcNow;
 
         await _departmentEndpoint.UpdateDepartmentAsync(department);
-        await LoadAllDepartments();
+        NotifyOfPropertyChange(() => Departments);
     }
 }

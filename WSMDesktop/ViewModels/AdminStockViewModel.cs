@@ -20,6 +20,7 @@ public class AdminStockViewModel : Screen
     private readonly IMapper _mapper;
     private readonly IWindowManager _window;
     private readonly StatusViewModel _status;
+    private bool _FilteredByArchived = false;
     
     public AdminStockViewModel(IItemEndpoint itemEndpoint,
                                IMapper mapper,
@@ -71,6 +72,39 @@ public class AdminStockViewModel : Screen
         Items = new BindingList<ItemDisplayModel>(items);
     }
 
+    public string FilterButtonColor
+    {
+        get
+        {
+            if (_FilteredByArchived == false)
+            {
+                return "Red";
+            }
+
+            return "#121212";
+        }
+    }
+
+    public async Task FilterByArchived()
+    {
+        if (_FilteredByArchived == false)
+        {
+            var itemList = await _itemEndpoint.GetAllAdminAsync();
+            var items = _mapper.Map<List<ItemDisplayModel>>(itemList)
+                .Where(x => x.Archived)
+                .ToList();
+            Items = new BindingList<ItemDisplayModel>(items);
+            _FilteredByArchived = true;
+        }
+        else
+        {
+            await LoadAllItems();
+            _FilteredByArchived = false;
+        }
+
+        NotifyOfPropertyChange(() => FilterButtonColor);
+    }
+
     private BindingList<ItemDisplayModel> _items;
 
     public BindingList<ItemDisplayModel> Items
@@ -91,15 +125,29 @@ public class AdminStockViewModel : Screen
         set 
         { 
             _selectedItem = value;
-            ModelName = value.ModelName;
-            Description = value.Description;
-            Quantity = value.Quantity;
-            Price = value.Price;
-            EAN = value.EAN;
+            
+            if (value is null)
+            {
+                ModelName = "";
+                Description = "";
+                Quantity = 0;
+                Price = 0;
+                EAN = 0;
+            }
+            else
+            {
+                ModelName = value.ModelName;
+                Description = value.Description;
+                Quantity = value.Quantity;
+                Price = value.Price;
+                EAN = value.EAN;
+            }
             NotifyOfPropertyChange(() => SelectedItem);
             NotifyOfPropertyChange(() => SelectedItemButtonColor);
             NotifyOfPropertyChange(() => CanSubmit);
             NotifyOfPropertyChange(() => SubmitButtonColor);
+            NotifyOfPropertyChange(() => CanArchive);
+            NotifyOfPropertyChange(() => ArchivedButtonColor);
         }
     }
 
@@ -351,6 +399,49 @@ public class AdminStockViewModel : Screen
             Quantity = 0;
             Price = 0;
             EAN = 0;
+
+            SelectedItem.ModelName = i.ModelName;
+            SelectedItem.Price = i.Price;
         }
+        
+        NotifyOfPropertyChange(() => Items);
+    }
+
+
+    public bool CanArchive
+    {
+        get
+        {
+            if (SelectedItem is not null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public string ArchivedButtonColor 
+    {
+        get
+        {
+            if (CanArchive)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task Archive()
+    {
+        var mappedItem = _mapper.Map<ItemModel>(SelectedItem);
+        mappedItem.Archived = !mappedItem.Archived;
+        SelectedItem.Archived = mappedItem.Archived;
+        
+
+        await _itemEndpoint.ArchiveItemAsync(mappedItem);
+        NotifyOfPropertyChange(() => Items);
     }
 }
