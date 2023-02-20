@@ -38,6 +38,6 @@ public class ItemData : IItemData
 
     public void ArchiveItem(ItemModel item)
     {
-        _sql.SaveData("dbo.spItem_Update", new { item.Id, item.Archived }, "WSMData");
+        _sql.SaveData("dbo.spItem_Archive", new { item.Id, item.Archived }, "WSMData");
     }
 }
