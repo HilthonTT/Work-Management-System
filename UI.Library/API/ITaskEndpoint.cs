@@ -8,7 +8,7 @@ namespace UI.Library.API
         Task<List<TaskModel>> GetAllAsync();
         Task<List<TaskModel>> GetByDepartmentIdAsync(int departmentId);
         Task<List<TaskModel>> GetByUserIdAsync(int Id);
-        Task<TaskModel> GetTaskById(int Id);
+        Task<TaskModel> GetTaskByIdAsync(int Id);
         Task PostTaskAsync(TaskModel task);
         Task UpdateAsync(TaskModel task);
         Task UpdatePercentageAsync(TaskModel task);

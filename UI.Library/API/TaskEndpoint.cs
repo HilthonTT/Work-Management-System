@@ -31,7 +31,7 @@ public class TaskEndpoint : ITaskEndpoint
         }
     }
 
-    public async Task<TaskModel> GetTaskById(int Id)
+    public async Task<TaskModel> GetTaskByIdAsync(int Id)
     {
         var data = new { Id };
 
