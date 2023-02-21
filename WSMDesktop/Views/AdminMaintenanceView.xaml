@@ -7,7 +7,7 @@
              Background="#282828"
              FontFamily="Comic Sans MS"
              Foreground="White"
-             FontSize="18"
+             FontSize="24"
              Height="850" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
@@ -39,45 +39,13 @@
         <DockPanel Grid.Row="0"
                    Grid.Column="0"
                    Grid.ColumnSpan="2">
-            
+
             <TextBox x:Name="UserSearchText"
                      VerticalAlignment="Bottom" 
                      Width="350" 
-                     Height="50" />
-
-            <Button x:Name="SearchUser"
-                    Content="Search User"
-                    Width="180"
-                    Height="50"
-                    Margin="0 0 0 0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom">
-
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="#121212" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="Cursor" Value="Hand" />
-
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#555555" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="180" Height="50"
-                            CornerRadius="8"
-                            Background="{TemplateBinding Background}">
-
-                            <ContentPresenter VerticalAlignment="Center"
-                                          HorizontalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+                     Height="50"
+                     Margin="0 0 350 0"/>
+            
         </DockPanel>
 
         <!-- User List -->
@@ -139,8 +107,8 @@
                    Grid.ColumnSpan="2"
                    Margin="170 0 0 0">
 
-            <Button x:Name="SearchDepartment"
-                    Content="Search Department"
+            <Button x:Name="FilterArchivedDepartment"
+                    Content="Filter Archived"
                     Width="180"
                     Height="50"
                     Margin="0 0 0 0"
@@ -149,7 +117,7 @@
 
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="#121212" />
+                        <Setter Property="Background" Value="{Binding FilterArchivedDepartmentButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 
@@ -364,7 +332,8 @@
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Center"
                 Content="Assign Task"
-                FontSize="30">
+                FontSize="30"
+                Margin="0 30 0 0">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Background" Value="{Binding AssignTaskButtonColor}" />

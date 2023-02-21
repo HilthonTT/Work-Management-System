@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WSMDesktop.Views"
              mc:Ignorable="d" 
-              d:DesignHeight="850" d:DesignWidth="1400"
+             d:DesignHeight="850" d:DesignWidth="1400"
              Background="#282828"
              FontFamily="Comic Sans MS"
              Foreground="White"
@@ -49,16 +49,18 @@
                      Width="300"
                      VerticalAlignment="Bottom"
                      Margin="0 0 0 20"/>
+            
+            <!-- Filter By Archived -->
 
-            <Button x:Name="SearchCompany"
-                    Content="Search Company"
+            <Button x:Name="FilterArchivedCompany"
+                    Content="Filter Archived"
                     Width="150"
                     Height="50"
                     Margin="5 0 0 20">
 
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{Binding SearchCompanyButtonColor}" />
+                        <Setter Property="Background" Value="{Binding FilterArchivedCompanyButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 
@@ -179,15 +181,15 @@
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Right">
 
-            <Button x:Name="SearchDepartment"
-                    Content="Search Department"
+            <Button x:Name="FilterArchivedDepartment"
+                    Content="Filter Archived"
                     Width="180"
                     Height="50"
                     Margin="0 0 10 20">
 
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{Binding SearchDepartmentButtonColor}" />
+                        <Setter Property="Background" Value="{Binding FilterArchivedDepartmentButtonColor}" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Cursor" Value="Hand" />
 

@@ -70,8 +70,9 @@ public class AdminUserRolesViewModel : Screen
         get { return _searchUserText; }
         set 
         {
-            _searchUserText = value; 
+            _searchUserText = value;
             NotifyOfPropertyChange(() => SearchUserText);
+            SearchUser();
         }
     }
 
@@ -85,18 +86,21 @@ public class AdminUserRolesViewModel : Screen
 
     public async Task SearchUser()
     {
-        if (string.IsNullOrWhiteSpace(SearchUserText))
+        var userList = await _userEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<UserModel>>(userList);
+
+        if (string.IsNullOrWhiteSpace(SearchUserText) == false)
         {
-            await LoadUsers();
+            output = output.Where(x => x.FirstName.Contains(SearchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.LastName.Contains(SearchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.EmailAddress.Contains(SearchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.PhoneNumber.Contains(SearchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+            Users = new BindingList<UserModel>(output);
         }
         else
         {
-            await LoadUsers();
-
-            var userList = Users.Where(x => x.FirstName.Contains(SearchUserText) ||
-                                        x.LastName.Contains(SearchUserText)).ToList();
-
-            Users = new BindingList<UserModel>(userList);
+            Users = new BindingList<UserModel>(output);
         }
     }
 

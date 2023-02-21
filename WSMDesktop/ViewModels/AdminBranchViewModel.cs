@@ -22,6 +22,8 @@ public class AdminBranchViewModel : Screen
     private readonly StatusViewModel _status;
     private readonly IMapper _mapper;
     private readonly IWindowManager _window;
+    private bool _filterByArchivedCompany = false;
+    private bool _filterByArchivedDepartment = false;
 
     public AdminBranchViewModel(ICompanyEndpoint companyEndpoint,
                                  IDepartmentEndpoint departmentEndpoint,
@@ -98,10 +100,11 @@ public class AdminBranchViewModel : Screen
         {
             _searchCompanyText = value; 
             NotifyOfPropertyChange(() => SearchCompanyText);
+            SearchCompany();
         }
     }
 
-    public static string SearchCompanyButtonColor
+    public static string ArchivedDepartmentButtonColor
     {
         get
         {
@@ -111,14 +114,30 @@ public class AdminBranchViewModel : Screen
 
     public async Task SearchCompany()
     {
-        if (string.IsNullOrWhiteSpace(SearchCompanyText))
+        var companyList = await _companyEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<CompanyDisplayModel>>(companyList);
+
+        if (_filterByArchivedCompany)
         {
-            await LoadAllCompanies();
+            output = output.Where(x => x.Archived).ToList();
         }
-        else 
+        else
         {
-            var companyList = Companies.Where(x => x.CompanyName.Contains(SearchCompanyText)).ToList();
-            Companies = new BindingList<CompanyDisplayModel>(companyList);
+            output = output.Where(x => x.Archived == false).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchCompanyText) == false)
+        {
+            output = output.Where(x => x.CompanyName.Contains(SearchCompanyText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(SearchCompanyText, StringComparison.InvariantCultureIgnoreCase) || 
+                x.Address.Contains(SearchCompanyText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Companies = new BindingList<CompanyDisplayModel>(output);
+        }
+        else
+        {
+            Companies = new BindingList<CompanyDisplayModel>(output);
         }
     }
 
@@ -215,6 +234,7 @@ public class AdminBranchViewModel : Screen
         {
             _searchDepartmentText = value;
             NotifyOfPropertyChange(() => SearchDepartmentText);
+            SearchDepartment();
         }
     }
 
@@ -228,14 +248,29 @@ public class AdminBranchViewModel : Screen
 
     public async Task SearchDepartment()
     {
-        if (string.IsNullOrWhiteSpace(SearchDepartmentText))
+        var departmentList = await _departmentEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<DepartmentDisplayModel>>(departmentList);
+
+        if (_filterByArchivedDepartment)
         {
-            await LoadAllDepartments();
+            output = output.Where(x => x.Archived).ToList();
         }
         else
         {
-            var departmentList = Departments.Where(x => x.DepartmentName.Contains(SearchDepartmentText)).ToList();
-            Departments = new BindingList<DepartmentDisplayModel>(departmentList);
+            output = output.Where(x => x.Archived == false).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchDepartmentText) == false)
+        {
+            output = output.Where(x => x.DepartmentName.Contains(SearchDepartmentText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(SearchDepartmentText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Departments = new BindingList<DepartmentDisplayModel>(output);
+        }
+        else
+        {
+            Departments = new BindingList<DepartmentDisplayModel>(output);
         }
     }
 
@@ -915,5 +950,71 @@ public class AdminBranchViewModel : Screen
 
         await _departmentEndpoint.UpdateDepartmentAsync(department);
         NotifyOfPropertyChange(() => Departments);
+    }
+
+    public string FilterArchivedCompanyButtonColor
+    {
+        get
+        {
+            if (_filterByArchivedCompany)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task FilterArchivedCompany()
+    {
+        if (_filterByArchivedCompany == false)
+        {
+            var companyList = await _companyEndpoint.GetAllAsync();
+            var companies = _mapper.Map<List<CompanyDisplayModel>>(companyList)
+                .Where(x => x.Archived)
+                .ToList();
+
+            Companies = new BindingList<CompanyDisplayModel>(companies);
+        }
+        else
+        {
+            await LoadAllCompanies();
+        }
+
+        _filterByArchivedCompany = !_filterByArchivedCompany;
+        NotifyOfPropertyChange(() => FilterArchivedCompanyButtonColor);
+    }
+
+    public string FilterArchivedDepartmentButtonColor
+    {
+        get
+        {
+            if (_filterByArchivedDepartment)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task FilterArchivedDepartment()
+    {
+        if (_filterByArchivedDepartment == false)
+        {
+            var departmentList = await _departmentEndpoint.GetAllAsync();
+            var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList)
+                .Where(x => x.Archived)
+                .ToList();
+
+            Departments = new BindingList<DepartmentDisplayModel>(departments);
+        }
+        else
+        {
+            await LoadAllDepartments();
+        }
+
+        _filterByArchivedDepartment = !_filterByArchivedDepartment;
+        NotifyOfPropertyChange(() => FilterArchivedDepartmentButtonColor);
     }
 }

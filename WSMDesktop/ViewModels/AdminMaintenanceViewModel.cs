@@ -26,6 +26,7 @@ public class AdminMaintenanceViewModel : Screen
     private readonly IUserEndpoint _userEndpoint;
     private readonly ITaskEndpoint _taskEndpoint;
     private readonly StatusViewModel _status;
+    private bool _filterByArchivedDepartment = false;
 
     public AdminMaintenanceViewModel(IEventAggregator events,       
                                 IWindowManager window,
@@ -81,23 +82,27 @@ public class AdminMaintenanceViewModel : Screen
         { 
             _userSearchText = value; 
             NotifyOfPropertyChange(() => UserSearchText);
+            SearchUser();
         }
     }
 
     public async Task SearchUser()
     {
-        if (string.IsNullOrWhiteSpace(UserSearchText))
+        var userList = await _userEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<UserModel>>(userList);
+
+        if (string.IsNullOrWhiteSpace(UserSearchText) == false)
         {
-            await LoadUsers();
+            output = output.Where(x => x.FirstName.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.LastName.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.EmailAddress.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.PhoneNumber.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+            Users = new BindingList<UserModel>(output);
         }
         else
         {
-            await LoadUsers();
-
-            var userList = Users.Where(x => x.FirstName.Contains(UserSearchText) || 
-                                        x.LastName.Contains(UserSearchText)).ToList();
-
-            Users = new BindingList<UserModel>(userList);
+            Users = new BindingList<UserModel>(output);
         }
     }
 
@@ -110,27 +115,29 @@ public class AdminMaintenanceViewModel : Screen
         { 
             _departmentSearchText = value; 
             NotifyOfPropertyChange(() => DepartmentSearchText);
+            SearchDepartment();
         }
     }
 
     public async Task SearchDepartment()
     {
-        if (string.IsNullOrWhiteSpace(DepartmentSearchText))
+        var departmentList = await _departmentEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<DepartmentDisplayModel>>(departmentList.Where(x => x.Archived == false));
+        
+
+        if (string.IsNullOrWhiteSpace(DepartmentSearchText) == false)
         {
-            await LoadDepartments();
+            output = output.Where(x => x.DepartmentName.Contains(DepartmentSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(DepartmentSearchText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Departments = new BindingList<DepartmentDisplayModel>(output);
         }
         else
         {
-            await LoadDepartments();
-
-            var departmentList = Departments.Where(x => x.DepartmentName.Contains(DepartmentSearchText) ||
-                                                    x.Description.Contains(DepartmentSearchText)).ToList();
-
-            Departments = new BindingList<DepartmentDisplayModel>(departmentList);
+            Departments = new BindingList<DepartmentDisplayModel>(output);
         }
     }
-
-
 
     public async Task LoadDepartments()
     {
@@ -378,5 +385,39 @@ public class AdminMaintenanceViewModel : Screen
         {
             ErrorMessage = ex.Message;
         }
+    }
+
+    public string FilterArchivedDepartmentButtonColor
+    {
+        get
+        {
+            if (_filterByArchivedDepartment)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+
+
+    public async Task FilterArchivedDepartment()
+    {
+        if (_filterByArchivedDepartment == false)
+        {
+            var departmentList = await _departmentEndpoint.GetAllAsync();
+            var departments = _mapper.Map<List<DepartmentDisplayModel>>(departmentList)
+                .Where(x => x.Archived)
+                .ToList();
+            Departments = new BindingList<DepartmentDisplayModel>(departments);
+        }
+        else
+        {
+            await LoadDepartments();
+        }
+
+        _filterByArchivedDepartment = !_filterByArchivedDepartment;
+        NotifyOfPropertyChange(() => FilterArchivedDepartmentButtonColor);
     }
 }

@@ -127,23 +127,27 @@ public class TaskViewModel : Screen
         { 
             _searchTaskText = value; 
             NotifyOfPropertyChange(() => SearchTaskText);
+            SearchTask();
         }
     }
 
     public async Task SearchTask()
     {
-        if (string.IsNullOrWhiteSpace(SearchTaskText))
+        var taskList = await _taskEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<TaskDisplayModel>>(taskList.Where(x => x.Archived == false));
+
+        if (string.IsNullOrWhiteSpace(SearchTaskText) == false)
         {
-            await LoadTasks();
+            output = output.Where(x => x.Title.Contains(SearchTaskText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(SearchTaskText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Tasks = new BindingList<TaskDisplayModel>(output);
         }
         else
         {
-            var taskList = Tasks.Where(x => x.Title.Contains(SearchTaskText) || 
-                                        x.Description.Contains(SearchTaskText)).ToList();
-            
-            Tasks = new BindingList<TaskDisplayModel>(taskList);
+            Tasks = new BindingList<TaskDisplayModel>(output);
         }
-
     }
 
     private BindingList<TaskDisplayModel> _tasks;

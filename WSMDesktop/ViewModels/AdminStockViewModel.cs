@@ -160,19 +160,35 @@ public class AdminStockViewModel : Screen
         { 
             _searchItemText = value;
             NotifyOfPropertyChange(() => SearchItemText);
+            SearchItem();
         }
     }
 
     public async Task SearchItem()
     {
-        if (string.IsNullOrWhiteSpace(SearchItemText))
+        var itemList = await _itemEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<ItemDisplayModel>>(itemList);
+
+        if (_FilteredByArchived)
         {
-            await LoadAllItems();
+            output = output.Where(x => x.Archived).ToList();
         }
         else
         {
-            var itemList = Items.Where(x => x.ModelName.Contains(SearchItemText)).ToList();
-            Items = new BindingList<ItemDisplayModel>(itemList);
+            output = output.Where(x => x.Archived == false).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchItemText) == false)
+        {
+            output = output.Where(x => x.ModelName.Contains(SearchItemText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(SearchItemText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Items = new BindingList<ItemDisplayModel>(output);
+        }
+        else
+        {
+            Items = new BindingList<ItemDisplayModel>(output);
         }
     }
 

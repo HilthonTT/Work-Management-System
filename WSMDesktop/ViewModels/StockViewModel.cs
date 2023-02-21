@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using UI.Library.API;
-using UI.Library.Models;
 using WSMDesktop.Models;
 
 namespace WSMDesktop.ViewModels;
@@ -20,6 +18,7 @@ public class StockViewModel : Screen
     private readonly IWindowManager _window;
     private readonly IMapper _mapper;
     private readonly StatusViewModel _status;
+    private bool _filteredByArchived = false;
 
     public StockViewModel(IItemEndpoint itemEndpoint,
                           IWindowManager window,
@@ -108,19 +107,35 @@ public class StockViewModel : Screen
         {
             _searchItemText = value;
             NotifyOfPropertyChange(() => SearchItemText);
+            SearchItem();
         }
     }
 
     public async Task SearchItem()
     {
-        if (string.IsNullOrWhiteSpace(SearchItemText))
+        var itemList = await _itemEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<ItemDisplayModel>>(itemList);
+
+        if (_filteredByArchived)
         {
-            await LoadAllItems();
+            output = output.Where(x => x.Archived).ToList();
         }
         else
         {
-            var itemList = Items.Where(x => x.ModelName.Contains(SearchItemText)).ToList();
-            Items = new BindingList<ItemDisplayModel>(itemList);
+            output = output.Where(x => x.Archived == false).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchItemText) == false)
+        {
+            output = output.Where(x => x.ModelName.Contains(SearchItemText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(SearchItemText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Items = new BindingList<ItemDisplayModel>(output);
+        }
+        else
+        {
+            Items = new BindingList<ItemDisplayModel>(output);
         }
     }
 
@@ -265,5 +280,37 @@ public class StockViewModel : Screen
 
             return "Red";
         }
+    }
+
+    public string FilterButtonColor
+    {
+        get
+        {
+            if (_filteredByArchived)
+            {
+                return "#121212";
+            }
+
+            return "Red";
+        }
+    }
+
+    public async Task FilterByArchived()
+    {
+        if (_filteredByArchived == false)
+        {
+            var itemList = await _itemEndpoint.GetAllAsync();
+            var items = _mapper.Map<List<ItemDisplayModel>>(itemList)
+                .Where(x => x.Archived)
+                .ToList();
+            Items = new BindingList<ItemDisplayModel>(items);
+        }
+        else
+        {
+            await LoadAllItems();
+        }
+
+        _filteredByArchived = !_filteredByArchived;
+        NotifyOfPropertyChange(() => FilterButtonColor);
     }
 }
