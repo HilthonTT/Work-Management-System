@@ -1,0 +1,109 @@
+﻿@page "/Items"
+@inject IItemEndpoint itemEndpoint
+@inject ILoggedInUserModel loggedInUser
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        @if (items is not null)
+        {
+            <Virtualize Items="items" Context="i" OverscanCount="10">
+                <div class="object-entry mt-4">
+                    <div>
+                        <div @onclick="(() => OpenDetails(i))">
+                            @i.ModelName
+                        </div>
+                        @if (archivingItem is null || archivingItem.Id != i.Id)
+                        {
+                            <div>
+                                <div @onclick="(() => OpenDetails(i))">
+                                    Quantity: @i.Quantity
+                                </div>
+                                <AuthorizeView Roles="Admin">
+                                    <button class="btn" @onclick="(() => archivingItem = i)">
+                                        archive
+                                    </button>
+                                </AuthorizeView>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <button class="btn btn-danger" @onclick="ArchiveItem">
+                                    confirm
+                                </button>
+                                <button class="btn btn-success" @onclick="(() => archivingItem = null)">
+                                    cancel
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <div>
+                            @i.Price
+                        </div>
+                    </div>
+                </div>
+            </Virtualize>
+        }
+    </div>
+</div>
+
+
+@code {
+    private double totalMinutesItem = 0;
+
+    private List<ItemModel> items;
+    private ItemModel archivingItem;
+    private const string ItemListName = "partList";
+    private const string ItemCacheDate = "partCacheDate";
+
+    private string errorMessage = "";    
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await localStorage.GetItemAsync<List<ItemModel>>(ItemListName);
+        DateTime? cacheDatePart = await localStorage.GetItemAsync<DateTime?>(ItemCacheDate);
+
+        if (cacheDatePart is not null)
+        {
+            totalMinutesItem = DateTime.UtcNow.Subtract((DateTime)cacheDatePart).TotalMinutes;
+        }
+
+        if (items is null || cacheDatePart is null || totalMinutesItem > 10)
+        {
+            try
+            {
+                items = await itemEndpoint.GetAllAsync();
+                await localStorage.SetItemAsync(ItemListName, items);
+                await localStorage.SetItemAsync(ItemCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+        }
+    }
+
+    private async Task ArchiveItem()
+    {
+        archivingItem.Archived = true;
+        await itemEndpoint.ArchiveItemAsync(archivingItem);
+        items.Remove(archivingItem);
+        archivingItem = null;
+    }
+
+    private void OpenDetails(ItemModel item)
+    {
+        navManager.NavigateTo($"/ItemDetails/{item.Id}");
+    }
+}

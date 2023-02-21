@@ -1,7 +1,23 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,700;1,900&display=swap');
+
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    color: black;
+}
+
+body {
+    background-color: #282828;
+    background-size: cover;
+    height: 100%;
 }
 
 h1:focus {
@@ -66,3 +82,30 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.page-heading {
+    text-align: center;
+}
+
+.object-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.object-entry {
+    display: grid;
+    grid-template-columns: 142px 1fr 45px;
+    border-radius: 20px 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+
+.create-form,
+.detail-form {
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+.form-layout {
+    padding: 1rem;
+}
