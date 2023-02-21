@@ -46,7 +46,7 @@ public class ItemEndpoint : IItemEndpoint
         }
     }
 
-    public async Task<ItemModel> GetByIdAsync(string Id)
+    public async Task<ItemModel> GetByIdAsync(int Id)
     {
         var data = new { Id };
 
