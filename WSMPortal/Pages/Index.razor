@@ -171,8 +171,8 @@
 
         if (string.IsNullOrWhiteSpace(searchText) == false)
         {
-            output = output.Where(t => t.Title.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) ||
-                t.Description.Contains(searchText, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            output = output.Where(t => t.Title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                t.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         if (selectedUser != "")
