@@ -1,0 +1,104 @@
+﻿@page "/items"
+@inject IItemEndpoint itemEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Items</h1>
+
+@code {
+    private List<ItemModel> items;
+    private bool isSortedByPrice = true;
+    private bool isSortedByQuantity = false;
+    private bool isSortedByArchived = false;
+    private string searchText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await itemEndpoint.GetAllAsync();
+    }
+
+    private void OpenDetails(ItemModel item)
+    {
+        navManager.NavigateTo($"/itemDetails/{item.Id}");
+    }
+
+    private void LoadUpdateItemPage(ItemModel item)
+    {
+        navManager.NavigateTo($"/updateItem/{item.Id}");
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
+        searchText = stringResults.Success ? stringResults.Value : "";
+
+        var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByPrice));
+        isSortedByPrice = boolResults.Success ? boolResults.Value : true;
+        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByArchived));
+        isSortedByArchived = boolResults.Success ? boolResults.Value : false;
+
+        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByQuantity));
+        isSortedByQuantity = boolResults.Success ? boolResults.Value : false;
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchText), searchText);
+        await sessionStorage.SetAsync(nameof(isSortedByPrice), isSortedByPrice);
+        await sessionStorage.SetAsync(nameof(isSortedByArchived), isSortedByArchived);
+        await sessionStorage.SetAsync(nameof(isSortedByQuantity), isSortedByQuantity);
+    }
+
+    private async Task FilterItems()
+    {
+        var output = await itemEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchText) == false)
+        {
+            output = output.Where(i => i.ModelName.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                i.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        if (isSortedByPrice)
+        {
+            output = output.OrderByDescending(i => i.Price).ToList();
+        }
+
+        if (isSortedByQuantity)
+        {
+            output = output.OrderByDescending(i => i.Quantity).ToList();
+        }
+
+        if (isSortedByArchived)
+        {
+            output = output.Where(i => i.Archived).ToList();
+        }
+        else
+        {
+            output = output.Where(i => i.Archived == false).ToList();
+        }
+
+
+        items = output;
+        await SaveFilterState();
+    }
+
+    private async Task OrderByPrice(bool isPrice)
+    {
+        isSortedByPrice = isPrice;
+        await FilterItems();
+    }
+
+    private async Task OrderByQuantity(bool isQuantity)
+    {
+        isSortedByQuantity = isQuantity;
+        await FilterItems();
+    }
+
+    private async Task OrderByArchived(bool isArchived)
+    {
+        isSortedByArchived = isArchived;
+        await FilterItems();    
+    }
+}
