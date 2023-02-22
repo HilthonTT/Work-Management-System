@@ -90,4 +90,5 @@ public class AuthStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(authState);
         await _localStorage.ClearAsync();
     }
+
 }

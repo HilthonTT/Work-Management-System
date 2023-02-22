@@ -1,0 +1,65 @@
+﻿@page "/login"
+@inject IAuthenticationService authService
+@inject NavigationManager navManager
+
+@if (string.IsNullOrWhiteSpace(authenticationErrorMessage) == false)
+{
+    <div class="alert alert-danger text-center">
+        @authenticationErrorMessage
+    </div>
+}
+
+<h1 class="page-heading text-uppercase mb-4">Login</h1>
+
+<div class="row justify-content-center create-form">
+    <div class="col-xl-8 col-lg-10 form-layout">
+        <div class="row">
+            <div class="col-11">
+                <EditForm Model="model" OnValidSubmit="ExecuteLogin">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="input-section">
+                        <label for="email" class="form-label fw-bold text-uppercase">Email Address</label>
+                        <div class="input-description">Enter your email address to gain access to your account.</div>
+                        <InputText id="email" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
+                    </div>
+                    <div class="input-section">
+                        <label for="password" class="form-label fw-bold text-uppercase">Password</label>
+                        <div class="input-description">Enter your password to gain access to your account.</div>
+                        <InputText id="password" class="form-control" type="password" @bind-Value="model.Password" placeholder="Password" />
+                    </div>
+                    <div class="center-children">
+                        <button class="btn btn-outline-success btn-login btn-lg text-uppercase" type="submit">Login</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private AuthenticationUserModel model = new();
+
+    private string authenticationErrorMessage = "";
+
+    private async Task ExecuteLogin()
+    {
+        authenticationErrorMessage = "";
+
+        AuthenticatedUserModel result = await authService.Login(model);
+
+        if (result is not null)
+        {
+            navManager.NavigateTo("/");
+        }
+        else
+        {
+            authenticationErrorMessage = "There was error when trying to login.";
+        }
+    }
+
+    private void OpenRegister()
+    {
+        navManager.NavigateTo("/");
+    }
+}

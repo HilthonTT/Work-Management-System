@@ -27,3 +27,10 @@ that lead you to their own update page.
 *Add quantity field for machine and part tables.
 *Add the GetById Stored Procdures
 *Remove unnecessary Stored Procedures
+
+
+
+
+-- Global --
+
+Add a report system (People report what they did on that day.)

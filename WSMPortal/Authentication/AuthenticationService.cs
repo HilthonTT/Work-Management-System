@@ -1,8 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using WSMPortal.Models;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using WSMPortal.Models;
 
 namespace WSMPortal.Authentication;
 
@@ -12,7 +12,7 @@ public class AuthenticationService : IAuthenticationService
     private readonly AuthenticationStateProvider _authStateProvider;
     private readonly ILocalStorageService _localStorage;
     private readonly IConfiguration _config;
-    private string _authTokenStorageKey;
+    private string authTokenStorageKey;
 
     public AuthenticationService(HttpClient client,
                               AuthenticationStateProvider authStateProvider,
@@ -23,7 +23,7 @@ public class AuthenticationService : IAuthenticationService
         _authStateProvider = authStateProvider;
         _localStorage = localStorage;
         _config = config;
-        _authTokenStorageKey = _config["authTokenStorageKey"];
+        authTokenStorageKey = _config["authTokenStorageKey"];
     }
 
     public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
@@ -47,7 +47,7 @@ public class AuthenticationService : IAuthenticationService
         var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(authContent,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        await _localStorage.SetItemAsync(_authTokenStorageKey, result.Access_Token);
+        await _localStorage.SetItemAsync(authTokenStorageKey, result.Access_Token);
 
         await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Access_Token);
 
@@ -56,7 +56,7 @@ public class AuthenticationService : IAuthenticationService
         return result;
     }
 
-    public async Task LogOut()
+    public async Task Logout()
     {
         await ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
     }

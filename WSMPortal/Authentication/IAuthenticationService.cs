@@ -5,6 +5,6 @@ namespace WSMPortal.Authentication
     public interface IAuthenticationService
     {
         Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication);
-        Task LogOut();
+        Task Logout();
     }
 }

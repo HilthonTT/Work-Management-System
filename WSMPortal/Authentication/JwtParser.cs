@@ -47,7 +47,7 @@ public static class JwtParser
 
     private static byte[] ParseBase64WithoutPadding(string base64)
     {
-        switch (base64.Length)
+        switch (base64.Length % 4)
         {
             case 2:
                 base64 += "==";

@@ -1,0 +1,303 @@
+﻿@page "/"
+@inject ITaskEndpoint taskEndpoint
+@inject IDepartmentEndpoint departmentEndpoint
+@inject ILoggedInUserModel loggedInUser
+@inject NavigationManager navManager 
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">My Tasks</h1>
+<div class="report-container">
+    <button @onclick="LoadCreateReportPage" class="btn btn-outline-dark text-uppercase btn-lg">Send a report</button>
+</div>
+
+<div class="row">
+    <div class="col-md-2 mt-2 text-uppercase fw-bold">@tasks?.Count Tasks</div>
+    <div class="col-md-4 col-xl-5 btn-group">
+        <button class="btn @SortedByNewClass(true) mx-1" @onclick="(() => OrderByNew(true))">New</button>
+        <button class="btn @SortedByNewClass(false) mx-1" @onclick="(() => OrderByNew(false))">Old</button>
+        <button class="btn @SortedByArchived(true) mx-1" @onclick="(() => ShowArchives(true))">Archived</button>
+        <button class="btn @SortedByArchived(false) mx-1" @onclick="(() => ShowArchives(false))">Non Archived</button>
+        <button class="btn @SortedByDone(true) mx-1" @onclick="(() => OrderByIsDone(true))">Completed</button>
+        <button class="btn @SortedByDone(false) mx-1" @onclick="(() => OrderByIsDone(false))">Incompleted</button>
+    </div>
+    <div class="col-md-4 col-xl-3 input-search">
+        <input type="text" placeholder="Search"
+            aria-label="Search Box" class="form-control rounded-control"
+            @oninput="((txt) => OnSearchInput((string)txt.Value))"/>
+    </div>
+    <div class="col-12 d-block d-md-none">
+        @if (departments is not null )
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold ">Departments</span>
+                <div class="" @onclick="(() => OnDepartmentClick())">All</div>
+                @foreach (var d in departments)
+                {
+                    <div class="" @onclick="(() => OnDepartmentClick(d.Id))">
+                        @d.DepartmentName
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        @if (tasks is not null && departments is not null)
+        {
+            <Virtualize Items="tasks" Context="t" OverscanCount="10">
+                <div class="row form-layout mt-4 tasks-background">
+                    <div class="col-12">
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Title</div>
+                            <div class="text-center">@t.Title</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                           <div class="text-center fw-bold text-uppercase">Description</div>
+                           <div class="text-center">@t.Description</div>
+                        </div>
+                        <div class="form-layout">
+                            <div class="text-center fw-bold text-uppercase">Department</div>
+                            <div class="text-center">@GetDepartmentName(t)</div>
+                        </div>
+                    </div>                  
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
+        @if (departments is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Departments</span>
+                <div class="@GetSelectedDepartment()" @onclick="(() => OnDepartmentClick())">All</div>
+                @foreach (var d in departments)
+                {
+                    <div class="@GetSelectedDepartment(d.Id)" @onclick="(() => OnDepartmentClick(d.Id))">@d.DepartmentName</div>
+                }
+            </div>
+        }
+        <div class="departments">
+            <span class="text-uppercase fw-bold">Filter By My Name</span>
+            <div class="@GetSelectedUser()" @onclick="(() => OnUserClick())">All</div>
+            <div class="@GetSelectedUser(loggedInUser.Id)" @onclick="(() => OnUserClick(loggedInUser.Id))">@loggedInUser.FirstName @loggedInUser.LastName</div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<TaskModel> tasks;
+    private List<DepartmentModel> departments;
+    private bool isSortedByNew = true;
+    private bool isSortedByIsDone = false;
+    private bool isSortedByArchived = false;
+    private int selectedDepartment = 0;
+    private string selectedUser = "";
+    private string searchText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        tasks = await taskEndpoint.GetAllAsync();
+        tasks = tasks.Where(x => x.IsDone == false && x.DepartmentId == loggedInUser.DepartmentId).ToList();
+        departments = await departmentEndpoint.GetAllAsync();
+    }
+
+    private void LoadCreateReportPage()
+    {
+        navManager.NavigateTo("/createReport");
+    }
+
+    private void OpenDetails(TaskModel task)
+    {
+        navManager.NavigateTo($"/taskDetails/{task.Id}");
+    }
+
+    private void LoadUpdateTaskPage(TaskModel task)
+    {
+        navManager.NavigateTo($"/updateTask/{task.Id}");
+    }
+
+    private string GetDepartmentName(TaskModel task)
+    {
+        var selectedDepartment = departments.Where(x => x.Id == task.DepartmentId).FirstOrDefault();
+
+        if (selectedDepartment is not null)
+        {
+            return $"{selectedDepartment.DepartmentName} department";
+        }
+
+        return "No Department";
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
+        searchText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(selectedUser));
+        selectedUser = stringResults.Success ? stringResults.Value : "";
+
+        var intResults = await sessionStorage.GetAsync<int>(nameof(selectedDepartment));
+        selectedDepartment = intResults.Success? intResults.Value : 0;
+
+        var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
+        isSortedByNew = boolResults.Success ? boolResults.Value : true;
+        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByArchived));
+        isSortedByArchived = boolResults.Success ? boolResults.Value : false;
+        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByIsDone));
+        isSortedByIsDone = boolResults.Success ? boolResults.Value : false;
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchText), searchText);
+        await sessionStorage.SetAsync(nameof(selectedDepartment), selectedDepartment);
+        await sessionStorage.SetAsync(nameof(isSortedByNew), isSortedByNew);
+        await sessionStorage.SetAsync(nameof(isSortedByArchived), isSortedByArchived);
+        await sessionStorage.SetAsync(nameof(isSortedByIsDone), isSortedByIsDone);
+        await sessionStorage.SetAsync(nameof(selectedUser), selectedUser);
+    }
+
+    private async Task FilterTasks()
+    {
+        var output = await taskEndpoint.GetAllAsync();
+
+        if (selectedDepartment != 0)
+        {
+            output = output.Where(t => t.DepartmentId == selectedDepartment).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(searchText) == false)
+        {
+            output = output.Where(t => t.Title.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) ||
+                t.Description.Contains(searchText, StringComparison.CurrentCultureIgnoreCase)).ToList();
+        }
+
+        if (selectedUser != "")
+        {
+            output = output.Where(t => t.UserId == loggedInUser.Id).ToList();
+        }
+
+        if (isSortedByIsDone)
+        {
+            output = output.Where(t => t.IsDone).ToList();
+        }
+        else
+        {
+            output = output.Where(t => t.IsDone == false).ToList();
+        }
+
+        if (isSortedByNew)
+        {
+            output = output.OrderByDescending(t => t.DateCreated).ToList();
+        }
+        else
+        {
+            output = output.OrderByDescending(t => t.DateDue).ThenByDescending(t => t.DateCreated).ToList();
+        }
+
+        if (isSortedByArchived)
+        {
+            output = output.Where(x => x.Archived).ToList();
+        }
+        else
+        {
+            output = output.Where(x => x.Archived == false).ToList();
+        }
+
+        tasks = output;
+        await SaveFilterState();
+    }
+
+    private async Task OrderByNew(bool isNew)
+    {
+        isSortedByNew = isNew;
+        await FilterTasks();
+    }
+
+    private async Task OnSearchInput(string searchInput)
+    {
+        searchText = searchInput;
+        await FilterTasks();
+    }
+
+    private async Task OnDepartmentClick(int departmentId = 0)
+    {
+        selectedDepartment = departmentId;
+        await FilterTasks();
+    }
+
+    private async Task OnUserClick(string userId = "")
+    {
+        selectedUser = userId;
+        await FilterTasks();
+    }
+
+    private async Task OrderByIsDone(bool isDone)
+    {
+        isSortedByIsDone = isDone;
+        await FilterTasks();
+    }
+
+    private async Task ShowArchives(bool showArchived)
+    {
+        isSortedByArchived = showArchived;
+        await FilterTasks();
+    }
+
+    private string GetSelectedDepartment(int department = 0)
+    {
+        if (department == selectedDepartment)
+        {
+            return "fw-bold";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string GetSelectedUser(string user = "")
+    {
+        if (user == selectedUser)
+        {
+            return "fw-bold";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string SortedByNewClass(bool isNew)
+    {
+        if (isNew == isSortedByNew)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+
+    private string SortedByArchived(bool isArchived)
+    {
+        if (isArchived == isSortedByArchived)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+
+    private string SortedByDone(bool isDone)
+    {
+        if (isDone == isSortedByIsDone)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+}

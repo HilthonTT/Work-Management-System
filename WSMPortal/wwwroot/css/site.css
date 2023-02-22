@@ -1,23 +1,8 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,700;1,900&display=swap');
-
 
 html, body {
-    font-family: 'Roboto', sans-serif;
-    font-size: 20px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    color: black;
-}
-
-body {
-    background-color: #282828;
-    background-size: cover;
-    height: 100%;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 18px;
 }
 
 h1:focus {
@@ -83,21 +68,47 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
+
 .page-heading {
     text-align: center;
 }
 
-.object-container {
+.form-layout {
+    border-style: solid;
+    border-color: black;
+    border-radius: 15px;
+    padding: 2rem;
+}
+    .form-layout a {
+        font-weight: 700;
+        color: #39BAD8;
+    }
+        .form-layout a:hover {
+            font-weight: 700;
+            color: #39BAD8;
+            text-decoration: underline;
+        }
+
+.close-button-section {
     display: flex;
-    justify-content: center;
-    margin-bottom: 3rem;
+    justify-content: flex-end;
 }
 
-.object-entry {
-    display: grid;
-    grid-template-columns: 142px 1fr 45px;
-    border-radius: 20px 0;
-    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+.input-section {
+    margin-bottom: 2rem;
+}
+
+.input-description {
+    margin-bottom: 0.5rem;
+}
+
+.center-children {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-login {
+    margin-left: 4.6rem;
 }
 
 .create-form,
@@ -106,6 +117,95 @@ a, .btn-link {
     margin-bottom: 1rem;
 }
 
-.form-layout {
+.report-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.report-btn {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: black;
+    color: white;
+    border-color: black;
+    border-radius: 10px;
+    border-width: 3px;
+}
+
+.btn-outline-light:hover {
+    color: #FFFFFF;
+    background-color: #393939;
+    border-color: #393939;
+    border-width: 3px;
+}
+
+.rounded-control {
+    border-width: 3px;
+    border-radius: 10px;
+}
+
+.departments {
+    margin: 1rem;
+    background-color: #393939;
+    border-radius: 10px;
     padding: 1rem;
+    color: #FFFFFF;
+}
+    .departments div {
+        margin-top: 1rem;
+    }
+        .departments div:hover {
+            cursor: pointer;
+        }
+
+.selected-department{
+    font-weight: 700;
+}
+
+.task-entry {
+    display: grid;
+    grid-template-columns: 142px 1fr 45px;
+    border-radius: 20px;
+    margin: 20px 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+
+.task-entry-text {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    padding-left: 20px;
+    background-color: #FFFFFF;
+}
+
+.task-entry-text-title {
+    flex-grow: 1;
+    padding-top: 10px;
+}
+
+.task-entry-text-department {
+    text-transform: uppercase;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+}
+
+.task-entry-bottom {
+    display: flex;
+}
+
+.task-department {
+    background-color: #393939;
+    padding: 10px;
+}
+
+.tasks-background {
+    background-color: lightgray;
+}
+
+.input-search {
+    margin-left: 210px;
 }

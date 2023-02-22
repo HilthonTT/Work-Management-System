@@ -1,0 +1,25 @@
+﻿@inject NavigationManager navManager
+
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10 form-layout">
+        <div class="row">
+            <div class="col-11">
+                <div class="fw-bold mb-2 fs-5">Authorization Required</div>
+                <p>
+                    You aren't authorized to view this section. You either aren't logged in
+                    or have the permission to view this page. Please contact us if you think this is a mistake.
+                </p>
+            </div>
+            <div class="col-1 close-button-section">
+                <button class="btn btn-close" @onclick="ClosePage"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+}

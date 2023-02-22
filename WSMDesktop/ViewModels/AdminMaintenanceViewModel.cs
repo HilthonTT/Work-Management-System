@@ -368,7 +368,7 @@ public class AdminMaintenanceViewModel : Screen
         {
             TaskModel newTask = new()
             {
-                UserId = SelectedUser.Id,
+                UserId = SelectedUser?.Id,
                 DepartmentId = SelectedDepartment?.Id,
                 Title = Title,
                 Description = TaskDescription,
