@@ -1,0 +1,65 @@
+﻿@page "/ItemDetails/{Id:int}"
+@inject IItemEndpoint itemEndpoint
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Item Details</h1>
+
+<div class="row justify-content-center detail-form">
+    <div class="col-md-12 col-xl-12">
+        @if (item is not null)
+        {
+            <div class="row form-layout mt-4 tasks-background">
+                <div class="col-11">
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Model Name</div>
+                        <div class="text-center">@item.ModelName</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Description</div>
+                        <div class="text-center">@item.Description</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Quantity</div>
+                        <div class="text-center">@item.Quantity</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Price</div>
+                        <div class="text-center">@item.Price€</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">European Article Number</div>
+                        <div class="text-center european-Article-Number-font">@EanValue()</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ItemModel item;
+
+    protected override async Task OnInitializedAsync()
+    {
+        item = await itemEndpoint.GetByIdAsync(Id);
+    }
+
+    private string EanValue()
+    {
+        if (item.EAN is null || string.IsNullOrWhiteSpace(item.EAN.ToString()))
+        {
+            return "404";
+        }
+
+        return item.EAN.ToString();
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+}

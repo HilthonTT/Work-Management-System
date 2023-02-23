@@ -1,0 +1,97 @@
+﻿@page "/TaskDetails/{Id:int}"
+@inject NavigationManager navManager
+@inject IDepartmentEndpoint departmentEndpoint
+@inject ILoggedInUserModel loggedInUser
+@inject ITaskEndpoint taskEndpoint
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Task Details</h1>
+
+<div class="row justify-content-center detail-form">
+    <div class="col-md-12 col-xl-12">
+        @if (task is not null)
+        {
+            <div class="row form-layout mt-4 tasks-background">
+                <div class="col-11">
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Title</div>
+                        <div class="text-center">@task.Title</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Description</div>
+                        <div class="text-center">@task.Description</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Percentage Done</div>
+                        <div class="text-center">@task.PercentageDone</div>
+                        <div class="row mt-2">
+                            @if (CanAccessModifyPage())
+                            {
+                                <button class="btn btn-danger" @onclick="LoadModifyPercentagePage">Modify Percentage</button>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Department Assigned</div>
+                        <div class="text-center">@GetDepartmentName()</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Date Dued</div>
+                        <div class="text-center">@task.DateDue.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Date Assigned</div>
+                        <div class="text-center">@task.DateCreated.ToString("dd/MM/yyyy")</div>
+                    </div> 
+                </div>
+                <div class="col-1 close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private TaskModel task;
+    private DepartmentModel department;
+
+    protected override async Task OnInitializedAsync()
+    {
+        task = await taskEndpoint.GetTaskByIdAsync(Id);
+        department = await departmentEndpoint.GetByIdAsync(task.Id);
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void LoadModifyPercentagePage()
+    {
+        navManager.NavigateTo($"/modifyPercentage/{Id}");
+    }
+
+    private string GetDepartmentName()
+    {
+        if (department is not null)
+        {
+            return $"{department.DepartmentName} Was Assigned";
+        }
+
+        return "No Department Assigned";
+    }
+
+    private bool CanAccessModifyPage()
+    {
+        if (loggedInUser.DepartmentId == task.DepartmentId || loggedInUser.Id == task.UserId)
+        {
+            return true;
+        }
+
+        return false;
+    }
+}
