@@ -48,7 +48,7 @@
         @if (tasks is not null && departments is not null)
         {
             <Virtualize Items="tasks" Context="t" OverscanCount="10">
-                <div class="row form-layout mt-4 tasks-background">
+                <div class="row form-layout mt-4 tasks-background" @onclick="(() => OpenDetails(t))">
                     <div class="col-12">
                         <div class="form-layout mb-2">
                             <div class="text-center fw-bold text-uppercase">Title</div>
@@ -105,6 +105,16 @@
         departments = await departmentEndpoint.GetAllAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterTasks();
+            StateHasChanged();
+        }
+    }
+
     private void LoadCreateReportPage()
     {
         navManager.NavigateTo("/createReport");
@@ -140,7 +150,7 @@
         selectedUser = stringResults.Success ? stringResults.Value : "";
 
         var intResults = await sessionStorage.GetAsync<int>(nameof(selectedDepartment));
-        selectedDepartment = intResults.Success? intResults.Value : 0;
+        selectedDepartment = intResults.Success ? intResults.Value : 0;
 
         var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
         isSortedByNew = boolResults.Success ? boolResults.Value : true;
