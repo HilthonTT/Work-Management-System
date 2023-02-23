@@ -6,16 +6,79 @@
 
 <h1 class="page-heading text-uppercase mb-4">Items</h1>
 
+<div class="row">
+    <div class="col-md-2 mt-2 text-uppercase fw-bold">@items?.Count Items</div>
+    <div class="col-md-4 col-xl-5 btn-group">
+        <button class="btn @SortedByPrice(true)" @onclick="(() => OrderByPrice(true))">Price</button>
+        <button class="btn @SortedByPrice(false)" @onclick="(() => OrderByPrice(false))">Quantity</button>
+    </div>
+    <div class="col-md-4 col-xl-3 input-search">
+        <input type="text" placeholder="Search" 
+            aria-label="Search Box" 
+            class="form-control rounded-control"
+            @oninput="((txt) => OnSearchInput((string)txt.Value))" />
+    </div>
+    <div class="col-12 d-block d-md-none">
+        <div class="departments">
+            <span class="text-uppercase fw-bold">Archived</span>
+            <div class="@SortedByArchived(true)" @onclick="(() => OrderByArchived(true))">Archived</div>
+            <div class="@SortedByArchived(false)" @onclick="(() => OrderByArchived(false))">Non Archived</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        @if (items is not null)
+        {
+            <Virtualize Items="items" Context="i" OverscanCount="10">
+                <div class="row form-layout mt-4 items-background" @onclick="(() => OpenDetails(i))">
+                    <div class="col-12">
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Model Name</div>
+                            <div class="text-center fw-bold">@i.ModelName</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Quantity</div>
+                            <div class="text-center fw-bold">@i.Quantity</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Price</div>
+                            <div class="text-center fw-bold">@i.Price€</div>
+                        </div>
+                    </div>
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
+        <div class="departments">
+            <span class="text-uppercase fw-bold">Archived</span>
+            <div class="@SortedByArchived(true)" @onclick="(() => OrderByArchived(true))">Archived</div>
+            <div class="@SortedByArchived(false)" @onclick="(() => OrderByArchived(false))">Non Archived</div>
+        </div>
+    </div>
+</div>
+
 @code {
     private List<ItemModel> items;
     private bool isSortedByPrice = true;
-    private bool isSortedByQuantity = false;
     private bool isSortedByArchived = false;
     private string searchText = "";
 
     protected override async Task OnInitializedAsync()
     {
         items = await itemEndpoint.GetAllAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterItems();
+            StateHasChanged();
+        }
     }
 
     private void OpenDetails(ItemModel item)
@@ -37,9 +100,6 @@
         isSortedByPrice = boolResults.Success ? boolResults.Value : true;
         boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByArchived));
         isSortedByArchived = boolResults.Success ? boolResults.Value : false;
-
-        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByQuantity));
-        isSortedByQuantity = boolResults.Success ? boolResults.Value : false;
     }
 
     private async Task SaveFilterState()
@@ -47,7 +107,6 @@
         await sessionStorage.SetAsync(nameof(searchText), searchText);
         await sessionStorage.SetAsync(nameof(isSortedByPrice), isSortedByPrice);
         await sessionStorage.SetAsync(nameof(isSortedByArchived), isSortedByArchived);
-        await sessionStorage.SetAsync(nameof(isSortedByQuantity), isSortedByQuantity);
     }
 
     private async Task FilterItems()
@@ -64,8 +123,7 @@
         {
             output = output.OrderByDescending(i => i.Price).ToList();
         }
-
-        if (isSortedByQuantity)
+        else
         {
             output = output.OrderByDescending(i => i.Quantity).ToList();
         }
@@ -90,15 +148,35 @@
         await FilterItems();
     }
 
-    private async Task OrderByQuantity(bool isQuantity)
-    {
-        isSortedByQuantity = isQuantity;
-        await FilterItems();
-    }
-
     private async Task OrderByArchived(bool isArchived)
     {
         isSortedByArchived = isArchived;
         await FilterItems();    
+    }
+
+    private async Task OnSearchInput(string searchInput)
+    {
+        searchText = searchInput;
+        await FilterItems();
+    }
+
+    private string SortedByPrice(bool isPrice)
+    {
+        if (isPrice == isSortedByPrice)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+
+    private string SortedByArchived(bool isArchived)
+    {
+        if (isArchived == isSortedByArchived)
+        {
+            return "fw-bold";
+        }
+
+        return "";
     }
 }
