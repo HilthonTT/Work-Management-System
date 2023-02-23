@@ -239,3 +239,41 @@ a, .btn-link {
     font-family: 'Libre Barcode EAN13 Text', cursive;
     font-size: 150px;
 }
+
+.radio-item-group input[type="radio"] {
+    display: none;
+}
+
+.radio-item-group label {
+    border-color: #121212;
+    border-width: 1px;
+    padding: 0.3rem 1.5rem;
+    border-radius: 10px;
+    width: 150%;
+    border-style: solid;
+    cursor: pointer;
+}
+
+.radio-item-group input[type="radio"]:checked + label {
+    background-color: #121212;
+    color: #FFFFFF;
+    width: 150%;
+    border: 1px #121212 solid;
+}
+
+.radio-item-group {
+    margin: 0.5rem;
+}
+
+.create-task-department{
+    margin-right: 2px;
+}
+
+.create-task-user {
+    margin-left: 2px;
+}
+
+.create-task-input-search {
+    width: 150px;
+    background-color: red;
+}
