@@ -4,7 +4,7 @@
     [UserId] NVARCHAR(128) NULL, 
     [DepartmentId] INT NULL, 
     [Title] NVARCHAR(50) NOT NULL, 
-    [Description] NVARCHAR(255) NOT NULL, 
+    [Description] NVARCHAR(500) NOT NULL, 
     [DateDue] DATETIME2 NOT NULL, 
     [PercentageDone] INT NOT NULL DEFAULT 0, 
     [IsDone] BIT NOT NULL DEFAULT 0, 

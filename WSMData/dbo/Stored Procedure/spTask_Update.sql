@@ -3,7 +3,7 @@
 	@UserId nvarchar(128), 
 	@DepartmentId int, 
 	@Title nvarchar(50), 
-	@Description nvarchar(MAX), 
+	@Description nvarchar(500), 
 	@DateDue datetime2, 
 	@PercentageDone int, 
 	@IsDone bit,

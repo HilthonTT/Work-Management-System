@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spItem_Insert]
 	@Id int output,
 	@ModelName nvarchar(128),
-	@Description nvarchar(256),
+	@Description nvarchar(500),
 	@EAN decimal,
 	@Quantity int,
 	@Price money,

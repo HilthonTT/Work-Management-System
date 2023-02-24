@@ -5,7 +5,7 @@
 	@Address nvarchar(500),
 	@ChairPersonId nvarchar(128),
 	@PhoneNumber nvarchar(50),
-	@Description nvarchar(255),
+	@Description nvarchar(500),
 	@CreatedDate datetime2,
 	@Archived bit
 AS

@@ -2,7 +2,7 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [ModelName] NVARCHAR(128) NOT NULL, 
-    [Description] NVARCHAR(256) NOT NULL, 
+    [Description] NVARCHAR(500) NOT NULL, 
     [Quantity] INT NOT NULL, 
     [Price] DECIMAL NOT NULL , 
     [Location] NVARCHAR(128) NOT NULL, 

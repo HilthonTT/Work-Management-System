@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spItem_Update]
 	@Id int,
 	@ModelName nvarchar(128),
-	@Description nvarchar(256),
+	@Description nvarchar(500),
 	@Quantity int,
 	@Price money,
 	@Location nvarchar(128),

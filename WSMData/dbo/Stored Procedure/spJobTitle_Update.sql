@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spJobTitle_Update]
 	@Id int,
 	@JobName nvarchar(100),
-	@Description nvarchar(MAX),
+	@Description nvarchar(500),
 	@DepartmentId int
 
 AS
