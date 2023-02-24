@@ -70,4 +70,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ModelName" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="10e769ec-2727-4412-9167-99d68c8042c8" ChangeDateTime="02/24/2023 12:16:44">
+    <Property Name="ElementName" Value="[dbo].[Item].[InteralSupplier]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Item]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="InternalSupplier" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3a083cfe-ed41-42fb-af48-04b87588a3bf" ChangeDateTime="02/24/2023 12:18:32">
+    <Property Name="ElementName" Value="[dbo].[Item].[InternalSupplier]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Item]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="InternalSupplierPerson" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f3e6b156-8540-4f6d-98fd-e0f7b93c9b47" ChangeDateTime="02/24/2023 12:18:58">
+    <Property Name="ElementName" Value="[dbo].[Item].[InternalSupplierPerson]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Item]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="InternalSupplierPersonId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a8e2cbc0-d0ae-437f-80ea-66934330b0bf" ChangeDateTime="02/24/2023 12:19:01">
+    <Property Name="ElementName" Value="[dbo].[Item].[InternalSupplierCompany]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Item]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="InternalSupplierCompanyId" />
+  </Operation>
 </Operations>

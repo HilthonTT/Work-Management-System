@@ -4,6 +4,9 @@
 	@Description nvarchar(256),
 	@Quantity int,
 	@Price money,
+	@Location nvarchar(128),
+	@InternalSupplierPersonId nvarchar(128),
+	@InternalSupplierCompanyId int,
 	@EAN decimal,
 	@Archived bit
 AS
@@ -16,6 +19,9 @@ begin
 	Quantity = @Quantity,
 	Price = @Price,
 	EAN = @EAN,
+	[Location] = @Location,
+	InternalSupplierPersonId = @InternalSupplierPersonId,
+	InternalSupplierCompanyId = @InternalSupplierCompanyId,
 	Archived = @Archived
 
 	where Id = @Id;

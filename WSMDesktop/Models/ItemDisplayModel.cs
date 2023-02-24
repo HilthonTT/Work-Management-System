@@ -57,6 +57,43 @@ public class ItemDisplayModel : INotifyPropertyChanged
         }
     }
 
+    private string _location;
+
+    public string Location
+    {
+        get { return _location; }
+        set 
+        { 
+            _location = value; 
+            CallPropertyChanged(nameof(Location));
+        }
+    }
+
+    private string? _internalSupplierPersonId;
+
+    public string? InternalSupplierPersonId
+    {
+        get { return _internalSupplierPersonId; }
+        set 
+        { 
+            _internalSupplierPersonId = value; 
+            CallPropertyChanged(nameof(InternalSupplierPersonId));
+        }
+    }
+
+    private int? _internalSupplierCompanyId;
+
+    public int? InternalSupplierCompanyId
+    {
+        get { return _internalSupplierCompanyId; }
+        set 
+        { 
+            _internalSupplierCompanyId = value; 
+            CallPropertyChanged(nameof(InternalSupplierCompanyId));
+        }
+    }
+
+
     private decimal? _ean;
 
     public decimal? EAN
@@ -79,6 +116,7 @@ public class ItemDisplayModel : INotifyPropertyChanged
         { 
             _archived = value;
             CallPropertyChanged(nameof(Archived));
+            CallPropertyChanged(nameof(DisplayText));
         }
     }
 
@@ -87,7 +125,7 @@ public class ItemDisplayModel : INotifyPropertyChanged
     {
         get
         {
-            return $"{ModelName} - {Price}€";
+            return $"{ModelName} - {Price}€ - Archived: {Archived}";
         }
     }
 

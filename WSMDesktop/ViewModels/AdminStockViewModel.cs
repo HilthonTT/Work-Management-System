@@ -3,7 +3,6 @@ using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlTypes;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,17 +16,23 @@ namespace WSMDesktop.ViewModels;
 public class AdminStockViewModel : Screen
 {
     private readonly IItemEndpoint _itemEndpoint;
+    private readonly ICompanyEndpoint _companyEndpoint;
+    private readonly IUserEndpoint _userEndpoint;
     private readonly IMapper _mapper;
     private readonly IWindowManager _window;
     private readonly StatusViewModel _status;
     private bool _FilteredByArchived = false;
     
     public AdminStockViewModel(IItemEndpoint itemEndpoint,
+                               ICompanyEndpoint companyEndpoint,
+                               IUserEndpoint userEndpoint,
                                IMapper mapper,
                                IWindowManager window,
                                StatusViewModel status)
 	{
         _itemEndpoint = itemEndpoint;
+        _companyEndpoint = companyEndpoint;
+        _userEndpoint = userEndpoint;
         _mapper = mapper;
         _window = window;
         _status = status;
@@ -39,6 +44,8 @@ public class AdminStockViewModel : Screen
         try
         {
             await LoadAllItems();
+            await LoadAllUsers();
+            await LoadAllCompanies();
         }
         catch (Exception ex)
         {
@@ -62,14 +69,28 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public async Task LoadAllItems()
+    private async Task LoadAllItems()
     {
         var itemList = await _itemEndpoint.GetAllAdminAsync();
-        var items = _mapper.Map<List<ItemDisplayModel>>(itemList)
+        var items = _mapper.Map<List<ItemDisplayModel>>(itemList);
+
+        Items = new BindingList<ItemDisplayModel>(items);
+    }
+
+    private async Task LoadAllUsers()
+    {
+        var userList = await _userEndpoint.GetAllAsync();
+        Users = new BindingList<UserModel>(userList);
+    }
+
+    private async Task LoadAllCompanies()
+    {
+        var companyList = await _companyEndpoint.GetAllAsync();
+        var companies = _mapper.Map<List<CompanyDisplayModel>>(companyList)
             .Where(x => x.Archived == false)
             .ToList();
 
-        Items = new BindingList<ItemDisplayModel>(items);
+        Companies = new BindingList<CompanyDisplayModel>(companies);
     }
 
     public string FilterButtonColor
@@ -130,6 +151,9 @@ public class AdminStockViewModel : Screen
             {
                 ModelName = "";
                 Description = "";
+                SelectedUserName = "";
+                SelectedCompanyName = "";
+                Location = "";
                 Quantity = 0;
                 Price = 0;
                 EAN = 0;
@@ -138,7 +162,10 @@ public class AdminStockViewModel : Screen
             {
                 ModelName = value.ModelName;
                 Description = value.Description;
+                SelectedUserName = Users.Where(x => x.Id == value.InternalSupplierPersonId).FirstOrDefault()?.FullName != null ? Users.Where(x => x.Id == value.InternalSupplierPersonId).FirstOrDefault()?.FullName : "No Internal Supplier [Person]";
+                SelectedCompanyName = Companies.Where(x => x.Id == value.InternalSupplierCompanyId).FirstOrDefault()?.CompanyName != null ? Companies.Where(x => x.Id == value.InternalSupplierCompanyId).FirstOrDefault()?.CompanyName : "No Internal Supplier [Company]";
                 Quantity = value.Quantity;
+                Location = value.Location;
                 Price = value.Price;
                 EAN = value.EAN;
             }
@@ -148,6 +175,62 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => SubmitButtonColor);
             NotifyOfPropertyChange(() => CanArchive);
             NotifyOfPropertyChange(() => ArchivedButtonColor);
+        }
+    }
+
+    private BindingList<UserModel> _users;
+
+    public BindingList<UserModel> Users
+    {
+        get { return _users; }
+        set 
+        { 
+            _users = value;
+            NotifyOfPropertyChange(() => Users);
+        }
+    }
+
+    private UserModel _selectedUser;
+
+    public UserModel SelectedUser
+    {
+        get { return _selectedUser; }
+        set 
+        {
+            _selectedUser = value;
+            SelectedUserName = value?.FullName;
+            NotifyOfPropertyChange(() => SelectedUser);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+            NotifyOfPropertyChange(() => SelectedUserButtonColor);
+        }
+    }
+
+    private BindingList<CompanyDisplayModel> _companies;
+
+    public BindingList<CompanyDisplayModel> Companies
+    {
+        get { return _companies; }
+        set 
+        { 
+            _companies = value;
+            NotifyOfPropertyChange(() => Companies);
+        }
+    }
+
+    private CompanyDisplayModel _selectedCompany;
+
+    public CompanyDisplayModel SelectedCompany
+    {
+        get { return _selectedCompany; }
+        set 
+        { 
+            _selectedCompany = value;
+            SelectedCompanyName = value?.CompanyName;
+            NotifyOfPropertyChange(() => SelectedCompany);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+            NotifyOfPropertyChange(() => SelectedCompanyButtonColor);
         }
     }
 
@@ -164,7 +247,7 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    public async Task SearchItem()
+    private async Task SearchItem()
     {
         var itemList = await _itemEndpoint.GetAllAsync();
         var output = _mapper.Map<List<ItemDisplayModel>>(itemList);
@@ -189,6 +272,71 @@ public class AdminStockViewModel : Screen
         else
         {
             Items = new BindingList<ItemDisplayModel>(output);
+        }
+    }
+
+    private string _companySearchText;
+
+    public string CompanySearchText
+    {
+        get { return _companySearchText; }
+        set 
+        { 
+            _companySearchText = value; 
+            NotifyOfPropertyChange(() => CompanySearchText);
+            SearchCompany();
+        }
+    }
+
+
+    private async Task SearchCompany()
+    {
+        var companylist = await _companyEndpoint.GetAllAsync();
+        var output = _mapper.Map<List<CompanyDisplayModel>>(companylist.Where(x => x.Archived == false).ToList());
+
+        if (string.IsNullOrWhiteSpace(CompanySearchText) == false)
+        {
+            output = output.Where(x => x.CompanyName.Contains(CompanySearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                x.Description.Contains(CompanySearchText, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            Companies = new BindingList<CompanyDisplayModel>(output);
+        }
+        else
+        {
+            Companies = new BindingList<CompanyDisplayModel>(output);
+        }
+    }
+
+    private string _userSearchText;
+
+    public string UserSearchText
+    {
+        get { return _userSearchText; }
+        set 
+        {
+            _userSearchText = value;
+            NotifyOfPropertyChange(() => UserSearchText);
+            SearchUser();
+        }
+    }
+
+    private async Task SearchUser()
+    {
+        var output = await _userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(UserSearchText) == false)
+        {
+            output = output.Where(x => x.FirstName.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.LastName.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.EmailAddress.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.PhoneNumber.Contains(UserSearchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+            Users = new BindingList<UserModel>(output);
+        }
+        else
+        {
+            Users = new BindingList<UserModel>(output);
         }
     }
 
@@ -252,7 +400,22 @@ public class AdminStockViewModel : Screen
         }
     }
 
-    private decimal? _ean;
+    private string _location;
+
+    public string Location
+    {
+        get { return _location; }
+        set 
+        {
+            _location = value; 
+            NotifyOfPropertyChange(() => Location);
+            NotifyOfPropertyChange(() => LocationButtonColor);
+            NotifyOfPropertyChange(() => CanSubmit);
+            NotifyOfPropertyChange(() => SubmitButtonColor);
+        }
+    }
+
+    private decimal? _ean = 0;
 
     public decimal? EAN
     {
@@ -266,6 +429,32 @@ public class AdminStockViewModel : Screen
             NotifyOfPropertyChange(() => SubmitButtonColor);
         }
     }
+
+    private string _selectedUserName;
+
+    public string SelectedUserName
+    {
+        get { return _selectedUserName; }
+        set 
+        { 
+            _selectedUserName = value; 
+            NotifyOfPropertyChange(() => SelectedUserName);
+        }
+    }
+
+    private string _selectedCompanyName;
+
+    public string SelectedCompanyName
+    {
+        get { return _selectedCompanyName; }
+        set 
+        { 
+            _selectedCompanyName = value; 
+            NotifyOfPropertyChange(() => SelectedCompanyName);
+        }
+    }
+
+
 
     public string SelectedItemButtonColor
     {
@@ -332,11 +521,50 @@ public class AdminStockViewModel : Screen
         }
     }
 
+    public string LocationButtonColor
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Location) == false)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
     public string EANButtonColor
     {
         get
         {
             if (EAN >= 100_000_000_000 && EAN <= 999_999_999_999)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    public string SelectedUserButtonColor
+    {
+        get
+        {
+            if (SelectedUser is not null)
+            {
+                return "Green";
+            }
+
+            return "Red";
+        }
+    }
+
+    public string SelectedCompanyButtonColor
+    {
+        get
+        {
+            if (SelectedCompany is not null)
             {
                 return "Green";
             }
@@ -351,8 +579,14 @@ public class AdminStockViewModel : Screen
         {
             if (string.IsNullOrWhiteSpace(ModelName) == false &&
                 string.IsNullOrWhiteSpace(Description) == false &&
+                string.IsNullOrWhiteSpace(Location) == false &&
                 Quantity >= 0 && EAN >= 0)
             {
+                if (SelectedCompany is null && SelectedUser is null)
+                {
+                    return false;
+                }
+
                 return true;
             }
 
@@ -383,6 +617,9 @@ public class AdminStockViewModel : Screen
                 Description = Description,
                 Quantity = Quantity,
                 Price = Price,
+                InternalSupplierPersonId = SelectedUser?.Id,
+                InternalSupplierCompanyId = SelectedCompany?.Id,
+                Location = Location,
                 EAN = EAN,
                 Archived = false
             };
@@ -394,6 +631,9 @@ public class AdminStockViewModel : Screen
             ModelName = "";
             Description = "";
             Quantity = 0;
+            Location = "";
+            SelectedUser = null;
+            SelectedCompany = null;
             Price = 0;
             EAN = 0;
         }
@@ -405,6 +645,9 @@ public class AdminStockViewModel : Screen
                 ModelName = ModelName,
                 Description = Description,
                 Quantity = Quantity,
+                Location = Location,
+                InternalSupplierPersonId = SelectedUser?.Id,
+                InternalSupplierCompanyId = SelectedCompany?.Id,
                 Price = Price,
                 EAN = EAN
             };
@@ -413,10 +656,19 @@ public class AdminStockViewModel : Screen
             ModelName = "";
             Description = "";
             Quantity = 0;
+            Location = "";
+            SelectedUser = null;
+            SelectedCompany = null;
             Price = 0;
             EAN = 0;
 
             SelectedItem.ModelName = i.ModelName;
+            SelectedItem.Description = i.Description;
+            SelectedItem.Quantity = i.Quantity;
+            SelectedItem.Location = i.Location;
+            SelectedItem.InternalSupplierPersonId = i.InternalSupplierPersonId;
+            SelectedItem.InternalSupplierCompanyId = i.InternalSupplierCompanyId;
+            SelectedItem.EAN = i.EAN;
             SelectedItem.Price = i.Price;
         }
         
@@ -455,8 +707,10 @@ public class AdminStockViewModel : Screen
         var mappedItem = _mapper.Map<ItemModel>(SelectedItem);
         mappedItem.Archived = !mappedItem.Archived;
         SelectedItem.Archived = mappedItem.Archived;
-        
 
+        SelectedItem.Archived = mappedItem.Archived;
+
+        
         await _itemEndpoint.ArchiveItemAsync(mappedItem);
         NotifyOfPropertyChange(() => Items);
     }

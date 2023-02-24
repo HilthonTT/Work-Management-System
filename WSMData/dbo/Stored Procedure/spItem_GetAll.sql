@@ -3,7 +3,7 @@ AS
 begin
 	set nocount on;
 
-	select [Id], [ModelName], [Description], [Quantity], [Price], [EAN], [Archived]
+	select [Id], [ModelName], [Description], [Quantity], [Price], [Location], [InternalSupplierPersonId], [InternalSupplierCompanyId], [EAN], [Archived]
 	from dbo.Item
 
 	order by ModelName
