@@ -14,12 +14,12 @@
 <div class="row">
     <div class="col-md-2 mt-2 text-uppercase fw-bold">@tasks?.Count Tasks</div>
     <div class="col-md-4 col-xl-5 btn-group">
-        <button class="btn @SortedByNewClass(true) mx-1" @onclick="(() => OrderByNew(true))">New</button>
-        <button class="btn @SortedByNewClass(false) mx-1" @onclick="(() => OrderByNew(false))">Old</button>
-        <button class="btn @SortedByArchived(true) mx-1" @onclick="(() => ShowArchives(true))">Archived</button>
-        <button class="btn @SortedByArchived(false) mx-1" @onclick="(() => ShowArchives(false))">Non Archived</button>
-        <button class="btn @SortedByDone(true) mx-1" @onclick="(() => OrderByIsDone(true))">Completed</button>
-        <button class="btn @SortedByDone(false) mx-1" @onclick="(() => OrderByIsDone(false))">Incompleted</button>
+        <button class="btn @SortedByNewClass(true)" @onclick="(() => OrderByNew(true))">New</button>
+        <button class="btn @SortedByNewClass(false)" @onclick="(() => OrderByNew(false))">Old</button>
+        <button class="btn @SortedByArchived(true)" style="margin-left: 5px;" @onclick="(() => ShowArchives(true))">Archived</button>
+        <button class="btn @SortedByArchived(false)" @onclick="(() => ShowArchives(false))">Non Archived</button>
+        <button class="btn @SortedByDone(true)" style="margin-left: 5px;" @onclick="(() => OrderByIsDone(true))">Completed</button>
+        <button class="btn @SortedByDone(false)" @onclick="(() => OrderByIsDone(false))">Incompleted</button>
     </div>
     <div class="col-md-4 col-xl-3 input-search">
         <input type="text" placeholder="Search"
