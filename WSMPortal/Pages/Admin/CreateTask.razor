@@ -10,10 +10,8 @@
 <h1 class="page-heading text-uppercase mb-4">Make A Task</h1>
 
 <EditForm Model="task" OnValidSubmit="CreateTaskAsync">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
     <div class="row justify-content-center create-form">
-        <div class="col-xl-3 form-layout create-task-department">
+        <div class="col-xl-3 form-layout create-form-department-company">
             <div class="input-section">
             <label class="form-label fw-bold text-uppercase">Department</label>
             <div class="input-description">Choose one department to assign.</div>
@@ -38,29 +36,31 @@
         </div>
     </div>
     <div class="col-xl-5 col-lg-10 form-layout">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
         <div class="close-button-section">
             <button class="btn btn-close" @onclick="ClosePage"></button>
         </div>
-            <div class="input-section">
-                <label class="form-label fw-bold text-uppercase" for="task-title">Title</label>
-                <div class="input-description">Focus on the general idea of the task in question.</div>
-                <InputText type="text" class="form-control" id="task-title" @bind-Value="task.Title" />
-            </div>
-            <div class="input-section">
-                <label class="form-label fw-bold text-uppercase" for="task-description">Description</label>
-                <div class="input-description">Focus on detailing the information about the task.</div>
-                <InputTextArea type="text" class="form-control" id="task-description" @bind-Value="task.Description" />
-            </div>
-            <div class="input-section">
-                <label class="form-label fw-bold text-uppercase" for="task-date-due">Date Due</label>
-                <div class="input-description">Focus on the date that you want the task to be done.</div>
-                <InputDate class="form-control" id="task-date-due" @bind-Value="task.DateDue" />
-            </div>
-            <div class="center-children">
-                <button class="btn btn-success btn-lg text-uppercase" type="submit">Assign Task</button>
-            </div>
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase" for="task-title">Title</label>
+            <div class="input-description">Focus on the general idea of the task in question.</div>
+            <InputText type="text" class="form-control" id="task-title" @bind-Value="task.Title" />
+        </div>
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase" for="task-description">Description</label>
+            <div class="input-description">Focus on detailing the information about the task.</div>
+            <InputTextArea type="text" class="form-control" id="task-description" @bind-Value="task.Description" />
+        </div>
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase" for="task-date-due">Date Due</label>
+            <div class="input-description">Focus on the date that you want the task to be done.</div>
+            <InputDate class="form-control" id="task-date-due" @bind-Value="task.DateDue" />
+        </div>
+        <div class="center-children">
+            <button class="btn btn-success btn-lg text-uppercase" type="submit">Assign Task</button>
+        </div>
     </div>
-    <div class="col-xl-3 form-layout create-task-user">
+    <div class="col-xl-3 form-layout create-form-user">
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase">User</label>
             <div class="input-description">Choose one user to assign.</div>

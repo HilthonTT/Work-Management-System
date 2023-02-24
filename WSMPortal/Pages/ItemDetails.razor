@@ -1,5 +1,7 @@
 ﻿@page "/ItemDetails/{Id:int}"
 @inject IItemEndpoint itemEndpoint
+@inject IUserEndpoint userEndpoint
+@inject ICompanyEndpoint companyEndpoint
 @inject NavigationManager navManager
 @attribute [Authorize]
 
@@ -7,7 +9,7 @@
 
 <div class="row justify-content-center detail-form">
     <div class="col-md-12 col-xl-12">
-        @if (item is not null)
+        @if (item is not null && users is not null && companies is not null)
         {
             <div class="row form-layout mt-4 tasks-background">
                 <div class="col-11">
@@ -27,6 +29,18 @@
                         <div class="text-center fw-bold text-uppercase">Price</div>
                         <div class="text-center">@item.Price€</div>
                     </div>
+                     <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Internal Supplier [Person]</div>
+                        <div class="text-center">@GetInternalSupplierUserName()</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Internal Supplier [Company]</div>
+                        <div class="text-center">@GetInternalSupplierCompany()</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Location</div>
+                        <div class="text-center">@item.Location</div>
+                    </div>
                     <div class="form-layout mb-2">
                         <div class="text-center fw-bold text-uppercase">European Article Number</div>
                         <div class="text-center european-Article-Number-font">@EanValue()</div>
@@ -42,10 +56,14 @@
     public int Id { get; set; }
 
     private ItemModel item;
+    private List<UserModel> users;
+    private List<CompanyModel> companies;
 
     protected override async Task OnInitializedAsync()
     {
         item = await itemEndpoint.GetByIdAsync(Id);
+        users = await userEndpoint.GetAllAsync();
+        companies = await companyEndpoint.GetAllAsync();
     }
 
     private string EanValue()
@@ -56,6 +74,30 @@
         }
 
         return item.EAN.ToString();
+    }
+
+    private string GetInternalSupplierUserName()
+    {
+        var user = users.Where(u => u.Id == item.InternalSupplierPersonId).FirstOrDefault();
+
+        if (user is not null)
+        {
+            return $"{user.FullName}";
+        }
+
+        return "No Supplier [Person]";
+    }
+
+    private string GetInternalSupplierCompany()
+    {
+        var company = companies.Where(c => c.Id == item.InternalSupplierCompanyId).FirstOrDefault();
+
+        if (company is not null)
+        {
+            return $"{company.CompanyName}";
+        }
+
+        return "No Supplier [Company]";
     }
 
     private void ClosePage()

@@ -21,8 +21,9 @@
     <div class="col-12 d-block d-md-none">
         <div class="departments">
             <span class="text-uppercase fw-bold">Archived</span>
-            <div class="@SortedByArchived(true)" @onclick="(() => OrderByArchived(true))">Archived</div>
-            <div class="@SortedByArchived(false)" @onclick="(() => OrderByArchived(false))">Non Archived</div>
+            <div class="@SortedByArchived()" @onclick="(() => OrderByArchived())">All</div>
+            <div class="@SortedByArchived("Archived")" @onclick="@(() => OrderByArchived("Archived"))">Archived</div>
+            <div class="@SortedByArchived("Non-Archived")" @onclick="@(() => OrderByArchived("Non-Archived"))">Non Archived</div>
         </div>
     </div>
 </div>
@@ -54,8 +55,9 @@
     <div class="col-md-4 col-xl-3 d-none d-md-block">
         <div class="departments">
             <span class="text-uppercase fw-bold">Archived</span>
-            <div class="@SortedByArchived(true)" @onclick="(() => OrderByArchived(true))">Archived</div>
-            <div class="@SortedByArchived(false)" @onclick="(() => OrderByArchived(false))">Non Archived</div>
+            <div class="@SortedByArchived()" @onclick="(() => OrderByArchived())">All</div>
+            <div class="@SortedByArchived("Archived")" @onclick="@(() => OrderByArchived("Archived"))">Archived</div>
+            <div class="@SortedByArchived("Non-Archived")" @onclick="@(() => OrderByArchived("Non-Archived"))">Non Archived</div>
         </div>
     </div>
 </div>
@@ -63,7 +65,7 @@
 @code {
     private List<ItemModel> items;
     private bool isSortedByPrice = true;
-    private bool isSortedByArchived = false;
+    private string selectedFilter = "All";
     private string searchText = "";
 
     protected override async Task OnInitializedAsync()
@@ -95,18 +97,18 @@
     {
         var stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
         searchText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(selectedFilter));
+        selectedFilter = stringResults.Success ? stringResults.Value : "Non-Archived";
 
         var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByPrice));
         isSortedByPrice = boolResults.Success ? boolResults.Value : true;
-        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByArchived));
-        isSortedByArchived = boolResults.Success ? boolResults.Value : false;
     }
 
     private async Task SaveFilterState()
     {
         await sessionStorage.SetAsync(nameof(searchText), searchText);
         await sessionStorage.SetAsync(nameof(isSortedByPrice), isSortedByPrice);
-        await sessionStorage.SetAsync(nameof(isSortedByArchived), isSortedByArchived);
+        await sessionStorage.SetAsync(nameof(selectedFilter), selectedFilter);
     }
 
     private async Task FilterItems()
@@ -128,15 +130,14 @@
             output = output.OrderByDescending(i => i.Quantity).ToList();
         }
 
-        if (isSortedByArchived)
+        if (selectedFilter == "Archived")
         {
             output = output.Where(i => i.Archived).ToList();
         }
-        else
+        else if (selectedFilter == "Non-Archived")
         {
             output = output.Where(i => i.Archived == false).ToList();
         }
-
 
         items = output;
         await SaveFilterState();
@@ -148,9 +149,9 @@
         await FilterItems();
     }
 
-    private async Task OrderByArchived(bool isArchived)
+    private async Task OrderByArchived(string filter = "All")
     {
-        isSortedByArchived = isArchived;
+        selectedFilter = filter;
         await FilterItems();    
     }
 
@@ -170,9 +171,9 @@
         return "btn-danger";
     }
 
-    private string SortedByArchived(bool isArchived)
+    private string SortedByArchived(string filter = "All")
     {
-        if (isArchived == isSortedByArchived)
+        if (filter == selectedFilter)
         {
             return "fw-bold";
         }

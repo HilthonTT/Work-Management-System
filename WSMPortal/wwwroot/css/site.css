@@ -265,15 +265,14 @@ a, .btn-link {
     margin: 0.5rem;
 }
 
-.create-task-department{
+.create-form-department-company{
     margin-right: 2px;
 }
 
-.create-task-user {
+.create-form-user {
     margin-left: 2px;
 }
 
-.create-task-input-search {
-    width: 150px;
-    background-color: red;
+.index-btn-margin {
+    margin-left: 2px;
 }
