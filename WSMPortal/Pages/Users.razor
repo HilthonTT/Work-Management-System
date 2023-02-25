@@ -1,0 +1,265 @@
+﻿@page "/users"
+@inject IUserEndpoint userEndpoint
+@inject IJobTitleEndpoint jobTitleEndpoint
+@inject IDepartmentEndpoint departmentEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Users</h1>
+
+<div class="row">
+    <div class="col-md-2 text-uppercase fw-bold">@users?.Count Users</div>
+    <div class="col-md-4 col-xl-5 btn-group">
+        <button class="btn @SortedByDateCreated(true)" @onclick="(() => OrderByDateCreated(true))">Date Created</button>
+        <button class="btn @SortedByDateCreated(false)" @onclick="(() => OrderByDateCreated(false))">Date Of Birth</button>
+    </div>
+    <div class="col-md-4 col-xl-3 input-search">
+        <input type="text" placeholder="Search" 
+            aria-label="Search Box"
+            class="form-control rounded-control"
+            @oninput="((txt) => OnSearchInput((string)txt.Value))" />
+    </div>
+    <div class="col-12 d-block d-md-none">
+        @if (departments is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Departments</span>
+                <div class="" @onclick="(() => OnDepartmentClick())">All</div>
+                @foreach (var d in departments)
+                {
+                    <div class="" @onclick="(() => OnDepartmentClick(d.Id))">
+                        @d.DepartmentName
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        @if (users is not null && departments is not null)
+        {
+            <Virtualize Items="users" Context="u" OverscanCount="10">
+                <div class="row form-layout mt-4 tasks-background" @onclick="(() => OpenDetails(u))">
+                    <div class="col-12">
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Full Name</div>
+                            <div class="text-center">@u.FullName</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Department</div>
+                            <div class="text-center">@GetDepartmentName(u)</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Job Title</div>
+                            @if (u.JobList.Count() > 0)
+                            {
+                                <div class="text-center">@u.JobList</div>
+                            }
+                            else
+                            {
+                                <div class="text-center">No Job Title</div>
+                            }
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Roles [Web Permissions]</div>
+                            @if (u.RoleList.Count() > 0)
+                            {
+                                <div class="text-center">@u.RoleList</div>
+                            }
+                            else
+                            {
+                                <div class="text-center">No Roles</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
+        @if (departments is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Departments</span>
+                <div class="@GetSelectedDepartment()" @onclick="(() => OnDepartmentClick())">All</div>
+                @foreach (var d in departments)
+                {
+                    <div class="@GetSelectedDepartment(d.Id)" @onclick="(() => OnDepartmentClick(d.Id))">@d.DepartmentName</div>
+                }
+            </div>
+        }
+        @if (jobs is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Job Titles</span>
+                <div class="@GetSelectedJob()" @onclick="(() => OnJobTitleClick())">All</div>
+                @foreach (var j in jobs)
+                {
+                    <div class="@GetSelectedJob(j.Id)" @onclick="(() => OnJobTitleClick(j.Id))">@j.JobName</div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<UserModel> users;
+    private List<DepartmentModel> departments;
+    private List<CompanyModel> companies;
+    private List<JobTitleModel> jobs;
+    private bool isSortedByCreatedDate = true;
+    private int selectedDepartment = 0;
+    private int selectedJob = 0;
+    private string searchText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userEndpoint.GetAllAsync();
+        departments = await departmentEndpoint.GetAllAsync();
+        jobs = await jobTitleEndpoint.GetAllAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterUsers();
+            StateHasChanged();
+        }
+    }
+
+    private void OpenDetails(UserModel user)
+    {
+        navManager.NavigateTo($"/userDetails/{user.Id}");
+    }
+
+    private void LoadUpdateUserRoles(UserModel user)
+    {
+        navManager.NavigateTo($"/updateUserRoles/{user.Id}");
+    }
+
+    private string GetDepartmentName(UserModel user)
+    {
+        var selectedDepartment = departments.Where(x => x.Id == user.DepartmentId).FirstOrDefault();
+
+        if (selectedDepartment is not null)
+        {
+            return $"{selectedDepartment.DepartmentName} department";
+        }
+
+        return "No Department";
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
+        searchText = stringResults.Success ? stringResults.Value : "";
+
+        var intResults = await sessionStorage.GetAsync<int>(nameof(selectedDepartment));
+        selectedDepartment = intResults.Success ? intResults.Value : 0;
+        intResults = await sessionStorage.GetAsync<int>(nameof(selectedJob));
+        selectedJob = intResults.Success ? intResults.Value : 0;
+
+        var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByCreatedDate));
+        isSortedByCreatedDate = boolResults.Success ? boolResults.Value : true;
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchText), searchText);
+        await sessionStorage.SetAsync(nameof(isSortedByCreatedDate), isSortedByCreatedDate);
+        await sessionStorage.SetAsync(nameof(selectedDepartment), selectedDepartment);
+        await sessionStorage.SetAsync(nameof(selectedJob), selectedJob);
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (selectedDepartment != 0)
+        {
+            output = output.Where(c => c.DepartmentId == selectedDepartment).ToList();
+        }
+
+        if (selectedJob != 0)
+        {
+            output = output.Where(j => j.JobTitles.Where(x => x.Id == selectedJob).FirstOrDefault()?.Id == selectedJob).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(searchText) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        if (isSortedByCreatedDate)
+        {
+            output = output.OrderByDescending(u => u.CreatedDate).ToList();
+        }
+        else
+        {
+            output = output.OrderByDescending(u => u.DateOfBirth).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task OrderByDateCreated(bool isCreatedDate)
+    {
+        isSortedByCreatedDate = isCreatedDate;
+        await FilterUsers();
+    }
+
+    private async Task OnSearchInput(string searchInput)
+    {
+        searchText = searchInput;
+        await FilterUsers();
+    }
+
+    private string SortedByDateCreated(bool isCreatedDate)
+    {
+        if (isCreatedDate == isSortedByCreatedDate)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+
+    private async Task OnDepartmentClick(int departmentId = 0)
+    {
+        selectedDepartment = departmentId;
+        await FilterUsers();
+    }
+
+    private async Task OnJobTitleClick(int jobId = 0)
+    {
+        selectedJob = jobId;
+        await FilterUsers();
+    }
+
+    private string GetSelectedDepartment(int department = 0)
+    {
+        if (department == selectedDepartment)
+        {
+            return "fw-bold";
+        }
+
+        return "";
+    }
+
+    private string GetSelectedJob(int job = 0)
+    {
+        if (job == selectedJob)
+        {
+            return "fw-bold";
+        }
+
+        return "";
+    }
+}

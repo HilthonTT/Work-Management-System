@@ -14,7 +14,7 @@
 <div class="row justify-content-center create-form">
     <div class="col-xl-8 col-lg-10 form-layout">
         <div class="row">
-            <div class="col-11">
+            <div class="col-12">
                 <EditForm Model="model" OnValidSubmit="ExecuteLogin">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
@@ -29,7 +29,10 @@
                         <InputText id="password" class="form-control" type="password" @bind-Value="model.Password" placeholder="Password" />
                     </div>
                     <div class="center-children">
-                        <button class="btn btn-outline-success btn-login btn-lg text-uppercase" type="submit">Login</button>
+                        <button class="btn btn-outline-success btn-lg text-uppercase" type="submit">Login</button>
+                    </div>
+                    <div class="center-children mt-4">
+                        <button class="btn btn-outline-warning btn-lg text-uppercase" @onclick="LoadRegistrationPage">Register</button>
                     </div>
                 </EditForm>
             </div>
@@ -58,8 +61,8 @@
         }
     }
 
-    private void OpenRegister()
+    private void LoadRegistrationPage()
     {
-        navManager.NavigateTo("/");
+        navManager.NavigateTo("/register");
     }
 }

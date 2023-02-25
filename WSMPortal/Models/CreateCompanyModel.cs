@@ -18,6 +18,7 @@ public class CreateCompanyModel
     [DisplayName("Phone Number")]
     public string PhoneNumber { get; set; }
 
+    [Required]
     [DisplayName("User")]
     public string ChairPersonId { get; set; }
 

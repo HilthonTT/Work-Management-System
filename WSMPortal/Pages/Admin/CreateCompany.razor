@@ -1,5 +1,146 @@
-﻿<h3>CreateCompany</h3>
+﻿@page "/createCompany"
+@using WSMPortal.Components;
+@inject IUserEndpoint userEndpoint
+@inject ICompanyEndpoint companyEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Make A Company</h1>
+
+<div class="row justify-content-center create-form">
+    <div class="col-xl-8 col-lg-10 form-layout">
+        <EditForm Model="company" OnValidSubmit="CreateCompanyAsync">
+            <div class="close-button-section">
+                <button class="btn btn-close" @onclick="ClosePage"></button>
+            </div>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" id="company-name">Company Name</label>
+                <div class="input-description">Focus on the company's name</div>
+                <InputText class="form-control" id="company-name" @bind-Value="company.CompanyName" />
+            </div>
+            <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" id="company-address">Address</label>
+                <div class="input-description">Focus on the company's address</div>
+                <InputText class="form-control" id="company-address" @bind-Value="company.Address" />
+            </div>
+            <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" id="company-phone-number">Phone Number</label>
+                <div class="input-description">Focus on the company's phone number</div>
+                <InputText class="form-control" id="company-phone-number" @bind-Value="company.PhoneNumber" />
+            </div>
+            <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" id="company-description">Description</label>
+                <div class="input-description">Focus on the company's description</div>
+                <InputTextArea class="form-control" id="company-description" @bind-Value="company.Description" />
+            </div>
+            <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" id="company-name">Date Founded</label>
+                <div class="input-description">Focus on the company's date founded</div>
+                <InputDate class="form-control" id="company-name" @bind-Value="company.DateFounded" />
+            </div>
+            <div class="center-children">
+                <button class="btn btn-success btn-lg text-uppercase" type="submit">Create Company</button>
+            </div>
+            <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" for="user">User</label>
+                <div class="input-description">Choose one user that is the CEO of the company</div>
+                <div class="col-lg-8">
+                    <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))"
+                        type="text"
+                        class="form-control mb-4" 
+                        style="width: 150%"
+                        placeholder="Search User" />
+                    <MyInputRadioGroup id="user" @bind-Value="company.ChairPersonId">
+                        @if (users is not null)
+                        {
+                            @foreach (var u in users)
+                            {
+                                <div class="radio-item-group">
+                                    <InputRadio Value="u.Id" id="@u.Id" />
+                                    <label for="@u.Id">@u.FullName</label>
+                                </div>
+                            }
+                        }
+                    </MyInputRadioGroup>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
 
 @code {
+    private CreateCompanyModel company = new();
+    private List<UserModel> users;
+    private string searchUserText = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        company.DateFounded = DateTime.UtcNow;
+        users = await userEndpoint.GetAllAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await SaveFilterState();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserText));
+        searchUserText = stringResults.Success ? stringResults.Value : "";
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchUserText), searchUserText);
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchUserText) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task OnSearchInputUser(string searchInput)
+    {
+        searchUserText = searchInput;
+        await FilterUsers();
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private async Task CreateCompanyAsync()
+    {
+        CompanyModel c = new();
+        c.CompanyName = company.CompanyName;
+        c.Address = company.Address;
+        c.PhoneNumber = company.PhoneNumber;
+        c.ChairPersonId = company.ChairPersonId;
+        c.Description = company.Description;
+        c.DateFounded = company.DateFounded;
+        c.Archived = false;
+
+        await companyEndpoint.PostCompanyAsync(c);
+        company = new();
+        ClosePage();
+    }
 }
