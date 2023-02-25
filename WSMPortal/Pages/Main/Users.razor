@@ -11,8 +11,8 @@
 <div class="row">
     <div class="col-md-2 text-uppercase fw-bold">@users?.Count Users</div>
     <div class="col-md-4 col-xl-5 btn-group">
-        <button class="btn @SortedByDateCreated(true)" @onclick="(() => OrderByDateCreated(true))">Date Created</button>
-        <button class="btn @SortedByDateCreated(false)" @onclick="(() => OrderByDateCreated(false))">Date Of Birth</button>
+        <button class="btn @SortedByDateCreated(true)" @onclick="(() => OrderByDateCreated(true))">Newest</button>
+        <button class="btn @SortedByDateCreated(false)" @onclick="(() => OrderByDateCreated(false))">Oldest</button>
     </div>
     <div class="col-md-4 col-xl-3 input-search">
         <input type="text" placeholder="Search" 
@@ -213,7 +213,7 @@
         }
         else
         {
-            output = output.OrderByDescending(u => u.DateOfBirth).ToList();
+            output = output.OrderBy(u => u.CreatedDate).ToList();
         }
 
         users = output;

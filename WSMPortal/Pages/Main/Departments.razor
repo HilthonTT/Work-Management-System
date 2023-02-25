@@ -10,8 +10,8 @@
 <div class="row">
     <div class="col-md-2 mt-2 text-uppercase fw-bold">@departments?.Count Items</div>
     <div class="col-md-4 col-xl-5 btn-group">
-        <button class="btn @SortedByCreatedDate(true)" @onclick="(() => OrderByCreatedDate(true))">Created Date</button>
-        <button class="btn @SortedByCreatedDate(false)" @onclick="(() => OrderByCreatedDate(false))">Opposite Created Date</button>
+        <button class="btn @SortedByCreatedDate(true)" @onclick="(() => OrderByCreatedDate(true))">Oldest</button>
+        <button class="btn @SortedByCreatedDate(false)" @onclick="(() => OrderByCreatedDate(false))">Newest</button>
     </div>
     <div class="col-md-4 col-xl-3 input-search">
         <input type="text" placeholder="Search" 
@@ -93,7 +93,7 @@
     private List<DepartmentModel> departments;
     private List<CompanyModel> companies;
     private bool isSortedByCreatedDate = false;
-    private string selectedFilter = "All";
+    private string selectedFilter = "Non-Archived";
     private string searchText = "";
     private int selectedCompany = 0;
 
@@ -137,6 +137,7 @@
     {
         await sessionStorage.SetAsync(nameof(searchText), searchText);
         await sessionStorage.SetAsync(nameof(selectedFilter), selectedFilter);
+        await sessionStorage.SetAsync(nameof(selectedCompany), selectedCompany);
         await sessionStorage.SetAsync(nameof(isSortedByCreatedDate), isSortedByCreatedDate);
     }
 
