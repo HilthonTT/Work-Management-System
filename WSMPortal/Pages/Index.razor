@@ -31,10 +31,10 @@
         {
             <div class="departments">
                 <span class="text-uppercase fw-bold ">Departments</span>
-                <div class="" @onclick="(() => OnDepartmentClick())">All</div>
+                <div class="@GetSelectedDepartment()" @onclick="(() => OnDepartmentClick())">All</div>
                 @foreach (var d in departments)
                 {
-                    <div class="" @onclick="(() => OnDepartmentClick(d.Id))">
+                    <div class="@GetSelectedDepartment()" @onclick="(() => OnDepartmentClick(d.Id))">
                         @d.DepartmentName
                     </div>
                 }
