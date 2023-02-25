@@ -1,0 +1,232 @@
+﻿@page "/companies"
+@inject ICompanyEndpoint companyEndpoint
+@inject IUserEndpoint userEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Companies</h1>
+
+<div class="row">
+    <div class="col-md-2 mt-2 text-uppercase fw-bold">@companies?.Count Items</div>
+    <div class="col-md-4 col-xl-5 btn-group">
+        <button class="btn @SortedByDateFounded(true)" @onclick="(() => OrderByDateFounded(true))">Oldest</button>
+        <button class="btn @SortedByDateFounded(false)" @onclick="(() => OrderByDateFounded(false))">Newest</button>
+    </div>
+    <div class="col-md-4 col-xl-3 input-search">
+        <input type="text" placeholder="Search" 
+            aria-label="Search Box" 
+            class="form-control rounded-control"
+            @oninput="((txt) => OnSearchInput((string)txt.Value))" />
+    </div>
+    <div class="col-12 d-block d-md-none">
+        @if (users is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Companies</span>
+                <div class="@GetSelectedUser()" @onclick="(() => GetSelectedUser())">All</div>
+                @foreach (var u in users)
+                {
+                    <div class="@GetSelectedUser(u.Id)" @onclick="(() => GetSelectedUser(u.Id))">
+                        @u.FullName
+                    </div>
+                }
+            </div>
+        }
+        <div class="departments">
+            <span class="text-uppercase fw-bold">Archived</span>
+            <div class="@SortedByArchived()" @onclick="(() => OrderByArchived())">All</div>
+            <div class="@SortedByArchived("Archived")" @onclick="@(() => OrderByArchived("Archived"))">Archived</div>
+            <div class="@SortedByArchived("Non-Archived")" @onclick="@(() => OrderByArchived("Non-Archived"))">Non Archived</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        @if (companies is not null)
+        {
+            <Virtualize Items="companies" Context="c" OverscanCount="10">
+                <div class="row form-layout mt-4 items-background" @onclick="(() => OpenDetails(c))">
+                    <div class="col-12">
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Company Name</div>
+                            <div class="text-center fw-bold">@c.CompanyName</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Description</div>
+                            <div class="text-center fw-bold">@c.Description</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Phone number</div>
+                            <div class="text-center fw-bold">@c.PhoneNumber</div>
+                        </div>
+                    </div>
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
+        @if (users is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Companies</span>
+                <div class="@GetSelectedUser()" @onclick="(() => OnUserClick())">All</div>
+                @foreach (var u in users)
+                {
+                    <div class="@GetSelectedUser(u.Id)" @onclick="(() => OnUserClick(u.Id))">
+                        @u.FullName
+                    </div>
+                }
+            </div>
+        }
+        <div class="departments">
+            <span class="text-uppercase fw-bold">Archived</span>
+            <div class="@SortedByArchived()" @onclick="(() => OrderByArchived())">All</div>
+            <div class="@SortedByArchived("Archived")" @onclick="@(() => OrderByArchived("Archived"))">Archived</div>
+            <div class="@SortedByArchived("Non-Archived")" @onclick="@(() => OrderByArchived("Non-Archived"))">Non Archived</div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<CompanyModel> companies;
+    private List<UserModel> users;
+    private bool isSortedByDateFounded = false;
+    private string selectedFilter = "Non-Archived";
+    private string searchText = "";
+    private string selectedUser = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        companies = await companyEndpoint.GetAllAsync();
+        users = await userEndpoint.GetAllAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await SaveFilterState();
+            await FilterCompanies();
+            StateHasChanged();
+        }
+    }
+
+    private void OpenDetails(CompanyModel company)
+    {
+        navManager.NavigateTo($"/companyDetail/{company.Id}");
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
+        searchText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(selectedFilter));
+        selectedFilter = stringResults.Success ? stringResults.Value : "Non-Archived";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(selectedUser));
+        selectedUser = stringResults.Success ? stringResults.Value : "";
+
+        var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByDateFounded));
+        isSortedByDateFounded = boolResults.Success ? boolResults.Value : true;
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchText), searchText);
+        await sessionStorage.SetAsync(nameof(selectedFilter), selectedFilter);
+        await sessionStorage.SetAsync(nameof(isSortedByDateFounded), isSortedByDateFounded);
+    }
+
+    private async Task FilterCompanies()
+    {
+        var output = await companyEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchText) == false)
+        {
+            output = output.Where(d => d.CompanyName.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                d.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        if (isSortedByDateFounded)
+        {
+            output = output.OrderByDescending(c => c.DateFounded).ToList();
+        }
+        else
+        {
+            output = output.OrderBy(c => c.DateFounded).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(selectedUser) == false)
+        {
+            output = output.Where(c => c.ChairPersonId == selectedUser).ToList();
+        }
+
+        if (selectedFilter == "Archived")
+        {
+            output = output.Where(c => c.Archived).ToList();
+        }
+        else if (selectedFilter == "Non-Archived")
+        {
+            output = output.Where(c => c.Archived == false).ToList();
+        }
+
+        companies = output;
+        await SaveFilterState();
+    }
+
+    private async Task OrderByDateFounded(bool isDateFounded)
+    {
+        isSortedByDateFounded = isDateFounded;
+        await FilterCompanies();
+    }
+
+    private async Task OrderByArchived(string filter = "All")
+    {
+        selectedFilter = filter;
+        await FilterCompanies();
+    }
+
+    private async Task OnSearchInput(string searchInput)
+    {
+        searchText = searchInput;
+        await FilterCompanies();
+    }
+
+    private async Task OnUserClick(string user = "")
+    {
+        selectedUser = user;
+        await FilterCompanies();
+    }
+
+    private string GetSelectedUser(string user = "")
+    {
+        if (user == selectedUser)
+        {
+            return "fw-bold";
+        }
+
+        return "";
+    }
+
+    private string SortedByArchived(string filter = "All")
+    {
+        if (filter == selectedFilter)
+        {
+            return "fw-bold";
+        }
+
+        return "";
+    }
+
+    private string SortedByDateFounded(bool isDateFounded)
+    {
+        if (isDateFounded == isSortedByDateFounded)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+}
