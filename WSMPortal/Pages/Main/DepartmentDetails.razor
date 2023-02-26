@@ -1,0 +1,93 @@
+﻿@page "/departmentDetails/{Id:int}"
+@inject IDepartmentEndpoint departmentEndpoint
+@inject IUserEndpoint userEndpoint
+@inject ICompanyEndpoint companyEndpoint
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Item Details</h1>
+
+<div class="row justify-content-center detail-form">
+    <div class="col-md-12 col-xl-12">
+        @if (department is not null && users is not null && companies is not null)
+        {
+            <div class="row form-layout mt-4 tasks-background">
+                <div class="col-11">
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Department Name</div>
+                        <div class="text-center">@department.DepartmentName</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Description</div>
+                        <div class="text-center">@department.Description</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Address</div>
+                        <div class="text-center">@department.Address</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Phone Number</div>
+                        <div class="text-center">@department.PhoneNumber☎</div>
+                    </div>
+                     <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Chair Person</div>
+                        <div class="text-center">@GetChairPersonUserName()</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Parent Company</div>
+                        <div class="text-center">@GetCompanyName()</div>
+                    </div>
+                </div>
+                <div class="col-1 close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private DepartmentModel department;
+    private List<UserModel> users;
+    private List<CompanyModel> companies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        department = await departmentEndpoint.GetByIdAsync(Id);
+        users = await userEndpoint.GetAllAsync();
+        companies = await companyEndpoint.GetAllAsync();
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/departments");
+    }
+
+    private string GetCompanyName()
+    {
+        var company = companies.Where(c => c.Id == department.CompanyId).FirstOrDefault();
+
+        if (company is not null)
+        {
+            return $"{company.CompanyName}";
+        }
+
+        return "No Company";
+    }
+
+    private string GetChairPersonUserName()
+    {
+        var user = users.Where(u => u.Id == department.ChairPersonId).FirstOrDefault();
+
+        if (user is not null)
+        {
+            return $"{user.FullName}";
+        }
+
+        return "No User";
+    }
+}

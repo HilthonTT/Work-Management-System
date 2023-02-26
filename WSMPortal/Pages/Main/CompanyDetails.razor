@@ -1,0 +1,77 @@
+﻿@page "/companyDetails/{Id:int}"
+@inject ICompanyEndpoint companyEndpoint
+@inject IUserEndpoint userEndpoint
+@inject NavigationManager navManager
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Company Details</h1>
+
+<div class="row justify-content-center detail-form">
+    <div class="col-md-12 col-xl-12">
+        @if (company is not null && users is not null)
+        {
+            <div class="row form-layout mt-4 tasks-background">
+                <div class="col-11">
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">CompanyName</div>
+                        <div class="text-center">@company.CompanyName</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Description</div>
+                        <div class="text-center">@company.Description</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Address</div>
+                        <div class="text-center">@company.Address</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Phone Number</div>
+                        <div class="text-center">@company.PhoneNumber☎</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Chair Person</div>
+                        <div class="text-center">@GetChairpersonUserName()</div>
+                    </div>
+                     <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Date Founded</div>
+                        <div class="text-center">@company.DateFounded.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+                <div class="col-1 close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                 </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CompanyModel company;
+    private List<UserModel> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        company = await companyEndpoint.GetByIdAsync(Id);
+        users = await userEndpoint.GetAllAsync();
+    }
+
+    private string GetChairpersonUserName()
+    {
+        var user = users.Where(u => u.Id == company.ChairPersonId).FirstOrDefault();
+
+        if (user is not null)
+        {
+            return $"{user.FullName}";
+        }
+
+        return "No Chair Person";
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/companies");
+    }
+}
