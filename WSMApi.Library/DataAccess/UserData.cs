@@ -17,11 +17,11 @@ public class UserData : IUserData
         _sql = sql;
     }
 
-    public List<UserModel> GetUserById(string Id)
+    public UserModel GetUserById(string Id)
     {
         var output = _sql.LoadData<UserModel, dynamic>("dbo.spUser_GetById", new { Id }, "WSMData");
 
-        return output;
+        return output.FirstOrDefault();
     }
 
     public List<UserModel> GetUserByName(string FirstName, string LastName)

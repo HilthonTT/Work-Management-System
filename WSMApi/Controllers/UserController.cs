@@ -40,33 +40,74 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("GetMyId")]
-    public UserModel GetMyId()
+    public ApplicationUserModel GetMyId()
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        return _userData.GetUserById(userId).First();
+
+        UserModel userModel = _userData.GetUserById(userId);
+
+        ApplicationUserModel user = new()
+        {
+            FirstName = userModel.FirstName,
+            LastName = userModel.LastName,
+            EmailAddress = userModel.EmailAddress,
+            PhoneNumber = userModel.PhoneNumber,
+            DateOfBirth = userModel.DateOfBirth,
+            DepartmentId = userModel.DepartmentId,
+            JobTitleId = userModel.JobTitleId,
+            CreatedDate = userModel.CreatedDate,
+        };
+
+        var userRoles = from ur in _context.UserRoles
+                        join r in _context.Roles on ur.RoleId equals r.Id
+                        select new { ur.UserId, ur.RoleId, r.Name };
+
+        user.Roles = userRoles.Where(x => x.UserId == user.Id).ToDictionary(key => key.RoleId, val => val.Name);
+        user.JobTitles = _jobTitleData.GetJobTitles().Where(x => x.Id == user.JobTitleId).ToList();
+
+        return user;
     }
 
 
-    public record GetUserId(
-        string userId
+    public record GetId(
+        string Id
     );
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Route("Admin/GetById")]
-    public UserModel GetById(GetUserId user)
+    public ApplicationUserModel GetById(GetId Id)
     {
         try
         {
-            return _userData.GetUserById(user.userId).First();
+            UserModel userModel = _userData.GetUserById(Id.Id);
+
+            ApplicationUserModel user = new()
+            {
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                EmailAddress = userModel.EmailAddress,
+                PhoneNumber = userModel.PhoneNumber,
+                DateOfBirth = userModel.DateOfBirth,
+                DepartmentId = userModel.DepartmentId,
+                JobTitleId = userModel.JobTitleId,
+                CreatedDate = userModel.CreatedDate,
+            };
+            
+            var userRoles = from ur in _context.UserRoles
+                            join r in _context.Roles on ur.RoleId equals r.Id
+                            select new { ur.UserId, ur.RoleId, r.Name };
+
+            user.Roles = userRoles.Where(x => x.UserId == user.Id).ToDictionary(key => key.RoleId, val => val.Name);
+            user.JobTitles = _jobTitleData.GetJobTitles().Where(x => x.Id == user.JobTitleId).ToList();
+
+
+            return user;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
-            return _userData.GetUserById(userId).First();
+            return null;
         }
     }
 
