@@ -84,6 +84,7 @@ public class UserController : ControllerBase
 
             ApplicationUserModel user = new()
             {
+                Id = userModel.Id,
                 FirstName = userModel.FirstName,
                 LastName = userModel.LastName,
                 EmailAddress = userModel.EmailAddress,
@@ -100,7 +101,6 @@ public class UserController : ControllerBase
 
             user.Roles = userRoles.Where(x => x.UserId == user.Id).ToDictionary(key => key.RoleId, val => val.Name);
             user.JobTitles = _jobTitleData.GetJobTitles().Where(x => x.Id == user.JobTitleId).ToList();
-
 
             return user;
         }

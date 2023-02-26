@@ -115,7 +115,7 @@ public class UserEndpoint : IUserEndpoint
     {
         var data = new { model.Id ,model.JobTitleId };
 
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/UpdateUserJobId", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync("api/User/Admin/UpdateUserJobId", data);
         if (response.IsSuccessStatusCode)
         {
             _logger.LogInformation("The user of {userId} has been updated", model.Id);
