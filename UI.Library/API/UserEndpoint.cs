@@ -35,7 +35,7 @@ public class UserEndpoint : IUserEndpoint
     {
         var data = new { Id };
 
-        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/GetAllUsers", data);
+        using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("api/User/Admin/GetById", data);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsAsync<UserModel>();

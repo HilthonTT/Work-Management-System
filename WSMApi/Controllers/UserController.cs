@@ -54,7 +54,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    [Route("GetById")]
+    [Route("Admin/GetById")]
     public UserModel GetById(GetUserId user)
     {
         try
