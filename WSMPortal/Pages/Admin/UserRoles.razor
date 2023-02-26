@@ -1,0 +1,430 @@
+﻿@page "/userRoles"
+@using WSMPortal.Components;
+@inject IUserEndpoint userEndpoint
+@inject IJobTitleEndpoint jobTitleEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Users's roles and current job title</h1>
+
+<div class="row justify-content-center create-form">
+    <div class="col-xl-3 form-layout create-form-department-company">
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase">User Roles</label>
+            <div class="input-description">Choose one role to remove from a user. This affects their permissions.</div>
+            <div class="col-8">
+                <input @oninput="((txt) => OnSearchInputUserRole((string)txt.Value))" 
+                    type="text" class="form-control" 
+                    style="width: 140%; margin-left: 5px;" 
+                    placeholder="Search User Role" />
+                <MyInputRadioGroup id="user-roles" @bind-Value="selectedUserRole">
+                    @if (userRoles is not null && availableRoles is not null)
+                    {
+                        @foreach (var r in userRoles)
+                        {
+                            <div class="radio-item-group">
+                                <InputRadio Value="@r" id="@r" @onclick="(() => LoadSelectedAvailableRole(r))"/>
+                                <label for="@r">@r</label>
+                            </div>
+                        }
+                    }
+                </MyInputRadioGroup>
+            </div>
+        </div>
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase">Availables Roles</label>
+            <div class="input-description">Choose one role to add on a user. This affects their permissions.</div>
+            <div class="col-lg-8">
+                <input @oninput="((txt) => OnSearchInputAvailableRole((string)txt.Value))" 
+                    type="text" 
+                    class="form-control" 
+                    style="width: 140%; margin-left: 5px;" 
+                    placeholder="Search Available Role" />
+                <MyInputRadioGroup id="available-roles" @bind-Value="selectedAvailableRole">
+                    @if (availableRoles is not null && userRoles is not null)
+                    {
+                        @foreach (var r in availableRoles)
+                        {
+                            <div class="radio-item-group">
+                                <InputRadio Value="@r" id="@r" />
+                                <label for="@r">@r</label>
+                            </div>
+                        }
+                    }
+                </MyInputRadioGroup>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5 col-lg-10 form-layout">
+        <div class="close-button-section">
+            <button class="btn btn-close" @onclick="ClosePage"></button>
+        </div>
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase" for="users">Users</label>
+            <div class="input-description">Choose one user to add/remove a role/job title</div>
+            <div class="col-lg-8">
+                <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Search User" />
+                <div class="btn-group">
+                    <button class="btn btn-success" @onclick="AddSelectedRole">Add Role</button>
+                    <button class="btn btn-success" @onclick="RemoveSelectedRole">Remove Role</button>
+                    <button class="btn btn-success" @onclick="AddSelectedJob">Add Job</button>
+                    <button class="btn btn-success" @onclick="RemoveSelectedJob">Remove Job</button>
+                </div>
+                <MyInputRadioGroup id="users" @bind-Value="selectedUser.Id">
+                    @if (users is not null)
+                    {
+                        @foreach (var u in users)
+                        {
+                            <div class="radio-item-group">
+                                <InputRadio Value="@u.Id" id="@u.Id" @onclick="(() => LoadSelectedUser(u.Id))"/>
+                                <label for="@u.Id">@u.FullName - @u.RoleList</label>
+                            </div>
+                        }
+                    }
+                </MyInputRadioGroup>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 form-layout create-form-user">
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase">User Jobs</label>
+            <div class="input-description">Choose one job title to remove on a user. This doesn't affect permissions</div>
+            <div class="col-lg-8">
+                <input @oninput="((txt) => OnSearchInputUserJob((string)txt.Value))" 
+                    type="text" 
+                    class="form-control" 
+                    style="width: 140%; margin-left: 5px;" 
+                    placeholder="Search User Job" />
+                <MyInputRadioGroup id="user-jobs" @bind-Value="selectedUserJob">
+                    @if (userJobs is not null && availableJobs is not null)
+                    {
+                        @foreach (var j in userJobs)
+                        {
+                            <div class="radio-item-group">
+                                <InputRadio Value="j.Id" id="@j.Id" @onclick="(() => LoadSelectedUserJob(j))"/>
+                                <label for="@j.Id">@j.JobName</label>
+                            </div>
+                        }
+                    }
+                </MyInputRadioGroup>
+            </div>
+        </div>
+        <div class="input-section">
+            <label class="form-label fw-bold text-uppercase">Available Jobs</label>
+            <div class="input-description">Choose one job title to add on a user. This doesn't affect permissions.</div>
+            <div class="col-lg-8">
+                <input @oninput="((txt) => OnSearchInputAvailableJob((string)txt.Value))" 
+                    type="text" 
+                    class="form-control" 
+                    style="width: 140%; margin-left: 5px;" 
+                    placeholder="Search Available Job" />
+                <MyInputRadioGroup id="available-jobs" @bind-Value="selectedAvailableJob">
+                    @if (availableJobs is not null && userJobs is not null)
+                    {
+                        @foreach (var j in availableJobs)
+                        {
+                            <div class="radio-item-group">
+                                <InputRadio Value="j.Id" id="@j.Id" @onclick="(() => LoadSelectedAvailableJob(j))" />
+                                <label for="@j.Id">@j.JobName</label>
+                            </div>
+                        }
+                    }
+                </MyInputRadioGroup>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private UserModel selectedValue  = new();
+
+    private UserModel selectedUser = new();
+    private List<UserModel> users;
+    private List<string> availableRoles = new();
+    private List<string> userRoles = new();
+    private string selectedAvailableRole = "";
+    private string selectedUserRole = "";
+    private List<JobTitleModel> availableJobs = new();
+    private List<JobTitleModel> userJobs = new();
+    private int selectedAvailableJob = 0;
+    private int selectedUserJob = 0 ;
+
+    private string searchUserText = "";
+    private string searchAvailableJobText = "";
+    private string searchUserJobText = "";
+    private string searchAvailableRoleText = "";
+    private string searchUserRoleText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userEndpoint.GetAllAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadAllFilters();
+            await SaveFilterState();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserText));
+        searchUserText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchAvailableJobText));
+        searchAvailableJobText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchAvailableRoleText));
+        searchAvailableRoleText = stringResults.Success ? stringResults.Value : "";
+
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserJobText));
+        searchUserJobText = stringResults.Success ? stringResults.Value : "";
+
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserRoleText));
+        searchUserRoleText = stringResults.Success ? stringResults.Value : "";
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchUserText), searchUserText);
+        await sessionStorage.SetAsync(nameof(searchAvailableJobText), searchAvailableJobText);
+        await sessionStorage.SetAsync(nameof(searchAvailableRoleText), searchAvailableRoleText);
+        await sessionStorage.SetAsync(nameof(searchUserJobText), searchUserJobText);
+        await sessionStorage.SetAsync(nameof(searchUserRoleText), searchUserRoleText);
+    }
+
+    private async Task LoadAllFilters()
+    {
+        await FilterUsers();
+        await FilterUserRoles();
+        await FilterAvailableRoles();
+        await FilterUserJobs();
+        await FilterAvailableJobs();
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchUserText) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterAvailableJobs()
+    {
+        await LoadJobs();
+        var output = availableJobs;
+
+        if (string.IsNullOrWhiteSpace(searchAvailableJobText) == false)
+        {
+            output = output.Where(j => j.JobName.Contains(searchAvailableJobText, StringComparison.InvariantCultureIgnoreCase) ||
+                j.Description.Contains(searchAvailableJobText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        availableJobs = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterUserJobs()
+    {
+        var userJobList = selectedUser.JobTitles;
+
+        var output = userJobList;
+
+        if (string.IsNullOrWhiteSpace(searchUserJobText) == false)
+        {
+            output = output.Where(j => j.JobName.Contains(searchUserJobText, StringComparison.InvariantCultureIgnoreCase) ||
+                j.Description.Contains(searchUserJobText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        userJobs = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterAvailableRoles()
+    {
+        await LoadRoles();
+        var output = availableRoles;
+
+        if (string.IsNullOrWhiteSpace(searchAvailableRoleText) == false)
+        {
+            output = output.Where(r => r.Contains(searchAvailableRoleText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        availableRoles = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterUserRoles()
+    {
+        var userRolesList = new List<string>();
+        var allUserRoles = selectedUser.Roles;
+
+        foreach (var r in allUserRoles)
+        {
+            userRolesList.Add(r.Value);
+        }
+
+        var output = userRolesList;
+
+        if (string.IsNullOrWhiteSpace(searchUserRoleText) == false)
+        {
+            output = output.Where(r => r.Contains(searchUserRoleText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        userRoles = output;
+        await SaveFilterState();
+    }
+
+    private async Task OnSearchInputUser(string searchInput)
+    {
+        searchUserText = searchInput;
+        await FilterUsers();
+    }
+
+    private async Task OnSearchInputAvailableRole(string searchInput)
+    {
+        searchAvailableRoleText = searchInput;
+        await FilterAvailableRoles();
+    }
+
+    private async Task OnSearchInputUserRole(string searchInput)
+    {
+        searchUserRoleText = searchInput;
+        await FilterUserRoles();
+    }
+
+    private async Task OnSearchInputAvailableJob(string searchInput)
+    {
+        searchAvailableJobText = searchInput;
+        await FilterAvailableJobs();
+    }
+
+    private async Task OnSearchInputUserJob(string searchInput)
+    {
+        searchUserJobText = searchInput;
+        await FilterUserJobs();
+    }
+
+    private async Task LoadRoles()
+    {
+        var roles = await userEndpoint.GetAllRolesAsync();
+        availableRoles.Clear();
+
+        foreach (var r in roles)
+        {
+            if (userRoles.IndexOf(r.Value) < 0)
+            {
+                availableRoles.Add(r.Value);
+            }
+        }
+    }
+
+    private async Task LoadJobs()
+    {
+        var jobs = await jobTitleEndpoint.GetAllAsync();
+        availableJobs.Clear();
+
+        foreach (var j in jobs)
+        {
+            if (userJobs.IndexOf(j) < 0)
+            {
+                availableJobs.Add(j);
+            }
+        }
+    }
+
+    private async Task AddSelectedRole()
+    {
+        await userEndpoint.AddUserToRoleAsync(selectedUser.Id, selectedAvailableRole);
+
+        userRoles.Add(selectedAvailableRole);
+        availableRoles.Remove(selectedAvailableRole);
+    }
+
+    private async Task RemoveSelectedRole()
+    {
+        await userEndpoint.RemoveUserFromRoleAsync(selectedUser.Id, selectedUserRole);
+
+        availableRoles.Add(selectedUserRole);
+        userRoles.Remove(selectedUserRole);
+    }
+
+    private async Task AddSelectedJob()
+    {
+        var user = await userEndpoint.GetByIdAsync(selectedUser.Id);
+
+        var selectedJob = await jobTitleEndpoint.GetByIdAsync(selectedAvailableJob);
+        user.JobTitleId = selectedAvailableJob;
+
+        await userEndpoint.UpdateUserJobTitleIdAsync(user);
+
+        userJobs.Add(selectedJob);
+        availableJobs.Remove(selectedJob);
+
+        selectedAvailableJob = 0;
+    }
+
+    private async Task RemoveSelectedJob()
+    {
+        var user = await userEndpoint.GetByIdAsync(selectedUser.Id);
+
+        var selectedJob = await jobTitleEndpoint.GetByIdAsync(selectedUserJob);
+
+        user.JobTitleId = null;
+
+        await userEndpoint.UpdateUserJobTitleIdAsync(user);
+
+        userJobs.Remove(selectedJob);
+        availableJobs.Add(selectedJob);
+
+        selectedAvailableJob = 0;
+    }
+
+    private async Task LoadSelectedUser(string Id)
+    {
+        selectedUser = await userEndpoint.GetByIdAsync(Id);
+        userRoles = new List<string>(selectedUser.Roles.Select(x => x.Value));
+        await LoadRoles();
+        List<JobTitleModel> selectedUserJobs = selectedUser.JobTitles;
+        userJobs = new List<JobTitleModel>(selectedUserJobs);
+        await LoadJobs();
+    }
+
+    private void LoadSelectedAvailableRole(string roleName)
+    {
+        selectedAvailableRole = roleName;
+    }
+
+    private void LoadUserRole(string roleName)
+    {
+        selectedUserRole = roleName;
+    }
+
+    private void LoadSelectedAvailableJob(JobTitleModel job)
+    {
+        selectedAvailableJob = job.Id;
+    }
+
+    private void LoadSelectedUserJob(JobTitleModel job)
+    {
+        selectedUserJob = job.Id;
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+}
