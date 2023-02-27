@@ -105,8 +105,8 @@
                         @foreach (var j in userJobs)
                         {
                             <div class="radio-item-group">
-                                <InputRadio Value="j.Id" id="@j.Id" @onclick="(() => LoadSelectedUserJob(j))"/>
-                                <label for="@j.Id">@j.JobName</label>
+                                <InputRadio Value="j" id="@j" @onclick="(() => LoadSelectedUserJob(j))"/>
+                                <label for="@j">@j</label>
                             </div>
                         }
                     }
@@ -128,8 +128,8 @@
                         @foreach (var j in availableJobs)
                         {
                             <div class="radio-item-group">
-                                <InputRadio Value="j.Id" id="@j.Id" @onclick="(() => LoadSelectedAvailableJob(j))" />
-                                <label for="@j.Id">@j.JobName</label>
+                                <InputRadio Value="j" id="@j" @onclick="(() => LoadSelectedAvailableJob(j))" />
+                                <label for="@j">@j</label>
                             </div>
                         }
                     }
@@ -140,18 +140,16 @@
 </div>
 
 @code {
-    private UserModel selectedValue  = new();
-
     private UserModel selectedUser = new();
     private List<UserModel> users;
     private List<string> availableRoles = new();
-    private List<string> userRoles = new();
+    private List<string> userRoles;
     private string selectedAvailableRole = "";
     private string selectedUserRole = "";
-    private List<JobTitleModel> availableJobs = new();
-    private List<JobTitleModel> userJobs = new();
-    private int selectedAvailableJob = 0;
-    private int selectedUserJob = 0 ;
+    private List<string> availableJobs = new();
+    private List<string> userJobs = new();
+    private string selectedAvailableJob = "";
+    private string selectedUserJob = "";
 
     private string searchUserText = "";
     private string searchAvailableJobText = "";
@@ -229,8 +227,8 @@
 
         if (string.IsNullOrWhiteSpace(searchAvailableJobText) == false)
         {
-            output = output.Where(j => j.JobName.Contains(searchAvailableJobText, StringComparison.InvariantCultureIgnoreCase) ||
-                j.Description.Contains(searchAvailableJobText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            output = output.Where(j => j.Contains(searchAvailableJobText, StringComparison.InvariantCultureIgnoreCase) ||
+                j.Contains(searchAvailableJobText, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         availableJobs = output;
@@ -239,14 +237,13 @@
 
     private async Task FilterUserJobs()
     {
-        var userJobList = selectedUser.JobTitles;
+        var userJobList = selectedUser.JobTitles.Select(j => j.JobName).ToList();
 
         var output = userJobList;
 
         if (string.IsNullOrWhiteSpace(searchUserJobText) == false)
         {
-            output = output.Where(j => j.JobName.Contains(searchUserJobText, StringComparison.InvariantCultureIgnoreCase) ||
-                j.Description.Contains(searchUserJobText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            output = output.Where(j => j.Contains(searchUserJobText, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         userJobs = output;
@@ -339,9 +336,9 @@
 
         foreach (var j in jobs)
         {
-            if (userJobs.IndexOf(j) < 0)
+            if (userJobs.IndexOf(j.JobName) < 0)
             {
-                availableJobs.Add(j);
+                availableJobs.Add(j.JobName);
             }
         }
     }
@@ -365,32 +362,36 @@
     private async Task AddSelectedJob()
     {
         var user = await userEndpoint.GetByIdAsync(selectedUser.Id);
+        var jobs = await jobTitleEndpoint.GetAllAsync();
+        var chosenJob = jobs.Where(j => j.JobName == selectedAvailableJob).FirstOrDefault();
 
-        var selectedJob = await jobTitleEndpoint.GetByIdAsync(selectedAvailableJob);
-        user.JobTitleId = selectedAvailableJob;
+        var selectedJob = await jobTitleEndpoint.GetByIdAsync(chosenJob.Id);
+        user.JobTitleId = chosenJob.Id;
 
         await userEndpoint.UpdateUserJobTitleIdAsync(user);
 
-        userJobs.Add(selectedJob);
-        availableJobs.Remove(selectedJob);
+        userJobs.Add(selectedJob.JobName);
+        availableJobs.Remove(selectedJob.JobName);
 
-        selectedAvailableJob = 0;
+        selectedAvailableJob = "";
     }
 
     private async Task RemoveSelectedJob()
     {
         var user = await userEndpoint.GetByIdAsync(selectedUser.Id);
+        var jobs = await jobTitleEndpoint.GetAllAsync();
+        var chosenJob = jobs.Where(j => j.JobName == selectedUserJob).FirstOrDefault();
 
-        var selectedJob = await jobTitleEndpoint.GetByIdAsync(selectedUserJob);
+        var selectedJob = await jobTitleEndpoint.GetByIdAsync(chosenJob.Id);
 
         user.JobTitleId = null;
 
         await userEndpoint.UpdateUserJobTitleIdAsync(user);
 
-        userJobs.Remove(selectedJob);
-        availableJobs.Add(selectedJob);
+        userJobs.Remove(selectedJob.JobName);
+        availableJobs.Add(selectedJob.JobName);
 
-        selectedAvailableJob = 0;
+        selectedAvailableJob = "";
     }
 
     private async Task LoadSelectedUser(string Id)
@@ -398,8 +399,7 @@
         selectedUser = await userEndpoint.GetByIdAsync(Id);
         userRoles = new List<string>(selectedUser.Roles.Select(x => x.Value));
         await LoadRoles();
-        List<JobTitleModel> selectedUserJobs = selectedUser.JobTitles;
-        userJobs = new List<JobTitleModel>(selectedUserJobs);
+        userJobs = new List<string>(selectedUser.JobTitles.Select(j => j.JobName));
         await LoadJobs();
     }
 
@@ -413,18 +413,30 @@
         selectedUserRole = roleName;
     }
 
-    private void LoadSelectedAvailableJob(JobTitleModel job)
+    private void LoadSelectedAvailableJob(string job)
     {
-        selectedAvailableJob = job.Id;
+        selectedAvailableJob = job;
     }
 
-    private void LoadSelectedUserJob(JobTitleModel job)
+    private void LoadSelectedUserJob(string job)
     {
-        selectedUserJob = job.Id;
+        selectedUserJob = job;
     }
 
     private void ClosePage()
     {
         navManager.NavigateTo("/");
+    }
+
+    private async Task<string> GetJobName(int Id)
+    {
+        var job = await jobTitleEndpoint.GetByIdAsync(Id);
+
+        if (job is not null)
+        {
+            return job.JobName;
+        }
+
+        return "N/A";
     }
 }
