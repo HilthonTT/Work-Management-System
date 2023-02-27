@@ -4,13 +4,14 @@
 	@UserId nvarchar(256),
 	@Title nvarchar(50),
 	@Description nvarchar(500),
-	@DateCreated datetime2
+	@DateCreated datetime2,
+	@Archived bit
 AS
 begin
 	set nocount on;
 
-	insert into dbo.Report(TaskId, UserId, Title, [Description], DateCreated)
-	values (@TaskId, @UserId, @Title, @Description, @DateCreated)
+	insert into dbo.Report(TaskId, UserId, Title, [Description], DateCreated, Archived)
+	values (@TaskId, @UserId, @Title, @Description, @DateCreated, @Archived)
 
 	select @Id = SCOPE_IDENTITY();
 end
