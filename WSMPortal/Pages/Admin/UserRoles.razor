@@ -8,6 +8,18 @@
 
 <h1 class="page-heading text-uppercase mb-4">Users's roles and current job title</h1>
 
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="row justify-content-center alert alert-danger">
+        <div class="col-lg-11 center-children">
+            @errorMessage
+        </div>
+         <div class="col-lg-1">
+            <button class="btn btn-close" @onclick="@(() => errorMessage = "")"></button>
+        </div>
+    </div>
+}
+
 <div class="row justify-content-center create-form">
     <div class="col-xl-3 form-layout create-form-department-company">
         <div class="input-section">
@@ -25,7 +37,7 @@
                         @foreach (var r in userRoles)
                         {
                             <div class="radio-item-group">
-                                <InputRadio Value="@r" id="@r" @onclick="(() => LoadSelectedAvailableRole(r))"/>
+                                <InputRadio Value="@r" id="@r" @onclick="(() => LoadSelectedUserRole(r))"/>
                                 <label for="@r">@r</label>
                             </div>
                         }
@@ -72,10 +84,10 @@
                     placeholder="Search User" />
                 <div class="center-children">
                     <div class="btn-group align-items-center">
-                        <button class="btn btn-success" @onclick="AddSelectedRole">Add Role</button>
-                        <button class="btn btn-success" @onclick="RemoveSelectedRole">Remove Role</button>
-                        <button class="btn btn-success" @onclick="AddSelectedJob">Add Job</button>
-                        <button class="btn btn-success" @onclick="RemoveSelectedJob">Remove Job</button>
+                        <button class="btn @AddSelectedRoleClass()" @onclick="AddSelectedRole">Add Role</button>
+                        <button class="btn @RemoveSelectedRoleClass()" @onclick="RemoveSelectedRole">Remove Role</button>
+                        <button class="btn @AddSelectedJobClass()" @onclick="AddSelectedJob">Add Job</button>
+                        <button class="btn @RemoveSelectedJobClass()" @onclick="RemoveSelectedJob">Remove Job</button>
                     </div>
                 </div>
             </div>
@@ -164,6 +176,8 @@
     private string searchUserJobText = "";
     private string searchAvailableRoleText = "";
     private string searchUserRoleText = "";
+
+    private string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -353,22 +367,50 @@
 
     private async Task AddSelectedRole()
     {
+        errorMessage = "";
+
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedAvailableRole))
+        {
+            errorMessage = "You didn't select a user or an available role to add.";
+            return;
+        }
+
         await userEndpoint.AddUserToRoleAsync(selectedUser.Id, selectedAvailableRole);
 
         userRoles.Add(selectedAvailableRole);
         availableRoles.Remove(selectedAvailableRole);
+
+        selectedAvailableRole = "";
     }
 
     private async Task RemoveSelectedRole()
     {
+        errorMessage = "";
+
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedUserRole))
+        {
+            errorMessage = "You didn't select a user or a user role to remove.";
+            return;
+        }
+
         await userEndpoint.RemoveUserFromRoleAsync(selectedUser.Id, selectedUserRole);
 
         availableRoles.Add(selectedUserRole);
         userRoles.Remove(selectedUserRole);
+
+        selectedUserRole = "";
     }
 
     private async Task AddSelectedJob()
     {
+        errorMessage = "";
+
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedAvailableJob))
+        {
+            errorMessage = "You didn't select a user or an available Job to add.";
+            return;
+        }
+
         var user = await userEndpoint.GetByIdAsync(selectedUser.Id);
         var jobs = await jobTitleEndpoint.GetAllAsync();
         var chosenJob = jobs.Where(j => j.JobName == selectedAvailableJob).FirstOrDefault();
@@ -386,6 +428,14 @@
 
     private async Task RemoveSelectedJob()
     {
+        errorMessage = "";
+
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedUserJob))
+        {
+            errorMessage = "You didn't select a user or a user Job to remove.";
+            return;
+        }
+
         var user = await userEndpoint.GetByIdAsync(selectedUser.Id);
         var jobs = await jobTitleEndpoint.GetAllAsync();
         var chosenJob = jobs.Where(j => j.JobName == selectedUserJob).FirstOrDefault();
@@ -399,11 +449,15 @@
         userJobs.Remove(selectedJob.JobName);
         availableJobs.Add(selectedJob.JobName);
 
-        selectedAvailableJob = "";
+        selectedUserJob = "";
     }
 
     private async Task LoadSelectedUser(string Id)
     {
+        selectedAvailableRole = "";
+        selectedAvailableJob = "";
+        selectedUserRole = "";
+        selectedUserJob = "";
         selectedUser = await userEndpoint.GetByIdAsync(Id);
         userRoles = new List<string>(selectedUser.Roles.Select(x => x.Value));
         await LoadRoles();
@@ -416,7 +470,7 @@
         selectedAvailableRole = roleName;
     }
 
-    private void LoadUserRole(string roleName)
+    private void LoadSelectedUserRole(string roleName)
     {
         selectedUserRole = roleName;
     }
@@ -446,5 +500,45 @@
         }
 
         return "N/A";
+    }
+
+    private string AddSelectedRoleClass()
+    {
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedAvailableRole))
+        {
+            return "btn-danger";
+        }
+
+        return "btn-success";
+    }
+
+    private string RemoveSelectedRoleClass()
+    {
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedUserRole))
+        {
+            return "btn-danger";
+        }
+
+        return "btn-success";
+    }
+
+    private string AddSelectedJobClass()
+    {
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedAvailableJob))
+        {
+            return "btn-danger";
+        }
+
+        return "btn-success";
+    }
+
+    private string RemoveSelectedJobClass()
+    {
+        if (string.IsNullOrWhiteSpace(selectedUser.Id) || string.IsNullOrWhiteSpace(selectedUserJob))
+        {
+            return "btn-danger";
+        }
+
+        return "btn-success";
     }
 }
