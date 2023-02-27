@@ -48,6 +48,7 @@ public class UserController : ControllerBase
 
         ApplicationUserModel user = new()
         {
+            Id = userModel.Id,
             FirstName = userModel.FirstName,
             LastName = userModel.LastName,
             EmailAddress = userModel.EmailAddress,
