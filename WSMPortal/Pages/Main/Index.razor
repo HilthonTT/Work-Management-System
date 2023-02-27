@@ -59,9 +59,19 @@
                            <div class="text-center fw-bold text-uppercase">Description</div>
                            <div class="text-center">@t.Description</div>
                         </div>
-                        <div class="form-layout">
+                        <div class="form-layout mb-2">
                             <div class="text-center fw-bold text-uppercase">Department</div>
                             <div class="text-center">@GetDepartmentName(t)</div>
+                        </div>
+                        <div class="form-layout">
+                            <div class="text-center fw-bold text-uppercase">Progress Of The Task</div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-label="Success striped example" 
+                                style="width: @t.PercentageDone%" 
+                                aria-valuenow="@t.PercentageDone" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">@t.PercentageDone%</div>
+                            </div>
                         </div>
                     </div>                  
                 </div>

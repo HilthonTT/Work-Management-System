@@ -22,8 +22,14 @@
                         <div class="text-center">@task.Description</div>
                     </div>
                     <div class="form-layout mb-2">
-                        <div class="text-center fw-bold text-uppercase">Percentage Done</div>
-                        <div class="text-center">@task.PercentageDone</div>
+                    <div class="text-center fw-bold text-uppercase">Progress Of The Task</div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-label="Success striped example" 
+                        style="width: @task.PercentageDone%" 
+                        aria-valuenow="@task.PercentageDone" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">@task.PercentageDone%</div>
+                    </div>
                         <div class="row mt-2">
                             @if (CanAccessModifyPage())
                             {
