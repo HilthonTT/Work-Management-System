@@ -39,6 +39,7 @@ builder.Services.AddTransient<IJobTitleData, JobTitleData>();
 builder.Services.AddTransient<IDepartmentData, DepartmentData>();
 builder.Services.AddTransient<ITaskData, TaskData>();
 builder.Services.AddTransient<IItemData, ItemData>();
+builder.Services.AddTransient<IReportData, ReportData>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -68,8 +69,6 @@ builder.Services.AddSwaggerGen(setup =>
             Version = "v1"
         });
 });
-
-
 
 var app = builder.Build();
 

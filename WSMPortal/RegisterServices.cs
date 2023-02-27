@@ -35,19 +35,6 @@ public static class RegisterServices
         builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
         builder.Services.AddTransient<IItemEndpoint, ItemEndpoint>();
         builder.Services.AddSingleton<ILogger, Logger<ItemEndpoint>>();
-
-        //var mapperConfiguration = new MapperConfiguration(cfg =>
-        //{
-        //    cfg.CreateMap<FormDepartmentModel, DepartmentModel>();
-        //    cfg.CreateMap<FormCompanyModel, CompanyModel>();
-        //    cfg.CreateMap<FormTaskModel, TaskModel>();
-        //    cfg.CreateMap<DepartmentModel, FormDepartmentModel>();
-        //    cfg.CreateMap<CompanyModel, FormCompanyModel>();
-        //    cfg.CreateMap<TaskModel, FormTaskModel>();
-        //});
-
-        //var mapper = mapperConfiguration.CreateMapper();
-
-        //builder.Services.AddSingleton(mapper);
+        builder.Services.AddSingleton<IReportEndpoint, ReportEndpoint>();
     }
 }
