@@ -15,11 +15,12 @@
             <div class="input-section">
             <label class="form-label fw-bold text-uppercase">Department</label>
             <div class="input-description">Choose one department to assign.</div>
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputDepartment((string)txt.Value))" 
-                    class="form-control" 
-                    style="width: 140%; margin-left: 5px" 
+                    class="form-control"  
                     placeholder="Search Department" />
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="department" @bind-Value="task.DepartmentId">
                     @if (departments is not null)
                     {
@@ -64,11 +65,12 @@
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase">User</label>
             <div class="input-description">Choose one user to assign.</div>
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
-                    class="form-control" 
-                    style="width: 140%; margin-left: 5px" 
+                    class="form-control"
                     placeholder="Search User"/>
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="users" @bind-Value="task.UserId">
                     @if (users is not null)
                     {

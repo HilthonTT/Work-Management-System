@@ -13,11 +13,12 @@
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase">User Roles</label>
             <div class="input-description">Choose one role to remove from a user. This affects their permissions.</div>
-            <div class="col-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputUserRole((string)txt.Value))" 
                     type="text" class="form-control" 
-                    style="width: 140%; margin-left: 5px;" 
                     placeholder="Search User Role" />
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="user-roles" @bind-Value="selectedUserRole">
                     @if (userRoles is not null && availableRoles is not null)
                     {
@@ -35,12 +36,13 @@
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase">Availables Roles</label>
             <div class="input-description">Choose one role to add on a user. This affects their permissions.</div>
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputAvailableRole((string)txt.Value))" 
                     type="text" 
                     class="form-control" 
-                    style="width: 140%; margin-left: 5px;" 
                     placeholder="Search Available Role" />
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="available-roles" @bind-Value="selectedAvailableRole">
                     @if (availableRoles is not null && userRoles is not null)
                     {
@@ -63,17 +65,21 @@
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase" for="users">Users</label>
             <div class="input-description">Choose one user to add/remove a role/job title</div>
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
                     type="text" 
-                    class="form-control" 
+                    class="form-control mb-2" 
                     placeholder="Search User" />
-                <div class="btn-group">
-                    <button class="btn btn-success" @onclick="AddSelectedRole">Add Role</button>
-                    <button class="btn btn-success" @onclick="RemoveSelectedRole">Remove Role</button>
-                    <button class="btn btn-success" @onclick="AddSelectedJob">Add Job</button>
-                    <button class="btn btn-success" @onclick="RemoveSelectedJob">Remove Job</button>
+                <div class="center-children">
+                    <div class="btn-group align-items-center">
+                        <button class="btn btn-success" @onclick="AddSelectedRole">Add Role</button>
+                        <button class="btn btn-success" @onclick="RemoveSelectedRole">Remove Role</button>
+                        <button class="btn btn-success" @onclick="AddSelectedJob">Add Job</button>
+                        <button class="btn btn-success" @onclick="RemoveSelectedJob">Remove Job</button>
+                    </div>
                 </div>
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="users" @bind-Value="selectedUser.Id">
                     @if (users is not null)
                     {
@@ -93,12 +99,13 @@
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase">User Jobs</label>
             <div class="input-description">Choose one job title to remove on a user. This doesn't affect permissions</div>
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputUserJob((string)txt.Value))" 
                     type="text" 
                     class="form-control" 
-                    style="width: 140%; margin-left: 5px;" 
                     placeholder="Search User Job" />
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="user-jobs" @bind-Value="selectedUserJob">
                     @if (userJobs is not null && availableJobs is not null)
                     {
@@ -116,12 +123,13 @@
         <div class="input-section">
             <label class="form-label fw-bold text-uppercase">Available Jobs</label>
             <div class="input-description">Choose one job title to add on a user. This doesn't affect permissions.</div>
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <input @oninput="((txt) => OnSearchInputAvailableJob((string)txt.Value))" 
                     type="text" 
                     class="form-control" 
-                    style="width: 140%; margin-left: 5px;" 
                     placeholder="Search Available Job" />
+            </div>
+            <div class="col-lg-8">
                 <MyInputRadioGroup id="available-jobs" @bind-Value="selectedAvailableJob">
                     @if (availableJobs is not null && userJobs is not null)
                     {

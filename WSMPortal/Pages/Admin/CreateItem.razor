@@ -15,12 +15,13 @@
             <div class="input-section">
                 <label class="form-label fw-bold text-uppercase">Company</label>
                 <div class="input-description">Choose one company that is the internal supplier.</div>
-                <div class="col-8">
+                <div class="col-lg-12">
                     <input @oninput="((txt) => OnSearchCompany((string)txt.Value))" 
                         type="text"
-                        class="form-control" 
-                        style="width: 140%; margin-left: 5px;" 
+                        class="form-control"
                         placeholder="Search Company" />
+                </div>
+                <div class="col-lg-8">
                     <MyInputRadioGroup id="companies" @bind-Value="item.InternalSupplierCompanyId">
                         @if (companies is not null)
                         {
@@ -80,12 +81,13 @@
             <div class="input-section">
                 <label class="form-label fw-bold text-uppercase">User</label>
                 <div class="input-description">Choose one user that is the internal supplier.</div>
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
                         type="text"
                         class="form-control" 
-                        style="width: 140%; margin-left: 5px;" 
                         placeholder="Search User" />
+                </div>
+                <div class="col-lg-8">
                     <MyInputRadioGroup id="users" @bind-Value="item.InternalSupplierPersonId">
                         @if (users is not null)
                         {

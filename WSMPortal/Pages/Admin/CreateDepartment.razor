@@ -15,12 +15,13 @@
             <div class="input-section">
                 <label class="form-label fw-bold text-uppercase">Company</label>
                 <div class="input-description">Choose one company that owns the department.</div>
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <input @oninput="((txt) => OnSearchInputCompany((string)txt.Value))" 
                         type="text"
                         class="form-control" 
-                        style="width: 140%; margin-left: 5px;" 
                         placeholder="Search Company" />
+                </div>
+                <div class="col-lg-8">
                     <MyInputRadioGroup id="companies" @bind-Value="department.CompanyId">
                         @if (companies is not null)
                         {
@@ -75,12 +76,13 @@
             <div class="input-section">
                 <label class="form-label fw-bold text-uppercase">User</label>
                 <div class="input-description">Choose one user that is the chairman of the department.</div>
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
                         type="text"
                         class="form-control" 
-                        style="width: 140%; margin-left: 5px;" 
                         placeholder="Search User" />
+                </div>
+                <div class="col-lg-8">
                     <MyInputRadioGroup id="users" @bind-Value="department.ChairPersonId">
                         @if (users is not null)
                         {

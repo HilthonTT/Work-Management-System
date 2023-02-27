@@ -47,12 +47,13 @@
             <div class="input-section">
                 <label class="form-label fw-bold text-uppercase" for="user">User</label>
                 <div class="input-description">Choose one user that is the CEO of the company</div>
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))"
                         type="text"
                         class="form-control mb-4" 
-                        style="width: 150%"
                         placeholder="Search User" />
+                </div>
+                <div class="col-lg-8">
                     <MyInputRadioGroup id="user" @bind-Value="company.ChairPersonId">
                         @if (users is not null)
                         {
