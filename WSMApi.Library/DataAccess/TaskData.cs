@@ -52,10 +52,20 @@ public class TaskData : ITaskData
 
     public void UpdateTask(TaskModel task)
     {
-        _sql.SaveData("dbo.spTask_Update",  
-            new { task.Id, task.UserId, task.DepartmentId, task.Title, task.Description, task.DateDue, 
-                task.PercentageDone, task.IsDone },
-            "WSMData");
+        _sql.SaveData("dbo.spTask_Update", new
+        {
+            task.Id,
+            task.UserId,
+            task.DepartmentId,
+            task.Title,
+            task.Description,
+            task.DateDue,
+            task.PercentageDone,
+            task.IsDone,
+            task.Archived
+        }, 
+
+        "WSMData");
     }
 
     public void ArchiveTask(TaskModel task)
