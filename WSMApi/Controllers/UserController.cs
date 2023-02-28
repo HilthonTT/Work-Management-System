@@ -83,27 +83,32 @@ public class UserController : ControllerBase
         {
             UserModel userModel = _userData.GetUserById(Id.Id);
 
-            ApplicationUserModel user = new()
+            if (userModel is not null)
             {
-                Id = userModel.Id,
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName,
-                EmailAddress = userModel.EmailAddress,
-                PhoneNumber = userModel.PhoneNumber,
-                DateOfBirth = userModel.DateOfBirth,
-                DepartmentId = userModel.DepartmentId,
-                JobTitleId = userModel.JobTitleId,
-                CreatedDate = userModel.CreatedDate,
-            };
-            
-            var userRoles = from ur in _context.UserRoles
-                            join r in _context.Roles on ur.RoleId equals r.Id
-                            select new { ur.UserId, ur.RoleId, r.Name };
+                ApplicationUserModel user = new()
+                {
+                    Id = userModel.Id,
+                    FirstName = userModel.FirstName,
+                    LastName = userModel.LastName,
+                    EmailAddress = userModel.EmailAddress,
+                    PhoneNumber = userModel.PhoneNumber,
+                    DateOfBirth = userModel.DateOfBirth,
+                    DepartmentId = userModel.DepartmentId,
+                    JobTitleId = userModel.JobTitleId,
+                    CreatedDate = userModel.CreatedDate,
+                };
 
-            user.Roles = userRoles.Where(x => x.UserId == user.Id).ToDictionary(key => key.RoleId, val => val.Name);
-            user.JobTitles = _jobTitleData.GetJobTitles().Where(x => x.Id == user.JobTitleId).ToList();
+                var userRoles = from ur in _context.UserRoles
+                                join r in _context.Roles on ur.RoleId equals r.Id
+                                select new { ur.UserId, ur.RoleId, r.Name };
 
-            return user;
+                user.Roles = userRoles.Where(x => x.UserId == user.Id).ToDictionary(key => key.RoleId, val => val.Name);
+                user.JobTitles = _jobTitleData.GetJobTitles().Where(x => x.Id == user.JobTitleId).ToList();
+
+                return user;
+            }
+
+            return null;
         }
         catch (Exception ex)
         {
