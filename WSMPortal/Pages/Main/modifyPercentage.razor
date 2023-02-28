@@ -7,7 +7,6 @@
 
 <h1 class="page-heading text-uppercase mb-4">Modify Progress Of Task</h1>
 
-
 @if (task is not null)
 {
     @if (loggedInUser.DepartmentId != task.DepartmentId)
@@ -15,6 +14,56 @@
         <div class="alert alert-danger">
             You do not have the rights to modify the progress.
         </div>
+    }
+    else if (loggedInUser.Roles.Values.Contains("Admin"))
+    {
+        <AuthorizeView Roles="Admin">
+            <div class="row justify-content-center detail-form">
+                <div class="col-md-12 col-xl-12">
+                    <div class="row form-layout mt-4 tasks-background">
+                        <div class="col-11">
+                            <div class="form-layout mb-2">
+                                <div class="text-center fw-bold text-uppercase">Title</div>
+                                <div class="text-center">@task.Title</div>
+                            </div>
+                            <div class="form-layout mb-2">
+                                <div class="text-center fw-bold text-uppercase">Description</div>
+                                <div class="text-center">@task.Description</div>
+                            </div>
+                            <div class="form-layout mb-2">
+                                <div class="text-center fw-bold text-uppercase">Progress Of The Task</div>
+                                <EditForm Model="modifiedPercentage" OnValidSubmit="ModifyPercentageAsync" Context="modifiedTaskForm">
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary />
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" 
+                                            role="progressbar" 
+                                            aria-label="Success striped example" 
+                                            style="width: @task.PercentageDone%" 
+                                            aria-valuenow="@task.PercentageDone" 
+                                            aria-valuemin="0" 
+                                            aria-valuemax="100">
+                                            @task.PercentageDone%
+                                        </div>
+                                    </div>
+                                    <div class="input-section text-center">
+                                        <label class="form-label fw-bold text-uppercase mt-2" id="task-progress">Task Progress</label>
+                                        <div class="input-description">Focus on modifying the progress of task.</div>
+                                        <InputNumber class="form-control" id="task-progress" @bind-Value="modifiedPercentage.PercentageDone"/>
+                                        <div class="center-children mt-2">
+                                            <button class="btn btn-success btn-lg text-uppercase fw-bold">Change Progress</button>
+                                        </div>
+                                    </div>
+                                </EditForm>
+                            </div>
+                        </div>
+                        <div class="col-1 close-button-section">
+                            <button class="btn btn-close" @onclick="ClosePage"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </AuthorizeView>
     }
     else
     {

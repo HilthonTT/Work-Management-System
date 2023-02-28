@@ -12,6 +12,8 @@
         string LastName { get; set; }
         string PhoneNumber { get; set; }
         string Token { get; set; }
+        Dictionary<string, string> Roles { get; set; }
+        List<JobTitleModel> JobTitles { get; set; }
 
         void ResetUserModel();
     }

@@ -18,6 +18,9 @@ public class LoggedInUserModel : ILoggedInUserModel
     public int? JobTitleId { get; set; }
     public DateTime CreatedDate { get; set; }
 
+    public Dictionary<string, string> Roles { get; set; } = new();
+    public List<JobTitleModel> JobTitles { get; set; } = new();
+
     public void ResetUserModel()
     {
         Token = "";

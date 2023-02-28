@@ -87,6 +87,8 @@ public class APIHelper : IAPIHelper
                 _loggedInUser.JobTitleId = result.JobTitleId;
                 _loggedInUser.DepartmentId = result.DepartmentId;
                 _loggedInUser.EmailAddress = result.EmailAddress;
+                _loggedInUser.Roles = result.Roles;
+                _loggedInUser.JobTitles = result.JobTitles;
                 _loggedInUser.Id = result.Id;
                 _loggedInUser.Token = token;
             }
