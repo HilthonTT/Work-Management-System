@@ -62,8 +62,11 @@
     protected override async Task OnInitializedAsync()
     {
         department = await departmentEndpoint.GetByIdAsync(Id);
-        users = await userEndpoint.GetAllAsync();
-        companies = await companyEndpoint.GetAllAsync();
+        if (department is not null)
+        {
+            users = await userEndpoint.GetAllAsync();
+            companies = await companyEndpoint.GetAllAsync();
+        }
     }
 
     private void ClosePage()

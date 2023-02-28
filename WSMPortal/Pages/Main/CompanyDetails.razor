@@ -59,7 +59,10 @@
     protected override async Task OnInitializedAsync()
     {
         company = await companyEndpoint.GetByIdAsync(Id);
-        users = await userEndpoint.GetAllAsync();
+        if (company is not null)
+        {
+            users = await userEndpoint.GetAllAsync();
+        }
     }
 
     private string GetChairpersonUserName()

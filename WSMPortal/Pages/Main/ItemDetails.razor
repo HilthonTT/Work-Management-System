@@ -69,8 +69,11 @@
     protected override async Task OnInitializedAsync()
     {
         item = await itemEndpoint.GetByIdAsync(Id);
-        users = await userEndpoint.GetAllAsync();
-        companies = await companyEndpoint.GetAllAsync();
+        if (item is not null)
+        {
+            users = await userEndpoint.GetAllAsync();
+            companies = await companyEndpoint.GetAllAsync();
+        }
     }
 
     private string EanValue()

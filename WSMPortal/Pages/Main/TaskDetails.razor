@@ -72,7 +72,10 @@
     protected override async Task OnInitializedAsync()
     {
         task = await taskEndpoint.GetTaskByIdAsync(Id);
-        department = await departmentEndpoint.GetByIdAsync(task.Id);
+        if (task is not null)
+        {
+            department = await departmentEndpoint.GetByIdAsync(task.Id);
+        }
     }
 
     private void ClosePage()
