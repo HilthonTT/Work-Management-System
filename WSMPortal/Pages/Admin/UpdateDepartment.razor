@@ -1,0 +1,226 @@
+﻿@page "/updateDepartment/{Id:int}"
+@using WSMPortal.Components;
+@inject IDepartmentEndpoint departmentEndpoint
+@inject IUserEndpoint userEndpoint
+@inject ICompanyEndpoint companyEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Update A Department</h1>
+
+@if (department is not null)
+{
+    <EditForm Model="updatedDepartment" OnValidSubmit="UpdateDepartmentAsync">
+        <div class="row justify-content-center create-form">
+            <div class="col-xl-3 form-layout create-form-department-company">
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase">Company</label>
+                    <div class="input-description">Choose one company that owns the department.</div>
+                    <div class="col-lg-12">
+                        <input @oninput="((txt) => OnSearchInputCompany((string)txt.Value))" 
+                            type="text"
+                            class="form-control" 
+                            placeholder="Search Company" />
+                    </div>
+                    <div class="col-lg-8">
+                        <MyInputRadioGroup id="companies" @bind-Value="updatedDepartment.CompanyId">
+                            @if (companies is not null)
+                            {
+                                @foreach (var c in companies)
+                                {
+                                    <div class="radio-item-group">
+                                        <InputRadio Value="@c.Id" id="@c.Id" />
+                                        <label for="@c.Id">@c.CompanyName</label>
+                                    </div>
+                                }
+                            }
+                        </MyInputRadioGroup>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-10 form-layout">
+                <div class="close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                </div>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="department-name">Department Name</label>
+                    <div class="input-description">Focus on the department's name.</div>
+                    <InputText type="text" class="form-control" id="department-name" @bind-Value="updatedDepartment.DepartmentName" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="department-address">Address</label>
+                    <div class="input-description">Focus on the department's address.</div>
+                    <InputText type="text" class="form-control" id="department-address" @bind-Value="updatedDepartment.Address" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="department-phone-number">Phone Number</label>
+                    <div class="input-description">Focus on the department's phone number.</div>
+                    <InputText type="text" class="form-control" id="department-phone-number" @bind-Value="updatedDepartment.PhoneNumber" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="department-description">Description</label>
+                    <div class="input-description">Focus on the department's description. <br /> What do they do?</div>
+                    <InputTextArea type="text" class="form-control" id="department-description" @bind-Value="updatedDepartment.Description" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="department-created-date">Created Date</label>
+                    <div class="input-description">Focus on the department's created date.</div>
+                    <InputDate class="form-control" id="department-created-date" @bind-Value="updatedDepartment.CreatedDate" />
+                </div>
+                <div class="center-children">
+                    <button class="btn btn-success btn-lg text-uppercase" type="submit">Update Department</button>
+                </div>
+            </div>
+            <div class="col-xl-3 form-layout create-form-user">
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase">User</label>
+                    <div class="input-description">Choose one user that is the chairman of the department.</div>
+                    <div class="col-lg-12">
+                        <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
+                            type="text"
+                            class="form-control" 
+                            placeholder="Search User" />
+                    </div>
+                    <div class="col-lg-8">
+                        <MyInputRadioGroup id="users" @bind-Value="updatedDepartment.ChairPersonId">
+                            @if (users is not null)
+                            {
+                                @foreach (var u in users)
+                                {
+                                    <div class="radio-item-group">
+                                        <InputRadio Value="@u.Id" id="@u.Id" />
+                                        <label for="@u.Id">@u.FullName</label>
+                                    </div>
+                                }
+                            }
+                        </MyInputRadioGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <ErrorMessage />
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CreateDepartmentModel updatedDepartment = new();
+
+    private DepartmentModel department;
+    private List<UserModel> users;
+    private List<CompanyModel> companies;
+    private string searchUserText = "";
+    private string searchCompanyText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        department = await departmentEndpoint.GetByIdAsync(Id);
+        users = await userEndpoint.GetAllAsync();
+        companies = await companyEndpoint.GetAllAsync();
+        companies = companies.Where(x => x.Archived == false).ToList();
+
+        if (department is not null)
+        {
+            updatedDepartment.CompanyId = department.CompanyId;
+            updatedDepartment.DepartmentName = department.DepartmentName;
+            updatedDepartment.Address = department.Address;
+            updatedDepartment.PhoneNumber = department.PhoneNumber;
+            updatedDepartment.Description = department.Description;
+            updatedDepartment.CreatedDate = department.CreatedDate;
+            updatedDepartment.Archived = department.Archived;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterUsers();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserText));
+        searchUserText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchCompanyText));
+        searchCompanyText = stringResults.Success ? stringResults.Value : "";
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchUserText), searchUserText);
+        await sessionStorage.SetAsync(nameof(searchCompanyText), searchCompanyText);
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchUserText) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterCompanies()
+    {
+        var output = await companyEndpoint.GetAllAsync();
+        output = output.Where(x => x.Archived == false).ToList();
+
+        if (string.IsNullOrWhiteSpace(searchCompanyText) == false)
+        {
+            output = output.Where(c => c.CompanyName.Contains(searchCompanyText, StringComparison.InvariantCultureIgnoreCase) ||
+                c.Address.Contains(searchCompanyText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        companies = output;
+        await SaveFilterState();
+    }
+
+    private async Task OnSearchInputUser(string searchInput)
+    {
+        searchUserText = searchInput;
+        await FilterUsers();
+    }
+
+    private async Task OnSearchInputCompany(string searchInput)
+    {
+        searchCompanyText = searchInput;
+        await FilterCompanies();
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private async Task UpdateDepartmentAsync()
+    {
+        department.CompanyId = updatedDepartment.CompanyId.Value;
+        department.DepartmentName = updatedDepartment.DepartmentName;
+        department.Address = updatedDepartment.Address;
+        department.PhoneNumber = updatedDepartment.PhoneNumber;
+        department.Description = updatedDepartment.Description;
+        department.CreatedDate = updatedDepartment.CreatedDate;
+        department.Archived = updatedDepartment.Archived;
+
+        await departmentEndpoint.UpdateDepartmentAsync(department);
+        updatedDepartment = new();
+        ClosePage();
+    }
+}

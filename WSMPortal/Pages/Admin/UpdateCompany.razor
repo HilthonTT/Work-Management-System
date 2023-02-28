@@ -1,0 +1,169 @@
+﻿@page "/updateCompany/{Id:int}"
+@using WSMPortal.Components;
+@inject IUserEndpoint userEndpoint
+@inject ICompanyEndpoint companyEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Update A Company</h1>
+
+@if (company is not null)
+{
+    <div class="row justify-content-center create-form">
+        <div class="col-xl-12 col-lg-10 form-layout">
+            <EditForm Model="updatedCompany" OnValidSubmit="UpdateCompanyAsync">
+                <div class="close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                </div>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" id="company-name">Company Name</label>
+                    <div class="input-description">Focus on the company's name</div>
+                    <InputText class="form-control" id="company-name" @bind-Value="updatedCompany.CompanyName" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" id="company-address">Address</label>
+                    <div class="input-description">Focus on the company's address</div>
+                    <InputText class="form-control" id="company-address" @bind-Value="updatedCompany.Address" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" id="company-phone-number">Phone Number</label>
+                    <div class="input-description">Focus on the company's phone number</div>
+                    <InputText class="form-control" id="company-phone-number" @bind-Value="updatedCompany.PhoneNumber" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" id="company-description">Description</label>
+                    <div class="input-description">Focus on the company's description</div>
+                    <InputTextArea class="form-control" id="company-description" @bind-Value="updatedCompany.Description" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" id="company-name">Date Founded</label>
+                    <div class="input-description">Focus on the company's date founded</div>
+                    <InputDate class="form-control" id="company-name" @bind-Value="updatedCompany.DateFounded" />
+                </div>
+                <div class="center-children">
+                    <button class="btn btn-success btn-lg text-uppercase" type="submit">Update Company</button>
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="user">User</label>
+                    <div class="input-description">Choose one user that is the CEO of the company</div>
+                    <div class="col-lg-12">
+                        <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))"
+                            type="text"
+                            class="form-control mb-4" 
+                            placeholder="Search User" />
+                    </div>
+                    <div class="col-lg-8">
+                        <MyInputRadioGroup id="user" @bind-Value="updatedCompany.ChairPersonId">
+                            @if (users is not null)
+                            {
+                                @foreach (var u in users)
+                                {
+                                    <div class="radio-item-group">
+                                        <InputRadio Value="u.Id" id="@u.Id" />
+                                        <label for="@u.Id">@u.FullName</label>
+                                    </div>
+                                }
+                            }
+                        </MyInputRadioGroup>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <ErrorMessage />
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CreateCompanyModel updatedCompany = new();
+
+    private CompanyModel company;
+    private List<UserModel> users;
+    private string searchUserText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        company = await companyEndpoint.GetByIdAsync(Id);
+        users = await userEndpoint.GetAllAsync();
+
+        if (company is not null)
+        {
+            updatedCompany.CompanyName = company.CompanyName;
+            updatedCompany.Address = company.Address;
+            updatedCompany.PhoneNumber = company.PhoneNumber;
+            updatedCompany.ChairPersonId = company.ChairPersonId;
+            updatedCompany.Description = company.Description;
+            updatedCompany.DateFounded = company.DateFounded;
+            updatedCompany.Archived = company.Archived;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await SaveFilterState();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserText));
+        searchUserText = stringResults.Success ? stringResults.Value : "";
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchUserText), searchUserText);
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchUserText) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task OnSearchInputUser(string searchInput)
+    {
+        searchUserText = searchInput;
+        await FilterUsers();
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private async Task UpdateCompanyAsync()
+    {
+        company.CompanyName = updatedCompany.CompanyName;
+        company.Address = updatedCompany.Address;
+        company.PhoneNumber = updatedCompany.PhoneNumber;
+        company.ChairPersonId = updatedCompany.ChairPersonId;
+        company.Description = updatedCompany.Description;
+        company.DateFounded = updatedCompany.DateFounded;
+        company.Archived = updatedCompany.Archived;
+
+        await companyEndpoint.UpdateCompanyAsync(company);
+        updatedCompany = new();
+        ClosePage();
+    }
+}

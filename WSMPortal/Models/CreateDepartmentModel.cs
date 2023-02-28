@@ -32,6 +32,8 @@ public class CreateDepartmentModel
 
     [Required]
     [DisplayName("Created Date")]
+    [Range(typeof(DateTime), "1/1/1900", "1/1/9999",
+        ErrorMessage = "Value for {0} must be between {1} and {2}")]
     public DateTime CreatedDate { get; set; }
     public bool Archived { get; set; }
 }

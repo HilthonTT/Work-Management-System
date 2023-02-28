@@ -1,0 +1,233 @@
+﻿@page "/updateItem/{Id:int}"
+@using WSMPortal.Components
+@inject IItemEndpoint itemEndpoint
+@inject IUserEndpoint userEndpoint
+@inject ICompanyEndpoint companyEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Make An Item</h1>
+
+@if (item is not null)
+{
+    <EditForm Model="updatedItem" OnValidSubmit="UpdateItemAsync"> 
+        <div class="row justify-content-center create-form">
+            <div class="col-xl-3 form-layout create-form-department-company">
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase">Company</label>
+                    <div class="input-description">Choose one company that is the internal supplier.</div>
+                    <div class="col-lg-12">
+                        <input @oninput="((txt) => OnSearchCompany((string)txt.Value))" 
+                            type="text"
+                            class="form-control"
+                            placeholder="Search Company" />
+                    </div>
+                    <div class="col-lg-8">
+                        <MyInputRadioGroup id="companies" @bind-Value="updatedItem.InternalSupplierCompanyId">
+                            @if (companies is not null)
+                            {
+                                @foreach (var c in companies)
+                                {
+                                    <div class="radio-item-group">
+                                        <InputRadio Value="@c.Id" id="@c.Id" />
+                                        <label for="@c.Id">@c.CompanyName - @c.PhoneNumber ☎</label>
+                                    </div>
+                                }
+                            }
+                        </MyInputRadioGroup>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-10 form-layout">
+                <div class="close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                </div>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="item-model-name">Model Name</label>
+                    <div class="input-description">Focus on the item's full model name.</div>
+                    <InputText type="text" class="form-control" id="item-model-name" @bind-Value="updatedItem.ModelName" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="item-description">Description</label>
+                    <div class="input-description">Focus on the item's description.</div>
+                    <InputTextArea type="text" class="form-control" id="item-description" @bind-Value="updatedItem.Description" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="item-quantity">Quantity</label>
+                    <div class="input-description">Focus on the amount of items in our warehouses.</div>
+                    <InputNumber type="text" class="form-control" id="item-quantity" @bind-Value="updatedItem.Quantity" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="item-price">Price</label>
+                    <div class="input-description">Focus on the price of the item.</div>
+                    <InputNumber type="number" class="form-control" id="item-price" @bind-Value="updatedItem.Price" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="item-location">Location</label>
+                    <div class="input-description">Focus on the location of the item. <br /> What warehouse? What floor? etc...</div>
+                    <InputText type="text" class="form-control" id="item-location" @bind-Value="updatedItem.Location" />
+                </div>
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase" for="item-description">European Article Number</label>
+                    <div class="input-description">Focus on the item's european article number.</div>
+                    <InputNumber type="number" class="form-control european-Article-Number-font" id="item-description" @bind-Value="updatedItem.EAN" @bind-Value:format="F2"/>
+                </div>
+                <div class="center-children">
+                    <button class="btn btn-success btn-lg text-uppercase" type="submit">Update Item</button>
+                </div>
+            </div>
+            <div class="col-xl-3 form-layout create-form-user">
+                <div class="input-section">
+                    <label class="form-label fw-bold text-uppercase">User</label>
+                    <div class="input-description">Choose one user that is the internal supplier.</div>
+                    <div class="col-lg-12">
+                        <input @oninput="((txt) => OnSearchInputUser((string)txt.Value))" 
+                            type="text"
+                            class="form-control" 
+                            placeholder="Search User" />
+                    </div>
+                    <div class="col-lg-8">
+                        <MyInputRadioGroup id="users" @bind-Value="updatedItem.InternalSupplierPersonId">
+                            @if (users is not null)
+                            {
+                                @foreach (var u in users)
+                                {
+                                    <div class="radio-item-group">
+                                        <InputRadio Value="@u.Id" id="@u.Id" />
+                                        <label for="@u.Id">@u.FullName</label>
+                                    </div>
+                                }
+                            }
+                        </MyInputRadioGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <ErrorMessage />
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CreateItemModel updatedItem = new();
+    private ItemModel item;
+    private List<UserModel> users;
+    private List<CompanyModel> companies;
+    private string searchUserText = "";
+    private string searchCompanyText = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        item = await itemEndpoint.GetByIdAsync(Id);
+        users = await userEndpoint.GetAllAsync();
+        companies = await companyEndpoint.GetAllAsync();
+
+        if (item is not null)
+        {
+            updatedItem.ModelName = item.ModelName;
+            updatedItem.Description = item.Description;
+            updatedItem.Quantity = item.Quantity;
+            updatedItem.Price = item.Price;
+            updatedItem.Location = item.Location;
+            updatedItem.InternalSupplierPersonId = item.InternalSupplierPersonId;
+            updatedItem.InternalSupplierCompanyId = item.InternalSupplierCompanyId;
+            updatedItem.EAN = item.EAN;
+            updatedItem.Archived = item.Archived;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterUsers();
+            await FilterCompanies();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchUserText));
+        searchUserText = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchCompanyText));
+        searchCompanyText = stringResults.Success ? stringResults.Value : "";
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchUserText), searchUserText);
+        await sessionStorage.SetAsync(nameof(searchCompanyText), searchCompanyText);
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchUserText) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterCompanies()
+    {
+        var output = await companyEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchCompanyText) == false)
+        {
+            output = output.Where(c => c.CompanyName.Contains(searchCompanyText, StringComparison.InvariantCultureIgnoreCase) ||
+                c.Address.Contains(searchCompanyText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        companies = output;
+        await SaveFilterState();
+    }
+
+    private async Task OnSearchInputUser(string searchInput)
+    {
+        searchUserText = searchInput;
+        await FilterUsers();
+    }
+
+    private async Task OnSearchCompany(string searchInput)
+    {
+        searchCompanyText = searchInput;
+        await FilterCompanies();
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private async Task UpdateItemAsync()
+    {
+        item.ModelName = updatedItem.ModelName;
+        item.Description = updatedItem.Description;
+        item.Quantity = updatedItem.Quantity;
+        item.Price = updatedItem.Price;
+        item.Location = updatedItem.Location;
+        item.InternalSupplierPersonId = updatedItem.InternalSupplierPersonId;
+        item.InternalSupplierCompanyId = updatedItem.InternalSupplierCompanyId;
+        item.EAN = updatedItem.EAN;
+        item.Archived = updatedItem.Archived;
+
+        await itemEndpoint.UpdateItemAsync(item);
+        updatedItem = new();
+        ClosePage();
+    }
+}

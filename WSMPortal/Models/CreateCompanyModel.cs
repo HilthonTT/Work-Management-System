@@ -27,6 +27,8 @@ public class CreateCompanyModel
     public string Description { get; set; }
 
     [Required]
+    [Range(typeof(DateTime), "1/1/1900", "1/1/9999",
+        ErrorMessage = "Value for {0} must be between {1} and {2}")]
     public DateTime DateFounded { get; set; }
     public bool Archived { get; set; }
 }
