@@ -9,11 +9,11 @@
 <h1 class="page-heading text-uppercase mb-4">My Tasks</h1>
 
 <div class="report-container">
-    <button @onclick="LoadCreateReportPage" class="btn btn-outline-dark text-uppercase btn-lg">Send a report</button>
+    <button @onclick="LoadCreateReportPage" class="btn btn-outline-light text-uppercase btn-lg">Send a report</button>
 </div>
 
 <div class="row">
-    <div class="col-md-2 mt-2 text-uppercase fw-bold">@tasks?.Count Tasks</div>
+    <div class="col-md-2 mt-2 text-uppercase fw-bold text-white">@tasks?.Count Tasks</div>
     <div class="col-md-4 col-xl-5 btn-group">
         <button class="btn @SortedByNewClass(true)" @onclick="(() => OrderByNew(true))">New</button>
         <button class="btn @SortedByNewClass(false)" @onclick="(() => OrderByNew(false))">Old</button>

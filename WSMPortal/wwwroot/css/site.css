@@ -4,6 +4,7 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 18px;
+    background-color: #222222 !important;
 }
 
 h1:focus {
@@ -76,9 +77,11 @@ input[type='text']{
 
 .page-heading {
     text-align: center;
+    color: white;
 }
 
 .form-layout {
+    background-color: white;
     border-style: solid;
     border-color: black;
     border-radius: 15px;
@@ -279,4 +282,8 @@ input[type='text']{
 
 .index-btn-margin {
     margin-left: 2px;
+}
+
+.error-message-text {
+    color: dimgray;
 }

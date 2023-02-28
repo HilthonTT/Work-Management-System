@@ -8,7 +8,7 @@
 <h1 class="page-heading text-uppercase mb-4">Departments</h1>
 
 <div class="row">
-    <div class="col-md-2 mt-2 text-uppercase fw-bold">@departments?.Count Items</div>
+    <div class="col-md-2 mt-2 text-uppercase fw-bold text-light">@departments?.Count Items</div>
     <div class="col-md-4 col-xl-5 btn-group">
         <button class="btn @SortedByCreatedDate(true)" @onclick="(() => OrderByCreatedDate(true))">Oldest</button>
         <button class="btn @SortedByCreatedDate(false)" @onclick="(() => OrderByCreatedDate(false))">Newest</button>
