@@ -4,6 +4,7 @@
 @inject IUserEndpoint userEndpoint
 @inject NavigationManager navManager
 @inject ProtectedSessionStorage sessionStorage
+@inject IDistributedCache cache
 @attribute [Authorize(Roles = "Admin")]
 
 <h1 class="page-heading text-uppercase mb-4">Reports</h1>

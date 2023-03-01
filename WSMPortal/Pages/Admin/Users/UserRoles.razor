@@ -4,6 +4,7 @@
 @inject IJobTitleEndpoint jobTitleEndpoint
 @inject NavigationManager navManager
 @inject ProtectedSessionStorage sessionStorage
+@inject IDistributedCache cache
 @attribute [Authorize(Roles = "Admin")]
 
 <h1 class="page-heading text-uppercase mb-4">Users's roles and current job title</h1>
@@ -61,7 +62,7 @@
                         @foreach (var r in availableRoles)
                         {
                             <div class="radio-item-group">
-                                <InputRadio Value="@r" id="@r" />
+                                <InputRadio Value="@r" id="@r" @onclick="(() => LoadSelectedAvailableRole(r))"/>
                                 <label for="@r">@r</label>
                             </div>
                         }

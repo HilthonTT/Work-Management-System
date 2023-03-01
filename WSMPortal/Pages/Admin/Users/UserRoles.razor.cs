@@ -1,9 +1,13 @@
 using UI.Library.Models;
+using WSMPortal.Helpers;
 
 namespace WSMPortal.Pages.Admin.Users
 {
     public partial class UserRoles
     {
+        private List<JobTitleModel> allJobTitles;
+        private Dictionary<string, string> allRoles;
+
         private UserModel selectedUser = new();
         private List<UserModel> users;
         private List<string> availableRoles = new();
@@ -22,16 +26,32 @@ namespace WSMPortal.Pages.Admin.Users
         private string errorMessage = "";
         protected override async Task OnInitializedAsync()
         {
-            users = await userEndpoint.GetAllAsync();
+            await LoadUsers();
         }
-
+        
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                await LoadFilterState();
                 await LoadAllFilters();
-                await SaveFilterState();
                 StateHasChanged();
+            }
+        }
+
+        private async Task LoadUsers()
+        {
+            users = null;
+
+            string recordKey = "Users_" + DateTime.Now.ToString("ddMMyyyy_hhmm");
+
+            users = await cache.GetRecordAsync<List<UserModel>>(recordKey);
+
+            if (users is null)
+            {
+                users = await userEndpoint.GetAllAsync();
+
+                await cache.SetRecordAsync(recordKey, users);
             }
         }
 
@@ -69,7 +89,8 @@ namespace WSMPortal.Pages.Admin.Users
 
         private async Task FilterUsers()
         {
-            var output = await userEndpoint.GetAllAsync();
+            await LoadUsers();
+            var output = users;
             if (string.IsNullOrWhiteSpace(searchUserText) == false)
             {
                 output = output.Where(u => u.FirstName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase) || u.LastName.Contains(searchUserText, StringComparison.InvariantCultureIgnoreCase)).ToList();
@@ -169,9 +190,9 @@ namespace WSMPortal.Pages.Admin.Users
 
         private async Task LoadRoles()
         {
-            var roles = await userEndpoint.GetAllRolesAsync();
+            await LoadRolesCache();
             availableRoles.Clear();
-            foreach (var r in roles)
+            foreach (var r in allRoles)
             {
                 if (userRoles.IndexOf(r.Value) < 0)
                 {
@@ -182,14 +203,46 @@ namespace WSMPortal.Pages.Admin.Users
 
         private async Task LoadJobs()
         {
-            var jobs = await jobTitleEndpoint.GetAllAsync();
+            await LoadJobTitlesCache();
             availableJobs.Clear();
-            foreach (var j in jobs)
+            foreach (var j in allJobTitles)
             {
                 if (userJobs.IndexOf(j.JobName) < 0)
                 {
                     availableJobs.Add(j.JobName);
                 }
+            }
+        }
+
+        private async Task LoadJobTitlesCache()
+        {
+            allJobTitles = null;
+
+            string recordKey = "Jobs_" + DateTime.Now.ToString("ddMMyyyy_hhmm");
+
+            allJobTitles = await cache.GetRecordAsync<List<JobTitleModel>>(recordKey);
+
+            if (allJobTitles is null)
+            {
+                allJobTitles = await jobTitleEndpoint.GetAllAsync();
+
+                await cache.SetRecordAsync(recordKey, allJobTitles);
+            }
+        }
+
+        private async Task LoadRolesCache()
+        {
+            allRoles = null;
+
+            string recordKey = "Roles_" + DateTime.Now.ToString("ddMMyyyy_hhmm");
+
+            allRoles = await cache.GetRecordAsync<Dictionary<string, string>>(recordKey);
+
+            if (allRoles is null)
+            {
+                allRoles = await userEndpoint.GetAllRolesAsync();
+
+                await cache.SetRecordAsync(recordKey, allRoles);
             }
         }
 
@@ -299,17 +352,6 @@ namespace WSMPortal.Pages.Admin.Users
         private void ClosePage()
         {
             navManager.NavigateTo("/");
-        }
-
-        private async Task<string> GetJobName(int Id)
-        {
-            var job = await jobTitleEndpoint.GetByIdAsync(Id);
-            if (job is not null)
-            {
-                return job.JobName;
-            }
-
-            return "N/A";
         }
 
         private string AddSelectedRoleClass()

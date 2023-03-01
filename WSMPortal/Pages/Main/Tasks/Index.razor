@@ -2,6 +2,7 @@
 @inject ITaskEndpoint taskEndpoint
 @inject IDepartmentEndpoint departmentEndpoint
 @inject ILoggedInUserModel loggedInUser
+@inject IDistributedCache cache
 @inject NavigationManager navManager 
 @inject ProtectedSessionStorage sessionStorage
 @attribute [Authorize]

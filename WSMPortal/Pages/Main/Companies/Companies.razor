@@ -3,6 +3,7 @@
 @inject IUserEndpoint userEndpoint
 @inject NavigationManager navManager
 @inject ProtectedSessionStorage sessionStorage
+@inject IDistributedCache cache
 @attribute [Authorize]
 
 <h1 class="page-heading text-uppercase mb-4">Companies</h1>
@@ -23,7 +24,7 @@
         @if (users is not null)
         {
             <div class="departments">
-                <span class="text-uppercase fw-bold">Companies</span>
+                <span class="text-uppercase fw-bold">Users</span>
                 <div class="@GetSelectedUser()" @onclick="(() => GetSelectedUser())">All</div>
                 @foreach (var u in users)
                 {
@@ -70,7 +71,7 @@
         @if (users is not null)
         {
             <div class="departments">
-                <span class="text-uppercase fw-bold">Companies</span>
+                <span class="text-uppercase fw-bold">Users</span>
                 <div class="@GetSelectedUser()" @onclick="(() => OnUserClick())">All</div>
                 @foreach (var u in users)
                 {

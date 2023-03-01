@@ -2,6 +2,7 @@
 @inject IItemEndpoint itemEndpoint
 @inject NavigationManager navManager
 @inject ProtectedSessionStorage sessionStorage
+@inject IDistributedCache cache
 @attribute [Authorize]
 
 <h1 class="page-heading text-uppercase mb-4">Items</h1>

@@ -14,10 +14,17 @@ public static class RegisterServices
         var serviceProvider = builder.Services.BuildServiceProvider();
         var logger = serviceProvider.GetService<ILogger<ItemEndpoint>>();
 
+        // Services
         builder.Services.AddMemoryCache();
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
         builder.Services.AddBlazoredLocalStorage();
+
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = builder.Configuration.GetConnectionString("Redis");
+            options.InstanceName = "RedisWSM_Dev";
+        });
 
         // Authentication
         builder.Services.AddHttpClient();

@@ -13,10 +13,20 @@
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UI.Library\UI.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\ProgrammingProjects\C#\WSM\WorkSystemManagement\WSM\WSMPortal\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\ProgrammingProjects\C#\WSM\WorkSystemManagement\WSM\WSMPortal\.editorconfig" />
   </ItemGroup>
 
 </Project>

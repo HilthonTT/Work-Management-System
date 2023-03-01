@@ -1,4 +1,5 @@
 using UI.Library.Models;
+using WSMPortal.Helpers;
 
 namespace WSMPortal.Pages.Main.Users
 {
@@ -14,9 +15,9 @@ namespace WSMPortal.Pages.Main.Users
         private string searchText = "";
         protected override async Task OnInitializedAsync()
         {
-            users = await userEndpoint.GetAllAsync();
-            departments = await departmentEndpoint.GetAllAsync();
-            jobs = await jobTitleEndpoint.GetAllAsync();
+            await LoadUsers();
+            await LoadDepartments();
+            await LoadJobTitles();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -29,14 +30,57 @@ namespace WSMPortal.Pages.Main.Users
             }
         }
 
+        private async Task LoadUsers()
+        {
+            users = null;
+
+            string recordKey = "Users_" + DateTime.Now.ToString("ddMMyyyy_hhmm");
+
+            users = await cache.GetRecordAsync<List<UserModel>>(recordKey);
+
+            if (users is null)
+            {
+                users = await userEndpoint.GetAllAsync();
+
+                await cache.SetRecordAsync(recordKey, users);
+            }
+        }
+
+        private async Task LoadDepartments()
+        {
+            departments = null;
+
+            string recordKey = "Departments_" + DateTime.Now.ToString("ddMMyyyy_hhmm");
+
+            departments = await cache.GetRecordAsync<List<DepartmentModel>>(recordKey);
+
+            if (departments is null)
+            {
+                departments = await departmentEndpoint.GetAllAsync();
+
+                await cache.SetRecordAsync(recordKey, departments);
+            }
+        }
+
+        private async Task LoadJobTitles()
+        {
+            jobs = null;
+
+            string recordKey = "Jobs_" + DateTime.Now.ToString("ddMMyyyy_hhmm");
+
+            jobs = await cache.GetRecordAsync<List<JobTitleModel>>(recordKey);
+
+            if (jobs is null)
+            {
+                jobs = await jobTitleEndpoint.GetAllAsync();
+
+                await cache.SetRecordAsync(recordKey, jobs);
+            }
+        }
+
         private void OpenDetails(UserModel user)
         {
             navManager.NavigateTo($"/userDetails/{user.Id}");
-        }
-
-        private void LoadUpdateUserRoles(UserModel user)
-        {
-            navManager.NavigateTo($"/updateUserRoles/{user.Id}");
         }
 
         private string GetDepartmentName(UserModel user)
@@ -72,7 +116,8 @@ namespace WSMPortal.Pages.Main.Users
 
         private async Task FilterUsers()
         {
-            var output = await userEndpoint.GetAllAsync();
+            await LoadUsers();
+            var output = users;
             if (selectedDepartment != 0)
             {
                 output = output.Where(c => c.DepartmentId == selectedDepartment).ToList();
