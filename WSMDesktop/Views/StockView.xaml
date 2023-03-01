@@ -187,8 +187,9 @@
         <!-- Description -->
 
         <StackPanel Grid.Row="4"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2">
+                    Grid.Column="0"
+                    Grid.RowSpan="2"
+                    Grid.ColumnSpan="4">
 
             <TextBlock Text="Description"
                        HorizontalAlignment="Center"
@@ -197,10 +198,10 @@
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="DescriptionButton"
                         Width="30"
-                        Height="30"
+                        Height="150"
                         FontSize="24"
                         Grid.RowSpan="2"
-                        Margin="0 0 5 0"
+                        Margin="5 0 5 0"
                         VerticalAlignment="Center">
                     <Button.Style>
                         <Style TargetType="Button">
@@ -210,7 +211,7 @@
                     </Button.Style>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Width="30" Height="30"
+                            <Border Width="30" Height="150"
                                 CornerRadius="8"
                                 Background="{TemplateBinding Background}">
 
@@ -223,8 +224,9 @@
                 </Button>
 
                 <TextBox x:Name="Description"
-                         Height="50"
-                         Width="665"/>
+                         Height="150"
+                         Width="1450" 
+                         IsReadOnly="True"/>
             </StackPanel>
         </StackPanel>
 

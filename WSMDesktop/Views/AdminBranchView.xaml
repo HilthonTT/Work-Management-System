@@ -9,7 +9,7 @@
              Background="#282828"
              FontFamily="Comic Sans MS"
              Foreground="White"
-             FontSize="18">
+             FontSize="20">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -124,8 +124,9 @@
                 </Button>
 
                 <ListBox x:Name="Companies"
-                        Height="530"
+                         Height="530"
                          Width="320"
+                         FontSize="24"
                         SelectedItem="{Binding SelectedCompany}">
 
                     <ListBox.ItemTemplate>
@@ -232,11 +233,12 @@
                        HorizontalAlignment="Center" />
 
             <StackPanel Orientation="Horizontal">
-                
+
                 <ListBox x:Name="Departments"
-                     Height="530"
-                     Width="320"
-                     SelectedItem="{Binding SelectedDepartment}">
+                         Height="530"
+                         Width="320"
+                         FontSize="24"
+                         SelectedItem="{Binding SelectedDepartment}">
 
                     <ListBox.ItemTemplate>
                         <DataTemplate>
