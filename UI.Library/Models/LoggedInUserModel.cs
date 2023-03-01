@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UI.Library.Models;
+﻿namespace UI.Library.Models;
 public class LoggedInUserModel : ILoggedInUserModel
 {
     public string Token { get; set; }
