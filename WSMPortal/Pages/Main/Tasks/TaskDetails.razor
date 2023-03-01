@@ -3,6 +3,7 @@
 @inject IDepartmentEndpoint departmentEndpoint
 @inject ILoggedInUserModel loggedInUser
 @inject ITaskEndpoint taskEndpoint
+@inject PageHistoryState PageHistoryState
 @attribute [Authorize]
 
 <h1 class="page-heading text-uppercase mb-4">Task Details</h1>
@@ -48,7 +49,12 @@
                     <div class="form-layout mb-2">
                         <div class="text-center fw-bold text-uppercase">Date Assigned</div>
                         <div class="text-center">@task.DateCreated.ToString("dd/MM/yyyy")</div>
-                    </div> 
+                    </div>
+                    <AuthorizeView Roles="Admin">
+                        <div class="mb-2 center-children">
+                            <button class="btn btn-danger btn-lg text-uppercase" @onclick="LoadUpdateTaskPage">Update Task</button>
+                        </div>
+                   </AuthorizeView>
                 </div>
                 <div class="col-1 close-button-section">
                     <button class="btn btn-close" @onclick="ClosePage"></button>
@@ -76,6 +82,8 @@
         {
             department = await departmentEndpoint.GetByIdAsync(task.Id);
         }
+
+        PageHistoryState.AddPageToHistory($"/TaskDetails/{Id}");
     }
 
     private void ClosePage()
@@ -106,5 +114,10 @@
         }
 
         return false;
+    }
+
+    private void LoadUpdateTaskPage()
+    {
+        navManager.NavigateTo($"/updateTask/{Id}");
     }
 }

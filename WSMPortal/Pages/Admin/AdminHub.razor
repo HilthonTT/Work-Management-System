@@ -1,0 +1,77 @@
+﻿@page "/AdminHub"
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Admin Hub</h1>
+
+<div class="row justify-content-center create-form">
+    <div class="col-xl-4 form-layout">
+        <label class="form-label fw-bold text-uppercase">Company</label>
+        <div class="input-description">Create a Company.</div>
+        <div class="center-children">
+            <button class="btn btn-outline-danger" @onclick="GoToCreateCompany">Create Company</button>
+        </div>
+        <label class="form-label fw-bold text-uppercase mt-4">Item</label>
+        <div class="input-description">Create an Item.</div>
+        <div class="center-children">
+            <button class="btn btn-outline-danger" @onclick="GoToCreateItem">Create Item</button>
+        </div>
+    </div>
+    <div class="col-xl-4 form-layout">
+        <label class="form-label fw-bold text-uppercase">Department</label>
+        <div class="input-description">Create a Department.</div>
+        <div class="center-children">
+            <button class="btn btn-outline-danger" @onclick="GoToCreateDepartment">Create Department</button>
+        </div>
+        <label class="form-label fw-bold text-uppercase mt-4">View Reports</label>
+        <div class="input-description">View all the reports.</div>
+        <div class="center-children">
+            <button class="btn btn-outline-danger" @onclick="ViewReports">View Reports</button>
+        </div>
+    </div>
+    <div class="col-xl-4 form-layout">
+        <label class="form-label fw-bold text-uppercase">Task</label>
+        <div class="input-description">Create a Task.</div>
+        <div class="center-children">
+            <button class="btn btn-outline-danger" @onclick="GoToCreateTask">Create Task</button>
+        </div>
+        <label class="form-label fw-bold text-uppercase mt-4">User Roles/Job Titles</label>
+        <div class="input-description">Modify Permissions of an user.</div>
+        <div class="center-children">
+            <button class="btn btn-outline-danger" @onclick="ModifyUserRoles">Modify Permissions</button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private void GoToCreateCompany()
+    {
+        navManager.NavigateTo("/createCompany");
+    }
+
+    private void GoToCreateDepartment()
+    {
+        navManager.NavigateTo("/createDepartment");
+    }
+
+    private void GoToCreateTask()
+    {
+        navManager.NavigateTo("/createTask");
+    }
+
+    private void GoToCreateItem()
+    {
+        navManager.NavigateTo("/createItem");
+    }
+
+    private void ViewReports()
+    {
+        navManager.NavigateTo("/reports");
+    }
+
+    private void ModifyUserRoles()
+    {
+        navManager.NavigateTo("/userRoles");
+    }
+}

@@ -3,6 +3,7 @@
 @inject IUserEndpoint userEndpoint
 @inject ICompanyEndpoint companyEndpoint
 @inject NavigationManager navManager
+@inject PageHistoryState PageHistoryState
 @attribute [Authorize]
 
 <h1 class="page-heading text-uppercase mb-4">Item Details</h1>
@@ -45,6 +46,11 @@
                         <div class="text-center fw-bold text-uppercase">European Article Number</div>
                         <div class="text-center european-Article-Number-font">@EanValue()</div>
                     </div>
+                   <AuthorizeView Roles="Admin">
+                        <div class="mb-2 center-children">
+                            <button class="btn btn-danger btn-lg text-uppercase" @onclick="LoadUpdateItemPage">Update Item</button>
+                        </div>
+                   </AuthorizeView>
                 </div>
                 <div class="col-1 close-button-section">
                     <button class="btn btn-close" @onclick="ClosePage"></button>
@@ -74,6 +80,8 @@
             users = await userEndpoint.GetAllAsync();
             companies = await companyEndpoint.GetAllAsync();
         }
+
+        PageHistoryState.AddPageToHistory($"/ItemDetails/{Id}");
     }
 
     private string EanValue()
@@ -113,5 +121,10 @@
     private void ClosePage()
     {
         navManager.NavigateTo("/items");
+    }
+
+    private void LoadUpdateItemPage()
+    {
+        navManager.NavigateTo($"/updateItem/{Id}");
     }
 }

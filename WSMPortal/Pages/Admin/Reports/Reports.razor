@@ -1,0 +1,372 @@
+﻿@page "/reports"
+@inject IReportEndpoint reportEndpoint
+@inject ITaskEndpoint taskEndpoint
+@inject IUserEndpoint userEndpoint
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
+@attribute [Authorize(Roles = "Admin")]
+
+<h1 class="page-heading text-uppercase mb-4">Reports</h1>
+
+<div class="row">
+    <div class="col-12 d-block d-md-none">
+        @if (users is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold ">Users</span>
+                <div class="@GetSelectedUser()" @onclick="(() => OnUserClick())">All</div>
+                @foreach (var u in users)
+                {
+                    <div class="@GetSelectedUser()" @onclick="(() => OnUserClick(u.Id))">
+                        @u.FullName
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-md-2 mt-2 text-uppercase fw-bold text-white">@reports?.Count Reports</div>
+    <div class="col-md-4 col-xl-5 btn-group input-search">
+        <button class="btn @SortedByNewClass(true)" @onclick="(() => OrderByNew(true))">New</button>
+        <button class="btn @SortedByNewClass(false)" @onclick="(() => OrderByNew(false))">Old</button>
+        <button class="btn @SortedByArchivedClass(true)" style="margin-left: 5px;" @onclick="(() => ShowArchives(true))">Archived</button>
+        <button class="btn @SortedByArchivedClass(false)" @onclick="(() => ShowArchives(false))">Non Archived</button>
+    </div>
+    <div class="col-md-4 col-xl-3">
+        <input type="text" placeholder="Search"
+            aria-label="Search Box" class="form-control rounded-control"
+            @oninput="((txt) => OnSearchInputReport((string)txt.Value))"/>
+    </div>
+    <div class="col-12 d-block d-md-none">
+        @if (tasks is not null )
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Tasks</span>
+                <div class="@GetSelectedTask()" @onclick="(() => OnTaskClick())">All</div>
+                @foreach (var t in tasks)
+                {
+                    <div class="@GetSelectedTask()" @onclick="(() => OnTaskClick(t.Id))">
+                        @t.Title
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
+        @if (users is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold ">Users</span>
+                <input type="text" placeholder="Search"
+                    aria-label="Search Box" class="form-control rounded-control mt-2"
+                    @oninput="((txt) => OnSearchInputUser((string)txt.Value))"/>
+                <div class="@GetSelectedUser()" @onclick="(() => OnUserClick())">All</div>
+                @foreach (var u in users)
+                {
+                    <div class="@GetSelectedUser(u.Id)" @onclick="(() => OnUserClick(u.Id))">
+                        @u.FullName
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-md-8 col-xl-6">
+        @if (reports is not null && tasks is not null)
+        {
+            <Virtualize Items="reports" Context="r" OverscanCount="10">
+                <div class="row form-layout mt-4 tasks-background" @onclick="(() => OpenDetails(r))">
+                    <div class="col-12">
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Title</div>
+                            <div class="text-center">@r.Title</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                           <div class="text-center fw-bold text-uppercase">Description</div>
+                           <div class="text-center">@r.Description</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Task Title</div>
+                            <div class="text-center">@GetTaskTitle(r)</div>
+                        </div>
+                        <div class="form-layout mb-2">
+                            <div class="text-center fw-bold text-uppercase">Author</div>
+                            <div class="text-center">@GetTaskUser(r)</div>
+                        </div>
+                    </div>                  
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
+        @if (tasks is not null)
+        {
+            <div class="departments">
+                <span class="text-uppercase fw-bold">Tasks</span>
+                <input type="text" placeholder="Search"
+                    aria-label="Search Box" class="form-control rounded-control mt-2"
+                    @oninput="((txt) => OnSearchInputTask((string)txt.Value))"/>
+
+                <div class="@GetSelectedTask()" @onclick="(() => OnTaskClick())">All</div>
+                @foreach (var t in tasks)
+                {
+                    <div class="@GetSelectedTask(t.Id)" @onclick="(() => OnTaskClick(t.Id))">@t.Title</div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    private List<ReportModel> reports;
+    private List<TaskModel> tasks;
+    private List<UserModel> users;
+
+    private List<TaskModel> searchTasks;
+    private List<UserModel> searchUsers;
+
+    private bool isSortedByNew = true;
+    private bool isSortedByArchived = false;
+    private string selectedUser = "";
+    private int selectedTask = 0;
+
+    private string searchTextReport = "";
+    private string searchTextTask = "";
+    private string searchTextUser = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        reports = await reportEndpoint.GetAllAsync();
+        tasks = await taskEndpoint.GetAllAsync();
+        users = await userEndpoint.GetAllAsync();
+
+        searchTasks = tasks;
+        searchUsers = users;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterReports();
+            await FilterUsers();
+            await FilterTasks();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadFilterState()
+    {
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(searchTextReport));
+        searchTextReport = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchTextTask));
+        searchTextTask = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchTextUser));
+        searchTextUser = stringResults.Success ? stringResults.Value : "";
+        stringResults = await sessionStorage.GetAsync<string>(nameof(selectedUser));
+        selectedUser = stringResults.Success ? stringResults.Value : "";
+
+        var intResults = await sessionStorage.GetAsync<int>(nameof(selectedTask));
+        selectedTask = intResults.Success ? intResults.Value : 0;
+
+        var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
+        isSortedByNew = boolResults.Success ? boolResults.Value : true;
+        boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByArchived));
+        isSortedByArchived = boolResults.Success ? boolResults.Value : false;
+    }
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(searchTextReport), searchTextReport);
+        await sessionStorage.SetAsync(nameof(searchTextTask), searchTextTask);
+        await sessionStorage.SetAsync(nameof(searchTextUser), searchTextUser);
+        await sessionStorage.SetAsync(nameof(selectedUser), selectedUser);
+        await sessionStorage.SetAsync(nameof(selectedTask), selectedTask);
+        await sessionStorage.SetAsync(nameof(isSortedByNew), isSortedByNew);
+        await sessionStorage.SetAsync(nameof(isSortedByArchived), isSortedByArchived);
+    }
+
+    private async Task FilterReports()
+    {
+        var output = await reportEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(selectedUser) == false)
+        {
+            output = output.Where(r => r.UserId == selectedUser).ToList();
+        }
+
+        if (selectedTask != 0)
+        {
+            output = output.Where(r => r.TaskId == selectedTask).ToList();
+        }
+
+        if (string.IsNullOrWhiteSpace(searchTextReport) == false)
+        {
+            output = output.Where(r => r.Title.Contains(searchTextReport, StringComparison.InvariantCultureIgnoreCase) ||
+                r.Description.Contains(searchTextReport, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        if (isSortedByNew)
+        {
+            output = output.OrderByDescending(r => r.DateCreated).ToList();
+        }
+        else
+        {
+            output = output.OrderBy(r => r.DateCreated).ToList();
+        }
+
+        if (isSortedByArchived)
+        {
+            output = output.Where(r => r.Archived).ToList();
+        }
+        else
+        {
+            output = output.Where(r => r.Archived == false).ToList();
+        }
+
+        reports = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterUsers()
+    {
+        var output = await userEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchTextUser) == false)
+        {
+            output = output.Where(u => u.FirstName.Contains(searchTextUser, StringComparison.InvariantCultureIgnoreCase) ||
+                u.LastName.Contains(searchTextUser, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        users = output;
+        await SaveFilterState();
+    }
+
+    private async Task FilterTasks()
+    {
+        var output = await taskEndpoint.GetAllAsync();
+
+        if (string.IsNullOrWhiteSpace(searchTextTask) == false)
+        {
+            output = output.Where(t => t.Title.Contains(searchTextTask, StringComparison.InvariantCultureIgnoreCase) ||
+                t.Description.Contains(searchTextTask, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        tasks = output;
+        await SaveFilterState();
+    }
+
+    private async Task OnSearchInputReport(string searchInput)
+    {
+        searchTextReport = searchInput;
+        await FilterReports();
+    }
+
+    private async Task OnSearchInputUser(string searchInput)
+    {
+        searchTextUser = searchInput;
+        await FilterUsers();
+    }
+
+    private async Task OnSearchInputTask(string searchInput)
+    {
+        searchTextTask = searchInput;
+        await FilterTasks();
+    }
+
+    private async Task OrderByNew(bool isNew)
+    {
+        isSortedByNew = isNew;
+        await FilterReports();
+    }
+
+    private async Task ShowArchives(bool showArchives)
+    {
+        isSortedByArchived = showArchives;
+        await FilterReports();
+    }
+
+    private async Task OnUserClick(string userId = "")
+    {
+        selectedUser = userId;
+        await FilterReports();
+    }
+
+    private async Task OnTaskClick(int taskId = 0)
+    {
+        selectedTask = taskId;
+        await FilterReports();
+    }
+
+    private string SortedByNewClass(bool isNew)
+    {
+        if (isNew == isSortedByNew)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+
+    private string SortedByArchivedClass(bool isArchived)
+    {
+        if (isArchived == isSortedByArchived)
+        {
+            return "btn-success";
+        }
+
+        return "btn-danger";
+    }
+
+    private string GetSelectedUser(string userId = "")
+    {
+        if (userId == selectedUser)
+        {
+            return "fw-bold";
+        }
+
+        return "";
+    }
+
+    private string GetSelectedTask(int taskId = 0)
+    {
+        if (taskId == selectedTask)
+        {
+            return "fw-bold";
+        }
+
+        return "";
+    }
+
+    private string GetTaskTitle(ReportModel report)
+    {
+        var task = searchTasks.Where(t => t.Id == report.TaskId).FirstOrDefault();
+
+        if (task is not null)
+        {
+            return task.Title;
+        }
+
+        return "N/A";
+    }
+
+    private string GetTaskUser(ReportModel report)
+    {
+        var user = searchUsers.Where(u => u.Id == report.UserId).FirstOrDefault();
+
+        if (user is not null)
+        {
+            return user.FullName;
+        }
+
+        return "N/A";
+    }
+
+    private void OpenDetails(ReportModel report)
+    {
+        navManager.NavigateTo($"/reportDetails/{report.Id}");
+    }
+}

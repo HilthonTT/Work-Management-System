@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using UI.Library.API;
 using UI.Library.Models;
 using WSMPortal.Authentication;
+using WSMPortal.Helpers;
 
 namespace WSMPortal;
 
@@ -27,6 +28,7 @@ public static class RegisterServices
         // Personal Services
         builder.Services.AddSingleton<IAPIHelper, APIHelper>();
         builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
+        builder.Services.AddSingleton<PageHistoryState>();
 
         builder.Services.AddTransient<ICompanyEndpoint, CompanyEndpoint>();
         builder.Services.AddTransient<IDepartmentEndpoint, DepartmentEndpoint>();

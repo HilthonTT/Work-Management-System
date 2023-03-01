@@ -287,3 +287,7 @@ input[type='text']{
 .error-message-text {
     color: dimgray;
 }
+
+.clickable-link {
+    cursor: pointer;
+}

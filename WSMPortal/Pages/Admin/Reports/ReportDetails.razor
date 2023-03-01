@@ -1,0 +1,100 @@
+﻿@page "/reportDetails/{Id:int}"
+@inject NavigationManager navManager
+@inject IReportEndpoint reportEndpoint
+@inject IUserEndpoint userEndpoint
+@inject ITaskEndpoint taskEndpoint
+@inject PageHistoryState PageHistoryState
+@attribute [Authorize]
+
+<h1 class="page-heading text-uppercase mb-4">Report Details</h1>
+
+<div class="row justify-content-center detail-form">
+    <div class="col-md-12 col-xl-12">
+        @if (report is not null)
+        {
+            <div class="row form-layout mt-4 tasks-background">
+                <div class="col-11">
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Title</div>
+                        <div class="text-center">@report.Title</div>
+                    </div>
+                    <div class="form-layout mb-2">
+                        <div class="text-center fw-bold text-uppercase">Description</div>
+                        <div class="text-center">@report.Description</div>
+                    </div>
+                    <div class="form-layout mb-2 clickable-link" @onclick="LoadTaskDetailsPage">
+                        <div class="text-center fw-bold text-uppercase">Task Title</div>
+                        <div class="text-center">@GetTaskTitle()</div>
+                    </div>
+                    <div class="form-layout mb-2 clickable-link" @onclick="LoadUserDetailsPage">
+                        <div class="text-center fw-bold text-uppercase">Author</div>
+                        <div class="text-center">@GetUserName()</div>
+                    </div>
+                </div>
+                <div class="col-1 close-button-section">
+                    <button class="btn btn-close" @onclick="ClosePage"></button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <ErrorMessage />
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ReportModel report;
+    private UserModel user;
+    private TaskModel task;
+
+    protected override async Task OnInitializedAsync()
+    {
+        report = await reportEndpoint.GetByIdAsync(Id);
+        if (report is not null)
+        {
+            user = await userEndpoint.GetByIdAsync(report.UserId);
+            task = await taskEndpoint.GetTaskByIdAsync(report.TaskId);
+        }
+
+        PageHistoryState.AddPageToHistory($"/reportDetails/{Id}");
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void LoadTaskDetailsPage()
+    {
+        navManager.NavigateTo($"/taskDetails/{task.Id}");
+    }
+
+    private void LoadUserDetailsPage()
+    {
+        navManager.NavigateTo($"/userDetails/{user.Id}");
+    }
+
+    private string GetUserName()
+    {
+        if (user is not null)
+        {
+            return user.FullName;
+        }
+
+        return "N/A";
+    }
+
+    private string GetTaskTitle()
+    {
+        if (task is not null)
+        {
+            return task.Title;
+        }
+
+        return "N/A";
+    }
+}

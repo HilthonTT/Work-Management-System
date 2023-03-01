@@ -2,6 +2,7 @@
 @inject ICompanyEndpoint companyEndpoint
 @inject IUserEndpoint userEndpoint
 @inject NavigationManager navManager
+@inject PageHistoryState PageHistoryState
 @attribute [Authorize]
 
 <h1 class="page-heading text-uppercase mb-4">Company Details</h1>
@@ -32,10 +33,15 @@
                         <div class="text-center fw-bold text-uppercase">Chair Person</div>
                         <div class="text-center">@GetChairpersonUserName()</div>
                     </div>
-                     <div class="form-layout mb-2">
+                    <div class="form-layout mb-2">
                         <div class="text-center fw-bold text-uppercase">Date Founded</div>
                         <div class="text-center">@company.DateFounded.ToString("dd/MM/yyyy")</div>
                     </div>
+                   <AuthorizeView Roles="Admin">
+                        <div class="mb-2 center-children">
+                            <button class="btn btn-danger btn-lg text-uppercase" @onclick="LoadUpdateCompanyPage">Update Company</button>
+                        </div>
+                   </AuthorizeView>
                 </div>
                 <div class="col-1 close-button-section">
                     <button class="btn btn-close" @onclick="ClosePage"></button>
@@ -63,6 +69,8 @@
         {
             users = await userEndpoint.GetAllAsync();
         }
+
+        PageHistoryState.AddPageToHistory($"/companyDetails/{Id}");
     }
 
     private string GetChairpersonUserName()
@@ -80,5 +88,10 @@
     private void ClosePage()
     {
         navManager.NavigateTo("/companies");
+    }
+
+    private void LoadUpdateCompanyPage()
+    {
+        navManager.NavigateTo($"/updateCompany/{Id}");
     }
 }

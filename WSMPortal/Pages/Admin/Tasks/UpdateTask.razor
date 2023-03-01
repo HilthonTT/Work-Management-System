@@ -55,6 +55,11 @@
                 <InputTextArea type="text" class="form-control" id="task-description" @bind-Value="updatedTask.Description" />
             </div>
             <div class="input-section">
+                <label class="form-label fw-bold text-uppercase" for="task-progress">Progress</label>
+                <div class="input-description">Focus on the percentage that the task is done.</div>
+                <InputNumber class="form-control" id="task-progress" @bind-Value="updatedTask.PercentageDone" />
+            </div>
+            <div class="input-section">
                 <label class="form-label fw-bold text-uppercase" for="task-date-due">Date Due</label>
                 <div class="input-description">Focus on the date that you want the task to be done.</div>
                 <InputDate class="form-control" id="task-date-due" @bind-Value="updatedTask.DateDue" />
@@ -100,7 +105,7 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    private CreateTaskModel updatedTask = new();
+    private UpdateTaskModel updatedTask = new();
     private TaskModel task;
     private List<DepartmentModel> departments;
     private List<UserModel> users;
@@ -205,7 +210,7 @@ else
         task.DepartmentId = updatedTask.DepartmentId;
         task.Description = updatedTask.Description;
         task.DateDue = updatedTask.DateDue;
-        task.PercentageDone = updatedTask.PercentageDone;
+        task.PercentageDone = updatedTask.PercentageDone.Value;
         task.IsDone = updatedTask.IsDone;
         task.DateCreated = updatedTask.DateCreated;
         task.Archived = updatedTask.Archived;
