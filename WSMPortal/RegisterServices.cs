@@ -44,6 +44,6 @@ public static class RegisterServices
         builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
         builder.Services.AddTransient<IItemEndpoint, ItemEndpoint>();
         builder.Services.AddSingleton<ILogger, Logger<ItemEndpoint>>();
-        builder.Services.AddSingleton<IReportEndpoint, ReportEndpoint>();
+        builder.Services.AddTransient<IReportEndpoint, ReportEndpoint>();
     }
 }
