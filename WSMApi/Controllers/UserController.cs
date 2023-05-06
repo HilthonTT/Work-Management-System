@@ -117,7 +117,6 @@ public class UserController : ControllerBase
         }
     }
 
-
     [HttpPost]
     [Route("UpdateUser")]
     [Authorize(Roles = "Admin")]
